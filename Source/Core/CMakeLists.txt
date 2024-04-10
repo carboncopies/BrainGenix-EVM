@@ -45,7 +45,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     bg-common-logger
     rpclib::rpc
     ${CMAKE_THREAD_LIBS_INIT}
-    unofficial::noise::noise-static
 
     VersioningSystem
     CompileTimeStamp

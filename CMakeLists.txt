@@ -68,17 +68,10 @@ find_path(CPP_BASE64_INCLUDE_DIRS "cpp-base64/base64.cpp")
 message(STATUS "Setting Up yaml-cpp Library")
 find_package(yaml-cpp CONFIG REQUIRED)
 
-message(STATUS "Setting Up Vulkan Scene Graph Library")
-find_package(vsg CONFIG REQUIRED)
-
 # message(STATUS "Setting Up vsgXchange Library")
 # find_package(vsgXchange CONFIG REQUIRED)
 
-message(STATUS "Setting Up STB Library")
-find_package(Stb REQUIRED)
 
-message(STATUS "Setting Up LibNoies Library")
-find_package(unofficial-noise CONFIG REQUIRED)
 
 # Compiler optimizations
 find_package(AVX)
@@ -140,7 +133,6 @@ endif()
 
 # Add Source Subdirs
 add_subdirectory(${SRC_DIR}/Core)
-add_subdirectory(${SRC_DIR}/Renderer)
 
 
 

@@ -25,26 +25,10 @@ int main(int NumArguments, char** ArgumentValues) {
     // Setup API Server
     BG::EVM::API::RPCManager APIManager(&SystemConfiguration, &Logger);
 
-    // Setup RenderPools
-    // BG::EVM::Simulator::VSDA::RenderPool RenderPool(&Logger, false, 5);
-    // BG::EVM::Simulator::VisualizerPool VisualizerPool(&Logger, false, 1);
 
-    // Setup Simulator (Adding the routes here)
-    // BG::EVM::Simulator::SimulationRPCInterface SimulationRPCInterface(&Logger, &SystemConfiguration, &RenderPool, &VisualizerPool, &APIManager);
-    // BG::EVM::Simulator::GeometryRPCInterface   GeometryRPCInterface(&Logger, SimulationRPCInterface.GetSimulationVectorPtr(), &APIManager);
-    // BG::EVM::Simulator::ModelRPCInterface      ModelRPCInterface(&Logger, SimulationRPCInterface.GetSimulationVectorPtr(), &APIManager);
-    // BG::EVM::Simulator::VisualizerRPCInterface VisualizerRPCInterface(&Logger, SimulationRPCInterface.GetSimulationVectorPtr(), &APIManager);
-    // BG::EVM::Simulator::VSDA::VSDARPCInterface VSDARPCInterface(&Logger, &APIManager, SimulationRPCInterface.GetSimulationVectorPtr());
 
     // Print ASCII BrainGenix Logo To Console
     BG::EVM::Util::LogLogo(&Logger);
-
-
-    // // Check if we have profiling enabled, if so do that then quit
-    // if (SystemConfiguration.ProfilingStatus_ != BG::EVM::Config::PROFILE_NONE) {
-    //     BG::EVM::Profiling::Manager(&Logger, &SystemConfiguration, &SimulationRPCInterface, &RenderPool, &VisualizerPool, &APIManager);
-    //     return 0;
-    // }
 
     // Block forever while servers are running
     while (true) {

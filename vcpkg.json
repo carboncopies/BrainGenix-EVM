@@ -9,9 +9,6 @@
     "gtest",
     "nlohmann-json",
     "rpclib",
-    "vsg",
-    "cpp-base64",
-    "stb",
-    "libnoise"
+    "cpp-base64"
   ]
 }
