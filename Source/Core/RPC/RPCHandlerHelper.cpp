@@ -21,14 +21,13 @@ namespace API {
 
 
 // Handy class for standard handler data.
-HandlerData::HandlerData(const std::string& _JSONRequest, BG::Common::Logger::LoggingSystem* _Logger, std::string _RoutePath, Simulations _Simulations, bool PermitBusy, bool NoSimulation) {
+HandlerData::HandlerData(const std::string& _JSONRequest, BG::Common::Logger::LoggingSystem* _Logger, std::string _RoutePath) {
 
     // ManTaskData = called_by_manager_task;
     JSONRequestStr = _JSONRequest;
     Logger_ = _Logger;
     RoutePath_ = _RoutePath;
 
-    SimVec = _Simulations;
     RequestJSON = nlohmann::json::parse(_JSONRequest);
 
     // bool isloadingsim = (ManTaskData != nullptr); // Man.IsLoadingSim();
@@ -46,29 +45,13 @@ HandlerData::HandlerData(const std::string& _JSONRequest, BG::Common::Logger::Lo
     //     Status = BGStatusCode::BGStatusInvalidParametersPassed;
     //     return; // When loading, the first valid request must be SimulationCreate.
     // }
-    if (NoSimulation) {
-        return;
-    }
 
     // if (isloadingsim) {
     //     SimulationID = ManTaskData->ReplaceSimulationID;
     // } else {
-        if (!GetParInt("SimulationID", SimulationID)) {
-            return;
-        }
-    // }
-    if (SimulationID >= SimVec->size() || SimulationID < 0) {
-        Logger_->Log("Simulation ID Out Of Range", 8);
-        Status = BGStatusCode::BGStatusInvalidParametersPassed;
-        return;
-    }
-    ThisSimulation = SimVec->at(SimulationID).get();
 
-    if (!PermitBusy && (ThisSimulation->IsProcessing || ThisSimulation->WorkRequested)) {
-        Logger_->Log("Simulation Is Currently Busy, And Route Is Not Allowed To Run While Busy", 8);
-        Status = BGStatusCode::BGStatusSimulationBusy;
-        return;
-    }
+    // }
+
     // Man.Logger()->Log(Source+" called, on Sim " + SimIDStr(), 3);
 }
 
@@ -105,9 +88,6 @@ std::string HandlerData::ResponseAndStoreRequest(nlohmann::json& ResponseJSON,  
     //         ThisSimulation->StoreRequestHandled(Source, _RH.at(Source).Route, JSONRequestStr);
     //     }
     // }
-    if (ThisSimulation != nullptr) {
-        ThisSimulation->StoreRequestHandled(RoutePath_, JSONRequestStr);
-    }
 
     return ResponseJSON.dump();
 }
@@ -141,17 +121,6 @@ std::string HandlerData::StringResponse(std::string _Key, std::string _Value) {
     ResponseJSON["StatusCode"] = int(Status);
     ResponseJSON[_Key] = _Value;
     return ResponseJSON.dump();
-}
-
-int HandlerData::SimID() const {
-    return SimulationID;
-}
-std::string HandlerData::SimIDStr() const {
-    return std::to_string(SimulationID);
-}
-
-Simulator::Simulation* HandlerData::Sim() const {
-    return ThisSimulation;
 }
 
 const nlohmann::json& HandlerData::ReqJSON() const {
@@ -244,22 +213,6 @@ bool HandlerData::GetParString(const std::string& ParName, std::string& Value) {
     return GetParString(ParName, Value, RequestJSON);
 }
 
-bool HandlerData::GetParVec3FromJSON(const std::string& ParName, Simulator::Geometries::Vec3D& Value, nlohmann::json& _JSON, const std::string& Units) {
-    if (!GetParFloat(ParName+"X_"+Units, Value.x, _JSON)) {
-        return false;
-    }
-    if (!GetParFloat(ParName+"Y_"+Units, Value.y, _JSON)) {
-        return false;
-    }
-    if (!GetParFloat(ParName+"Z_"+Units, Value.z, _JSON)) {
-        return false;
-    }
-    return true;
-}
-
-bool HandlerData::GetParVec3(const std::string& ParName, Simulator::Geometries::Vec3D& Value, const std::string& Units) {
-    return GetParVec3FromJSON(ParName, Value, RequestJSON, Units);
-}
 
 bool HandlerData::GetParVecInt(const std::string& ParName, std::vector<int>& Value, nlohmann::json& _JSON) {
     nlohmann::json::iterator it;

@@ -15,11 +15,13 @@
 #include <memory>
 
 // Third-Party Libraries (BG convention: use <> instead of "")
+#include <nlohmann/json.hpp>
+
 
 // Internal Libraries (BG convention: use <> instead of "")
 #include <BG/Common/Logger/Logger.h>
 
-#include <Simulator/Structs/Simulation.h>
+// #include <Simulator/Structs/Simulation.h>
 
 // #include <RPC/ManagerTaskData.h>
 #include <RPC/APIStatusCode.h>
@@ -30,7 +32,7 @@ namespace NES {
 namespace API {
 
 
-typedef std::vector<std::unique_ptr<Simulator::Simulation>>* Simulations;
+// typedef std::vector<std::unique_ptr<Simulator::Simulation>>* Simulations;
 
 
 
@@ -40,7 +42,7 @@ class HandlerData {
 
 protected:
     // ManagerTaskData* ManTaskData;
-    Simulations SimVec = nullptr;
+    // Simulations SimVec = nullptr;
 
     BG::Common::Logger::LoggingSystem* Logger_ = nullptr; /**Pointer to the instance of the logging system*/
 
@@ -50,10 +52,10 @@ protected:
     BGStatusCode Status = BGStatusSuccess;
 
     int SimulationID = -1;
-    Simulator::Simulation* ThisSimulation = nullptr;
+    // Simulator::Simulation* ThisSimulation = nullptr;
 
 public:
-    HandlerData(const std::string& _JSONRequest, BG::Common::Logger::LoggingSystem* _Logger, std::string _RoutePath, Simulations _Simulations, bool PermitBusy = false, bool NoSimulation = false);
+    HandlerData(const std::string& _JSONRequest, BG::Common::Logger::LoggingSystem* _Logger, std::string _RoutePath);
 
     // See how this is used in Manager::SimulationCreate().
     // Simulator::Simulation* NewSimulation();
@@ -81,10 +83,8 @@ public:
     std::string ResponseWithID(const std::string& IDName, const std::string& IDValue);
     std::string StringResponse(std::string _Key, std::string _Value);
 
-    int SimID() const;
-    std::string SimIDStr() const;
 
-    Simulator::Simulation* Sim() const;
+    // Simulator::Simulation* Sim() const;
 
     const nlohmann::json& ReqJSON() const;
 
@@ -103,9 +103,9 @@ public:
     bool GetParString(const std::string& ParName, std::string& Value, nlohmann::json& _JSON);
     bool GetParString(const std::string& ParName, std::string& Value);
 
-    bool GetParVec3FromJSON(const std::string& ParName, Simulator::Geometries::Vec3D& Value, nlohmann::json& _JSON, const std::string& Units = "um");
+    // bool GetParVec3FromJSON(const std::string& ParName, Simulator::Geometries::Vec3D& Value, nlohmann::json& _JSON, const std::string& Units = "um");
 
-    bool GetParVec3(const std::string& ParName, Simulator::Geometries::Vec3D& Value, const std::string& Units = "um");
+    // bool GetParVec3(const std::string& ParName, Simulator::Geometries::Vec3D& Value, const std::string& Units = "um");
 
     bool GetParVecInt(const std::string& ParName, std::vector<int>& Value, nlohmann::json& _JSON);
     bool GetParVecInt(const std::string& ParName, std::vector<int>& Value);

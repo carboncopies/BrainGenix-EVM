@@ -96,7 +96,7 @@ std::string RPCManager::NESRequest(std::string _JSONRequest, int _SimulationIDOv
 
     // Parse Request
     //Logger_->Log(_JSONRequest, 3);
-    API::HandlerData Handle(_JSONRequest, Logger_, "NES", nullptr, true, true);
+    API::HandlerData Handle(_JSONRequest, Logger_, "EVM");
     if (Handle.HasError()) {
         return Handle.ErrResponse();
     }

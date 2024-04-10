@@ -1,1 +1,0 @@
-#include <VSDA/Ca/VoxelSubsystem/Structs/CaMicroscopeParameters.h>

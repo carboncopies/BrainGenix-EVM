@@ -18,7 +18,7 @@
 #include <nlohmann/json.hpp>
 
 // Internal Libraries (BG convention: use <> instead of "")
-#include <Simulator/Geometries/VecTools.h>
+// #include <Simulator/Geometries/VecTools.h>
 
 
 
@@ -75,7 +75,7 @@ void SetVec3(nlohmann::json* _Target, std::string _Input, std::string _Prefix, s
  * @param _Vector Reference to the Vec3D vector to be set.
  * @param _Input The input string.
  */
-void SetVec3(Simulator::Geometries::Vec3D& _Vector, std::string _Input);
+// void SetVec3(Simulator::Geometries::Vec3D& _Vector, std::string _Input);
 
 /**
  * @brief Set the JSON target from a 3D vector.
@@ -85,7 +85,7 @@ void SetVec3(Simulator::Geometries::Vec3D& _Vector, std::string _Input);
  * @param _Prefix The prefix to search for in the input.
  * @param _Units The units for the vector (default is "um").
  */
-void SetVec3(nlohmann::json & _Target, const Simulator::Geometries::Vec3D& _Input, const std::string & _Prefix, const std::string & _Units="um");
+// void SetVec3(nlohmann::json & _Target, const Simulator::Geometries::Vec3D& _Input, const std::string & _Prefix, const std::string & _Units="um");
 
 /**
  * @brief Helper function that sets the given vector given a pointer to some JSON, and a prefix and units to search for.
@@ -95,7 +95,7 @@ void SetVec3(nlohmann::json & _Target, const Simulator::Geometries::Vec3D& _Inpu
  * @param _Prefix The prefix to search for in the JSON.
  * @param _Units The units for the vector (default is "um").
  */
-void GetVec3(Simulator::Geometries::Vec3D& _Vector, const nlohmann::json* _Input, std::string _Prefix, std::string _Units="um");
+// void GetVec3(Simulator::Geometries::Vec3D& _Vector, const nlohmann::json* _Input, std::string _Prefix, std::string _Units="um");
 
 
 /**
@@ -105,7 +105,7 @@ void GetVec3(Simulator::Geometries::Vec3D& _Vector, const nlohmann::json* _Input
  * @param _Input Pointer to the JSON array object.
  * @param _Name Name of the parameter to retrieve.
  */
-void GetArrVec3(Simulator::Geometries::Vec3D& _Vector, const nlohmann::json* _Input, std::string _Name);
+// void GetArrVec3(Simulator::Geometries::Vec3D& _Vector, const nlohmann::json* _Input, std::string _Name);
 
 
 /**

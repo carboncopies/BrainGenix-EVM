@@ -102,7 +102,7 @@ message(STATUS "Finding gtest Package")
 find_package(GTest CONFIG REQUIRED)
 
 # Ensure config is copied to bin
-file(COPY "${SRC_DIR}/Data/NES.yaml" DESTINATION "${BIN_DIR}")
+file(COPY "${SRC_DIR}/Data/EVM.yaml" DESTINATION "${BIN_DIR}")
 
 
 
@@ -153,12 +153,12 @@ install(TARGETS ${PROJECT_NAME}
     LIBRARY DESTINATION ${INSTALL_PREFIX}
     DESTINATION ${INSTALL_PREFIX}
 )
-install(FILES "${SRC_DIR}/Data/NES.yaml"
+install(FILES "${SRC_DIR}/Data/EVM.yaml"
     DESTINATION ${INSTALL_PREFIX}
     COMPONENT Release
 )
 message(STATUS "Installing Unit File To '/etc/systemd/system'")
-install(FILES "${SRC_DIR}/Data/BrainGenix-NES.service"
+install(FILES "${SRC_DIR}/Data/BrainGenix-EVM.service"
     DESTINATION "/etc/systemd/system/"
     COMPONENT Release
 )
