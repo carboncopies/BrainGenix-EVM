@@ -52,9 +52,6 @@ RPCManager::~RPCManager() {
 }
 
 
-// void RPCManager::AddRequestHandler(std::string _RouteName, RouteAndHandler _Handler) {
-    // RequestHandlers_.insert(std::pair<std::string, std::function<std::string>&>(_RouteName, _Handler));
-// }
 
 void RPCManager::AddRoute(std::string _RouteHandle, std::function<std::string(std::string _JSONRequest)> _Function) {
     Logger_->Log("Registering Callback For Route '" + _RouteHandle + "'", 4);
@@ -74,6 +71,10 @@ bool BadReqID(int ReqID) {
     return false;
 }
 
+
+void SetupCallback(std::string _JSONRequest) {
+
+}
 
 
 /**
