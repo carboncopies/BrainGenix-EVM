@@ -1,4 +1,4 @@
 #!/bin/bash
 
-systemctl stop BrainGenix-NES
-systemctl disable BrainGenix-NES
+systemctl stop BrainGenix-EVM
+systemctl disable BrainGenix-EVM

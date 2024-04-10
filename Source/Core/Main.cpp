@@ -2,7 +2,7 @@
 
 
 /**
- * @brief The main entry point for the BrainGenix-NES Neuron Emulation System.
+ * @brief The main entry point for the BrainGenix-EVM Evaluation Manager.
  * 
  * This function initializes the system components, including configuration, logging, API server,
  * rendering pool, and simulator. It also prints the BrainGenix logo to the console and runs
@@ -26,25 +26,25 @@ int main(int NumArguments, char** ArgumentValues) {
     BG::NES::API::RPCManager APIManager(&SystemConfiguration, &Logger);
 
     // Setup RenderPools
-    BG::NES::Simulator::VSDA::RenderPool RenderPool(&Logger, false, 5);
-    BG::NES::Simulator::VisualizerPool VisualizerPool(&Logger, false, 1);
+    // BG::NES::Simulator::VSDA::RenderPool RenderPool(&Logger, false, 5);
+    // BG::NES::Simulator::VisualizerPool VisualizerPool(&Logger, false, 1);
 
     // Setup Simulator (Adding the routes here)
-    BG::NES::Simulator::SimulationRPCInterface SimulationRPCInterface(&Logger, &SystemConfiguration, &RenderPool, &VisualizerPool, &APIManager);
-    BG::NES::Simulator::GeometryRPCInterface   GeometryRPCInterface(&Logger, SimulationRPCInterface.GetSimulationVectorPtr(), &APIManager);
-    BG::NES::Simulator::ModelRPCInterface      ModelRPCInterface(&Logger, SimulationRPCInterface.GetSimulationVectorPtr(), &APIManager);
-    BG::NES::Simulator::VisualizerRPCInterface VisualizerRPCInterface(&Logger, SimulationRPCInterface.GetSimulationVectorPtr(), &APIManager);
-    BG::NES::Simulator::VSDA::VSDARPCInterface VSDARPCInterface(&Logger, &APIManager, SimulationRPCInterface.GetSimulationVectorPtr());
+    // BG::NES::Simulator::SimulationRPCInterface SimulationRPCInterface(&Logger, &SystemConfiguration, &RenderPool, &VisualizerPool, &APIManager);
+    // BG::NES::Simulator::GeometryRPCInterface   GeometryRPCInterface(&Logger, SimulationRPCInterface.GetSimulationVectorPtr(), &APIManager);
+    // BG::NES::Simulator::ModelRPCInterface      ModelRPCInterface(&Logger, SimulationRPCInterface.GetSimulationVectorPtr(), &APIManager);
+    // BG::NES::Simulator::VisualizerRPCInterface VisualizerRPCInterface(&Logger, SimulationRPCInterface.GetSimulationVectorPtr(), &APIManager);
+    // BG::NES::Simulator::VSDA::VSDARPCInterface VSDARPCInterface(&Logger, &APIManager, SimulationRPCInterface.GetSimulationVectorPtr());
 
     // Print ASCII BrainGenix Logo To Console
     BG::NES::Util::LogLogo(&Logger);
 
 
-    // Check if we have profiling enabled, if so do that then quit
-    if (SystemConfiguration.ProfilingStatus_ != BG::NES::Config::PROFILE_NONE) {
-        BG::NES::Profiling::Manager(&Logger, &SystemConfiguration, &SimulationRPCInterface, &RenderPool, &VisualizerPool, &APIManager);
-        return 0;
-    }
+    // // Check if we have profiling enabled, if so do that then quit
+    // if (SystemConfiguration.ProfilingStatus_ != BG::NES::Config::PROFILE_NONE) {
+    //     BG::NES::Profiling::Manager(&Logger, &SystemConfiguration, &SimulationRPCInterface, &RenderPool, &VisualizerPool, &APIManager);
+    //     return 0;
+    // }
 
     // Block forever while servers are running
     while (true) {

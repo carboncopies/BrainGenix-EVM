@@ -8,7 +8,7 @@ namespace Util {
 void LogLogo(BG::Common::Logger::LoggingSystem* Logger) {
 
     // Log BG Logo Text
-    Logger->Log("Starting BrainGenix-NES Instance", 2);
+    Logger->Log("Starting BrainGenix-EVM Instance", 2);
     Logger->Log("", 5);
     Logger->Log("---------------------------------------------------------------------------", 5);
     Logger->Log("\x1b[38;2;0;128;55m██████╗ ██████╗  █████╗ ██╗███╗   ██╗\x1b[38;2;130;68;208m ██████╗ ███████╗███╗   ██╗██╗██╗  ██╗", 5);
