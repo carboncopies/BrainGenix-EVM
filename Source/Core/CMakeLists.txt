@@ -25,6 +25,9 @@ set(MAIN_SOURCES
   ${SRC_DIR}/Core/RPC/StaticRoutes.h
   ${SRC_DIR}/Core/RPC/ManagerTaskData.cpp
   ${SRC_DIR}/Core/RPC/ManagerTaskData.h
+  ${SRC_DIR}/Core/RPC/SafeClient.cpp
+  ${SRC_DIR}/Core/RPC/SafeClient.h
+
 
   ${SRC_DIR}/Core/Util/JSONHelpers.cpp
   ${SRC_DIR}/Core/Util/JSONHelpers.h

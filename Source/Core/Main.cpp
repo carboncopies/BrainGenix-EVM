@@ -2,7 +2,7 @@
 
 
 /**
- * @brief The main entry point for the BrainGenix-EVM Evaluation Manager.
+ * @brief The main entry point for the BrainGenix-EVM Evaluation Metrics.
  * 
  * This function initializes the system components, including configuration, logging, API server,
  * rendering pool, and simulator. It also prints the BrainGenix logo to the console and runs

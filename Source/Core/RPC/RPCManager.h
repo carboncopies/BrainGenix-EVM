@@ -25,6 +25,8 @@
 
 #include <BG/Common/Logger/Logger.h>
 
+#include <RPC/SafeClient.h>
+
 #include <Config/Config.h>
 
 
@@ -47,7 +49,7 @@ private:
     std::unique_ptr<rpc::server> RPCServer_; /**Instance of RPC Server from rpclib*/
     BG::Common::Logger::LoggingSystem* Logger_ = nullptr; /**Pointer to the instance of the logging system*/
 
-
+    std::unique_ptr<SafeClient> APIClient_; /**Instance of the smartclient, allows us to talk back to the API's RPC server */
 
     std::map<std::string, std::function<std::string(std::string _JSONRequest)>> RequestHandlers_;
 
@@ -96,7 +98,7 @@ public:
     /**
      * @brief Called by the API service shortly after initialization, and allows the system to talk back to the API and request other calls.
     */
-    void SetupCallback(std::string _RouteHandle);
+    std::string SetupCallback(std::string _RouteHandle);
 
 
     std::string EVMRequest(std::string _JSONRequest, int _SimulationIDOverride = -1); // Generic JSON-based EVM requests.
