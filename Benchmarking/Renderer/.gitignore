@@ -1,8 +1,0 @@
-*.bmp
-*.png
-*.jpg
-*.tiff
-*.jpeg
-
-__pycache__/*
-.*/

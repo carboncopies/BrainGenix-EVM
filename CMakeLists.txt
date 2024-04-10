@@ -10,7 +10,7 @@ set(CMAKE_SCRIPTS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/CMake/CompileInfo")
 set(PROJECT_BUILD_DIR ${CMAKE_CURRENT_BINARY_DIR})
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake/Utils)
 
-set(INSTALL_PREFIX "/etc/BrainGenix/NES")
+set(INSTALL_PREFIX "/etc/BrainGenix/EVM")
 
 
 # Setup vcpkg script with CMake (note: should be placed before project() call)
@@ -19,13 +19,13 @@ set(CMAKE_TOOLCHAIN_FILE ${LIB_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake CACHE
 
 # Define Project
 project(
-	"BrainGenix-NES"
-	VERSION "2024.02.02"
+	"BrainGenix-EVM"
+	VERSION "2024.04.10"
 	LANGUAGES CXX
 )
 
 # Set project static library name
-set(PROJECT_LIBRARY_NAME "braingenix_nes")
+set(PROJECT_LIBRARY_NAME "BrainGenix-EVM-Lib")
 
 
 # Include Util CMake Scripts
