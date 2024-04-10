@@ -25,29 +25,33 @@ namespace EVM {
 
 bool SafeClient::RunVersionCheck() {
 
+    if (Client_ == nullptr) {
+        return false;
+    }
+
     // Run a query to force it to connect (or fail)
     std::string Temp;
     MakeJSONQuery("GetAPIVersion", &Temp);
     
 
     // Update our internal status of how the connection is doing
-    ::rpc::client::connection_state NESStatus = Client_->get_connection_state();
-    if (NESStatus != ::rpc::client::connection_state::connected) {
-        Logger_->Log("Unable to connect to NES service", 3);
+    ::rpc::client::connection_state RPCStatus = Client_->get_connection_state();
+    if (RPCStatus != ::rpc::client::connection_state::connected) {
+        Logger_->Log("Unable to connect to RPC Service", 3);
     } else {
         Logger_->Log("NES RPC Connection SERVICE_HEALTHY", 1);
     }
 
     // Check Version again (used as a heartbeat 'isAlive' check)
-    std::string NESVersion = "undefined";
-    bool Status = MakeJSONQuery("GetAPIVersion", &NESVersion, true);
+    std::string Version = "undefined";
+    bool Status = MakeJSONQuery("GetAPIVersion", &Version, true);
     if (!Status) {
-        Logger_->Log("Failed To Get NES API Version String", 1);
+        Logger_->Log("Failed To Get RPC Service API Version String", 1);
         return false;
     }
 
-    if (NESVersion != VERSION) {
-        Logger_->Log("Client/Server Version Mismatch! This might make stuff break. Server " + NESVersion + " Client " + VERSION, 9);
+    if (Version != VERSION) {
+        Logger_->Log("Client/Server Version Mismatch! This might make stuff break. Server " + Version + " Client " + VERSION, 9);
         return false;
     }
     return true;
@@ -59,20 +63,20 @@ bool SafeClient::Connect() {
     IsHealthy_ = false;
     Client_ = nullptr;
 
-    // Extract NES Client Parameters, Connect, Configure
+    // Extract RPC Service Client Parameters, Connect, Configure
     std::string NESHost = RPCHost_;
     int NESPort = RPCPort_;
     int NESTimeout_ms = RPCTimeout_ms;
     
-    Logger_->Log("Connecting to NES on port: " + std::to_string(NESPort), 1);
-    Logger_->Log("Connecting to NES on host: " + NESHost, 1);
-    Logger_->Log("Connecting to NES with timeout_ms of: " + std::to_string(NESTimeout_ms), 1);
+    Logger_->Log("Connecting to RPC Service on port: " + std::to_string(NESPort), 1);
+    Logger_->Log("Connecting to RPC Service on host: " + NESHost, 1);
+    Logger_->Log("Connecting to RPC Service with timeout_ms of: " + std::to_string(NESTimeout_ms), 1);
 
 
     try {
         Client_ = std::make_unique<::rpc::client>(NESHost.c_str(), NESPort);
     } catch (std::system_error& e) {
-        Logger_->Log("Cannot find NES host (authoritative)", 9);
+        Logger_->Log("Cannot find RPC Service host (authoritative)", 9);
         return false;
     }
     Client_->set_timeout(NESTimeout_ms);
@@ -147,7 +151,7 @@ bool SafeClient::MakeJSONQuery(std::string _Route, std::string _Query, std::stri
         Logger_->Log("NES remote returned RPC error",3);
         return false;
     } catch (std::system_error& e) {
-        Logger_->Log("Cannot talk to NES host",3);
+        Logger_->Log("Cannot talk to RPC Service host",3);
         return false;
     }
     return true;
@@ -158,7 +162,7 @@ void SafeClient::RPCManagerThread() {
 
     // Wait Until Config Valid
     while (RPCHost_ == "") {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
 
 
@@ -171,12 +175,12 @@ void SafeClient::RPCManagerThread() {
         // If not healthy, re-establish connection, retry stuff... For now, nothing...
         if (!IsHealthy) {
             if (!Connect()) {
-                Logger_->Log("Failed To Reconnect To NES Service",3);
+                Logger_->Log("Failed To Reconnect To RPC Service (Connect() returned false)", 3);
             }
         }
 
         // Wait 1000ms before polling again
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
 
     }

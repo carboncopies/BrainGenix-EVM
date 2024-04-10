@@ -40,6 +40,10 @@ RPCManager::RPCManager(Config::Config* _Config, BG::Common::Logger::LoggingSyste
     AddRoute("Echo", _Logger, &Echo);
     AddRoute("EVM", Logger_, [this](std::string RequestJSON){ return EVMRequest(RequestJSON);});
     AddRoute("SetCallback", Logger_, [this](std::string RequestJSON){ return SetupCallback(RequestJSON);});
+
+    // Add EVM Routes
+    AddRoute("Debug/Echo", std::bind(Echo, std::placeholders::_1));
+    // AddRoute("Debug/Echo", std::bind(&RPCManager::Echo, this, std::placeholders::_1))
     
 
     int ThreadCount = std::thread::hardware_concurrency();
@@ -82,7 +86,7 @@ std::string RPCManager::SetupCallback(std::string _JSONRequest) {
     int Port = Params["CallbackPort"];
 
     APIClient_->SetHostPort(Host, Port);
-    APIClient_->SetTimeout(10000);
+    APIClient_->SetTimeout(2500);
     APIClient_->Reconnect();
 
     Logger_->Log("System Callback To API Service Registered To '" + Host + ":" + std::to_string(Port) + "'", 5);
