@@ -1,7 +1,7 @@
 #include <Util/JSONHelpers.h>
 
 namespace BG {
-namespace NES {
+namespace EVM {
 namespace Util {
 
 int GetInt(const nlohmann::json *_JSON, std::string _ParamName) {
@@ -95,5 +95,5 @@ void GetStringVector(std::vector<std::string>* _Vector, const nlohmann::json* _I
 }
 
 }; // Close Namespace Util
-}; // Close Namespace NES
+}; // Close Namespace EVM
 }; // Close Namespace BG

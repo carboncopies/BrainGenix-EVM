@@ -1,5 +1,5 @@
 //=================================================================//
-// This file is part of the BrainGenix-NES Neuron Emulation System //
+// This file is part of the BrainGenix-EVM Neuron Emulation System //
 //=================================================================//
 
 /*
@@ -24,11 +24,11 @@
 
 
 namespace BG {
-namespace NES {
+namespace EVM {
 namespace Config {
 
 /**
- * @brief Configuration Manager Class - Provides program configuration capabilities to the NES service.
+ * @brief Configuration Manager Class - Provides program configuration capabilities to the EVM service.
  *
  * The Manager class is responsible for managing the configuration file parser, which generates a config struct.
  * This struct is then provided to the rest of the system for configuration purposes.
@@ -67,5 +67,5 @@ public:
 };
 
 }; // Close Namespace Config
-}; // Close Namespace NES
+}; // Close Namespace EVM
 }; // Close Namespace BG

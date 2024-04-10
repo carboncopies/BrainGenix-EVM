@@ -16,7 +16,7 @@
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    MERCHANTABILITY or FITEVMS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
 
     You should have received a copy of the GNU Affero General Public License
@@ -43,7 +43,7 @@
 
 
 namespace BG {
-namespace NES {
+namespace EVM {
 namespace Renderer {
 namespace Primitive {
 
@@ -61,7 +61,7 @@ struct Sphere {
     vsg::vec3 Position_; /**Position of the sphere from the origin of the world*/
     float Radius_;       /**Radius of the sphere*/
 
-    Shaders::Shader* Shader_ = nullptr; /**Defines the info/type of shader to be used for this cube*/
+    Shaders::Shader* Shader_ = nullptr; /**DefiEVM the info/type of shader to be used for this cube*/
 
 };
 

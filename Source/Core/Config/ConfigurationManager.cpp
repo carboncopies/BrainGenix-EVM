@@ -3,7 +3,7 @@
 
 
 namespace BG {
-namespace NES {
+namespace EVM {
 namespace Config {
 
 
@@ -18,7 +18,7 @@ Manager::Manager(int _NumArgs, char** _Args) {
     ConfigParser.~ConfigFileParser();
 
     if (_NumArgs > 1) {
-        std::cout<<"Detected that you're specifying a profiling argument, NES isn't intended to take arguments normally, so if you didn't expect this, use the config file instead!\n";
+        std::cout<<"Detected that you're specifying a profiling argument, EVM isn't intended to take arguments normally, so if you didn't expect this, use the config file instead!\n";
         Config_.ProfilingStatus_ = (ProfilingStatus)atoi(_Args[1]);
     }
 
@@ -37,5 +37,5 @@ Config& Manager::GetConfig() {
 
 
 }; // Close Namespace Config
-}; // Close Namespace NES
+}; // Close Namespace EVM
 }; // Close Namespace BG

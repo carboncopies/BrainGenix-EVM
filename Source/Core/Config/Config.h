@@ -1,5 +1,5 @@
 //=================================================================//
-// This file is part of the BrainGenix-NES Neuron Emulation System //
+// This file is part of the BrainGenix-EVM Neuron Emulation System //
 //=================================================================//
 
 /*
@@ -22,12 +22,12 @@
 
 
 namespace BG {
-namespace NES {
+namespace EVM {
 namespace Config {
 
 /**
  * @brief Simple enum which causes the program to run a certain set of preprogrammed profiling activities, enabling easier profiling.
- * Ignore these for basically everything else. (They're set by a command line flag (Ex. `./NES 1` would run the voxel array generator 1k spheres.) 
+ * Ignore these for basically everything else. (They're set by a command line flag (Ex. `./EVM 1` would run the voxel array generator 1k spheres.) 
  * 
  */
 enum ProfilingStatus {
@@ -67,5 +67,5 @@ struct Config {
 
 
 }; // Close Namespace Config
-}; // Close Namespace NES
+}; // Close Namespace EVM
 }; // Close Namespace BG

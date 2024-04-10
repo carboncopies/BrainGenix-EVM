@@ -3,7 +3,7 @@
 
 
 namespace BG {
-namespace NES {
+namespace EVM {
 namespace Renderer {
 
 vsg::ref_ptr<vsg::ImageView> createColorImageView(vsg::ref_ptr<vsg::Device> device, const VkExtent2D& extent, VkFormat imageFormat, VkSampleCountFlagBits samples)

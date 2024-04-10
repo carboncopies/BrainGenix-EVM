@@ -4,7 +4,7 @@
 //=================================//
 
 /*
-    Description: This file defines the image struct, used to provide work to the encoder pool.
+    Description: This file defiEVM the image struct, used to provide work to the encoder pool.
     Additional Notes: None
     Date Created: 2024-01-13
     Author(s): Thomas Liao
@@ -19,7 +19,7 @@
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    MERCHANTABILITY or FITEVMS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
 
     You should have received a copy of the GNU Affero General Public License
@@ -44,7 +44,7 @@
 
 
 namespace BG {
-namespace NES {
+namespace EVM {
 namespace Renderer {
 
 

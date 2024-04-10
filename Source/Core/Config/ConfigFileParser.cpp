@@ -2,7 +2,7 @@
 
 
 namespace BG {
-namespace NES {
+namespace EVM {
 namespace Config {
 
 
@@ -44,8 +44,8 @@ ConfigFileParser::ConfigFileParser(Config &_Config) {
 
 
     // Populate Configuration Struct With Data From Configuration File
-    _Config.PortNumber = Config["Network_NES_API_Port"].as<int>();
-    _Config.Host = Config["Network_NES_API_Host"].as<std::string>();
+    _Config.PortNumber = Config["Network_EVM_API_Port"].as<int>();
+    _Config.Host = Config["Network_EVM_API_Host"].as<std::string>();
 
 }
 
@@ -57,5 +57,5 @@ ConfigFileParser::~ConfigFileParser() {
 
 
 }; // Close Namespace Config
-}; // Close Namespace NES
+}; // Close Namespace EVM
 }; // Close Namespace BG

@@ -17,7 +17,7 @@ RENDERDOC_API_1_1_2 *rdoc_api = NULL;
 
 
 namespace BG {
-namespace NES {
+namespace EVM {
 namespace Renderer {
 
 
@@ -48,7 +48,7 @@ Manager::~Manager() {
 
 bool Manager::Initialize(bool _Windowed) {
     assert(Logger_ != nullptr);
-    Logger_->Log("Initializing NES Rendering Subsystem", 5);
+    Logger_->Log("Initializing EVM Rendering Subsystem", 5);
 
     // Iniitalize State Structs
     RenderData_ = std::make_unique<State::RenderData>();
@@ -57,7 +57,7 @@ bool Manager::Initialize(bool _Windowed) {
     Logger_->Log("Setting Up Configuration Options", 1);
     RenderData_->Options_ = vsg::Options::create();
     RenderData_->WindowTraits_ = vsg::WindowTraits::create();
-    RenderData_->WindowTraits_->windowTitle = "BrainGenix-NES";
+    RenderData_->WindowTraits_->windowTitle = "BrainGenix-EVM";
 
 
     // Check if we're running windowed or not
@@ -536,7 +536,7 @@ bool Manager::DrawFrame() {
         return false;
     }
 
-    // Lock the scene mutex to ensure we're the only ones accessing it right now
+    // Lock the scene mutex to ensure we're the only oEVM accessing it right now
     LockScene();
 
 

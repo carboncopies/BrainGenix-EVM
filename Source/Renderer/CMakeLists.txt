@@ -1,4 +1,4 @@
-add_library(NESRenderer 
+add_library(EVMRenderer 
 
     "BG/Renderer/Interface.h"
     "BG/Renderer/Interface.cpp"
@@ -39,13 +39,13 @@ add_library(NESRenderer
     "BG/Renderer/Math/MathHelpers.cpp"
 
 )
-target_link_libraries(NESRenderer
+target_link_libraries(EVMRenderer
     bg-common-logger
     Vulkan::Vulkan
     vsg::vsg
 
 
 )
-target_include_directories(NESRenderer PUBLIC ${SRC_DIR}/Renderer)
+target_include_directories(EVMRenderer PUBLIC ${SRC_DIR}/Renderer)
 
-target_include_directories(NESRenderer PRIVATE ${Stb_INCLUDE_DIR})
+target_include_directories(EVMRenderer PRIVATE ${Stb_INCLUDE_DIR})

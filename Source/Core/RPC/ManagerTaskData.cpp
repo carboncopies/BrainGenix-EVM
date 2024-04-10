@@ -15,11 +15,11 @@
 
 
 namespace BG {
-namespace NES {
+namespace EVM {
 namespace API {
 
 
 
 }; // Close Namespace API
-}; // Close Namespace NES
+}; // Close Namespace EVM
 }; // Close Namespace BG

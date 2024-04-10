@@ -3,7 +3,7 @@
 
 
 namespace BG {
-namespace NES {
+namespace EVM {
 namespace API {
 
 std::string GetAPIVersion() {
@@ -15,5 +15,5 @@ std::string Echo(std::string _Data) {
 }
 
 } // Close Namespace API
-} // Close Namespace NES
+} // Close Namespace EVM
 } // Close Namespace BG

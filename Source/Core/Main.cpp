@@ -15,34 +15,34 @@
 int main(int NumArguments, char** ArgumentValues) {
 
     // Startup With Config Manager, Will Read Args And Config File, Then Parse Into Config Struct
-    BG::NES::Config::Manager ConfigManager(NumArguments, ArgumentValues);
-    BG::NES::Config::Config& SystemConfiguration = ConfigManager.GetConfig();
+    BG::EVM::Config::Manager ConfigManager(NumArguments, ArgumentValues);
+    BG::EVM::Config::Config& SystemConfiguration = ConfigManager.GetConfig();
 
     // Setup Logging System
     BG::Common::Logger::LoggingSystem Logger;
     Logger.SetKeepVectorLogs(false);
 
     // Setup API Server
-    BG::NES::API::RPCManager APIManager(&SystemConfiguration, &Logger);
+    BG::EVM::API::RPCManager APIManager(&SystemConfiguration, &Logger);
 
     // Setup RenderPools
-    // BG::NES::Simulator::VSDA::RenderPool RenderPool(&Logger, false, 5);
-    // BG::NES::Simulator::VisualizerPool VisualizerPool(&Logger, false, 1);
+    // BG::EVM::Simulator::VSDA::RenderPool RenderPool(&Logger, false, 5);
+    // BG::EVM::Simulator::VisualizerPool VisualizerPool(&Logger, false, 1);
 
     // Setup Simulator (Adding the routes here)
-    // BG::NES::Simulator::SimulationRPCInterface SimulationRPCInterface(&Logger, &SystemConfiguration, &RenderPool, &VisualizerPool, &APIManager);
-    // BG::NES::Simulator::GeometryRPCInterface   GeometryRPCInterface(&Logger, SimulationRPCInterface.GetSimulationVectorPtr(), &APIManager);
-    // BG::NES::Simulator::ModelRPCInterface      ModelRPCInterface(&Logger, SimulationRPCInterface.GetSimulationVectorPtr(), &APIManager);
-    // BG::NES::Simulator::VisualizerRPCInterface VisualizerRPCInterface(&Logger, SimulationRPCInterface.GetSimulationVectorPtr(), &APIManager);
-    // BG::NES::Simulator::VSDA::VSDARPCInterface VSDARPCInterface(&Logger, &APIManager, SimulationRPCInterface.GetSimulationVectorPtr());
+    // BG::EVM::Simulator::SimulationRPCInterface SimulationRPCInterface(&Logger, &SystemConfiguration, &RenderPool, &VisualizerPool, &APIManager);
+    // BG::EVM::Simulator::GeometryRPCInterface   GeometryRPCInterface(&Logger, SimulationRPCInterface.GetSimulationVectorPtr(), &APIManager);
+    // BG::EVM::Simulator::ModelRPCInterface      ModelRPCInterface(&Logger, SimulationRPCInterface.GetSimulationVectorPtr(), &APIManager);
+    // BG::EVM::Simulator::VisualizerRPCInterface VisualizerRPCInterface(&Logger, SimulationRPCInterface.GetSimulationVectorPtr(), &APIManager);
+    // BG::EVM::Simulator::VSDA::VSDARPCInterface VSDARPCInterface(&Logger, &APIManager, SimulationRPCInterface.GetSimulationVectorPtr());
 
     // Print ASCII BrainGenix Logo To Console
-    BG::NES::Util::LogLogo(&Logger);
+    BG::EVM::Util::LogLogo(&Logger);
 
 
     // // Check if we have profiling enabled, if so do that then quit
-    // if (SystemConfiguration.ProfilingStatus_ != BG::NES::Config::PROFILE_NONE) {
-    //     BG::NES::Profiling::Manager(&Logger, &SystemConfiguration, &SimulationRPCInterface, &RenderPool, &VisualizerPool, &APIManager);
+    // if (SystemConfiguration.ProfilingStatus_ != BG::EVM::Config::PROFILE_NONE) {
+    //     BG::EVM::Profiling::Manager(&Logger, &SystemConfiguration, &SimulationRPCInterface, &RenderPool, &VisualizerPool, &APIManager);
     //     return 0;
     // }
 

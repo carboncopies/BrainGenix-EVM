@@ -1,5 +1,5 @@
 //=================================================================//
-// This file is part of the BrainGenix-NES Neuron Emulation System //
+// This file is part of the BrainGenix-EVM Neuron Emulation System //
 //=================================================================//
 
 /*
@@ -26,7 +26,7 @@
 
 
 namespace BG {
-namespace NES {
+namespace EVM {
 namespace Config {
 
 
@@ -35,7 +35,7 @@ namespace Config {
  * @brief The configuration file parser loads and parses all parameters saved in the configuration file.
  *
  * The ConfigFileParser class is responsible for loading and parsing parameters from a configuration file.
- * The default configuration file is set to "NES.yaml," but users can manually specify a path using command-line options.
+ * The default configuration file is set to "EVM.yaml," but users can manually specify a path using command-line options.
  * If the parser fails to load the file (due to non-existence or unreadability), the program will exit with an error message.
  * Users typically configure the file without setting command-line arguments.
  */
@@ -62,5 +62,5 @@ public:
 };
 
 }; // Close Namespace Config
-}; // Close Namespace NES
+}; // Close Namespace EVM
 }; // Close Namespace BG

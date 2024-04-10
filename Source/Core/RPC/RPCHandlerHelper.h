@@ -1,5 +1,5 @@
 //=================================================================//
-// This file is part of the BrainGenix-NES Neuron Emulation System //
+// This file is part of the BrainGenix-EVM Neuron Emulation System //
 //=================================================================//
 
 /*
@@ -28,7 +28,7 @@
 
 
 namespace BG {
-namespace NES {
+namespace EVM {
 namespace API {
 
 
@@ -69,10 +69,10 @@ public:
     //       nlohmann::json, as that is a way to accidentally a JSON object
     //       into JSON containing a single string, e.g. by accidentally
     //       passing ResponseJSON.dump() instead of ResponseJSON.
-    // Note: Calling this from NESRequest uses store==false, because we only
+    // Note: Calling this from EVMRequest uses store==false, because we only
     //       want to store the calls from their actual handlers, not from the
-    //       NESRequest batch handler. We don't want to double-count the calls,
-    //       and we want to store the individual ones, because they may be
+    //       EVMRequest batch handler. We don't want to double-count the calls,
+    //       and we want to store the individual oEVM, because they may be
     //       intended for different simulations (dependeing on their SimulationID).
     std::string ResponseAndStoreRequest(nlohmann::json& ResponseJSON, bool store = true);
     std::string ErrResponse(int _Status);
@@ -118,5 +118,5 @@ public:
 
 
 }; // Close Namespace API
-}; // Close Namespace NES
+}; // Close Namespace EVM
 }; // Close Namespace BG

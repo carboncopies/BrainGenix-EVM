@@ -1,5 +1,5 @@
 //=================================================================//
-// This file is part of the BrainGenix-NES Neuron Emulation System //
+// This file is part of the BrainGenix-EVM Neuron Emulation System //
 //=================================================================//
 
 /*
@@ -30,11 +30,11 @@
 
 
 namespace BG {
-namespace NES {
+namespace EVM {
 namespace API {
 
 /**
- * @brief Manages the NES remote procedure call (RPC) host.
+ * @brief Manages the EVM remote procedure call (RPC) host.
  *
  * The RPCManager class owns the RPC server and handles its initialization and destruction at the end of the program's run.
  * It also takes a copy of the systemwide configuration struct to configure the RPC server (e.g., host and port).
@@ -93,7 +93,7 @@ private:
         // {"SetRecordInstruments", {"", SetRecordInstrumentsHandler} },
         // {"GetInstrumentRecordings", {"", GetInstrumentRecordingsHandler} },
 
-        // {"NESRequest", {"NES", nullptr}},
+        // {"EVMRequest", {"EVM", nullptr}},
 
         // {"ManTaskStatus", {"ManTaskStatus", ManTaskStatusHandler}},
 
@@ -139,7 +139,7 @@ public:
 
  
     /**
-     * @brief Adds a route to the NES RPC Handler.
+     * @brief Adds a route to the EVM RPC Handler.
      * 
      * @param _RouteHandle 
      * @param _Function 
@@ -149,7 +149,7 @@ public:
     
 
 
-    std::string NESRequest(std::string _JSONRequest, int _SimulationIDOverride = -1); // Generic JSON-based NES requests.
+    std::string EVMRequest(std::string _JSONRequest, int _SimulationIDOverride = -1); // Generic JSON-based EVM requests.
 
 
     /**
@@ -170,5 +170,5 @@ public:
 };
 
 }; // Close Namespace API
-}; // Close Namespace NES
+}; // Close Namespace EVM
 }; // Close Namespace BG

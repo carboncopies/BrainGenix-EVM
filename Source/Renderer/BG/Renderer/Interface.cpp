@@ -18,7 +18,7 @@
 
 
 namespace BG {
-namespace NES {
+namespace EVM {
 namespace Renderer {
 
 
@@ -48,7 +48,7 @@ Interface::Interface(BG::Common::Logger::LoggingSystem* _Logger) {
 
 Interface::~Interface() {
     assert(Logger_ != nullptr);
-    Logger_->Log("Shutting Down NES Rendering Subsystem", 3);
+    Logger_->Log("Shutting Down EVM Rendering Subsystem", 3);
 
     if (IsWindowed_) {
         ThreadExit_ = true;

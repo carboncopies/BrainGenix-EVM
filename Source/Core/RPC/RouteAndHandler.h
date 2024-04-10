@@ -1,5 +1,5 @@
 //=================================================================//
-// This file is part of the BrainGenix-NES Neuron Emulation System //
+// This file is part of the BrainGenix-EVM Neuron Emulation System //
 //=================================================================//
 
 /*
@@ -23,7 +23,7 @@
 
 
 namespace BG {
-namespace NES {
+namespace EVM {
 namespace API {
 
 
@@ -33,9 +33,9 @@ namespace API {
 //           a bunch of unnecessary extra work - you can just pass references
 //           to components of a JSON object as a JSON object.
 //           E.g. call AddBSNeuron(ReqParams) where ReqParams is as obtained
-//           in NESRequest() below.
+//           in EVMRequest() below.
 
-// typedef std::string NESRequest_func_t(const nlohmann::json&);
+// typedef std::string EVMRequest_func_t(const nlohmann::json&);
 
 struct RouteAndHandler {
     std::string Route_;
@@ -46,5 +46,5 @@ struct RouteAndHandler {
 
 
 }; // Close Namespace API
-}; // Close Namespace NES
+}; // Close Namespace EVM
 }; // Close Namespace BG

@@ -1,7 +1,7 @@
 #include <Util/LogLogo.h>
 
 namespace BG {
-namespace NES {
+namespace EVM {
 namespace Util {
 
 
@@ -28,5 +28,5 @@ void LogLogo(BG::Common::Logger::LoggingSystem* Logger) {
 }
 
 }; // Close Namespace Util
-}; // Close Namespace NES
+}; // Close Namespace EVM
 }; // Close Namespace BG

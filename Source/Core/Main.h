@@ -1,10 +1,10 @@
 //=================================================================//
-// This file is part of the BrainGenix-NES Neuron Emulation System //
+// This file is part of the BrainGenix-EVM Neuron Emulation System //
 //=================================================================//
 
 /*
     Description: 
-        This header file serves as the main entry point for the BrainGenix-NES Neuron Emulation System.
+        This header file serves as the main entry point for the BrainGenix-EVM Neuron Emulation System.
         It includes essential libraries and sets up the main function for the system.
 
     Additional Notes: 
@@ -42,7 +42,7 @@
 // #include <Profiling/ProfilingManager.h>
 
 /**
- * @brief The main entry point for the BrainGenix-NES Neuron Emulation System.
+ * @brief The main entry point for the BrainGenix-EVM Neuron Emulation System.
  * 
  * This function initializes the system, sets up essential components, and starts the main loop.
  * 

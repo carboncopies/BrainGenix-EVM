@@ -17,7 +17,7 @@
 
 
 namespace BG {
-namespace NES {
+namespace EVM {
 namespace API {
 
 
@@ -36,7 +36,7 @@ RPCManager::RPCManager(Config::Config* _Config, BG::Common::Logger::LoggingSyste
     // Add predefined routes to the RPC server
     AddRoute("GetAPIVersion", _Logger, &GetAPIVersion);
     AddRoute("Echo", _Logger, &Echo);
-    AddRoute("NES", Logger_, [this](std::string RequestJSON){ return NESRequest(RequestJSON);});
+    AddRoute("EVM", Logger_, [this](std::string RequestJSON){ return EVMRequest(RequestJSON);});
     
 
     int ThreadCount = std::thread::hardware_concurrency();
@@ -92,7 +92,7 @@ bool BadReqID(int ReqID) {
  *   <more requests>
  * ]
  */
-std::string RPCManager::NESRequest(std::string _JSONRequest, int _SimulationIDOverride) { // Generic JSON-based NES requests.
+std::string RPCManager::EVMRequest(std::string _JSONRequest, int _SimulationIDOverride) { // Generic JSON-based EVM requests.
 
     // Parse Request
     //Logger_->Log(_JSONRequest, 3);
@@ -146,7 +146,7 @@ std::string RPCManager::NESRequest(std::string _JSONRequest, int _SimulationIDOv
             if (!it->second) {
                 ReqResponseJSON["ReqID"] = ReqID;
                 Logger_->Log("Error, Handler Is Null For Call " + ReqFunc + ", Continuing Anyway", 7);
-                // ReqResponseJSON["StatusCode"] = 1; // not a valid NES request *** TODO: use the right code
+                // ReqResponseJSON["StatusCode"] = 1; // not a valid EVM request *** TODO: use the right code
             } else {
                 Logger_->Log("DEBUG -> Got Request For '" + ReqFunc + "'", 0);
                 if (_SimulationIDOverride != -1) {
@@ -185,5 +185,5 @@ std::string RPCManager::NESRequest(std::string _JSONRequest, int _SimulationIDOv
 
 
 }; // Close Namespace API
-}; // Close Namespace NES
+}; // Close Namespace EVM
 }; // Close Namespace BG

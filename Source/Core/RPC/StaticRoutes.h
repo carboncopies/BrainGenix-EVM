@@ -1,9 +1,9 @@
 //=================================================================//
-// This file is part of the BrainGenix-NES Neuron Emulation System //
+// This file is part of the BrainGenix-EVM Neuron Emulation System //
 //=================================================================//
 
 /*
-    Description: This file provides some basic static routes for NES.
+    Description: This file provides some basic static routes for EVM.
     Additional Notes: None
     Date Created: 2023-06-26
 */
@@ -20,7 +20,7 @@
 
 
 namespace BG {
-namespace NES {
+namespace EVM {
 namespace API {
 
 
@@ -46,5 +46,5 @@ std::string Echo(std::string _Data);
 
 
 }; // Close Namespace API
-}; // Close Namespace NES
+}; // Close Namespace EVM
 }; // Close Namespace BG

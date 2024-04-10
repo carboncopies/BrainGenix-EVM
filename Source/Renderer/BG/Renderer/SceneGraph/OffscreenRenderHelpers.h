@@ -28,7 +28,7 @@
 
 
 namespace BG {
-namespace NES {
+namespace EVM {
 namespace Renderer {
 
 /**

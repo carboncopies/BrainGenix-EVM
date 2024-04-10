@@ -1,5 +1,5 @@
 //=================================================================//
-// This file is part of the BrainGenix-NES Neuron Emulation System //
+// This file is part of the BrainGenix-EVM Neuron Emulation System //
 //=================================================================//
 
 /*
@@ -24,7 +24,7 @@
 
 
 namespace BG {
-namespace NES {
+namespace EVM {
 namespace Util {
 
 
@@ -139,5 +139,5 @@ void GetStringVector(std::vector<std::string>* _Vector, const nlohmann::json* _I
 
 
 }; // Close Namespace Util
-}; // Close Namespace NES
+}; // Close Namespace EVM
 }; // Close Namespace BG

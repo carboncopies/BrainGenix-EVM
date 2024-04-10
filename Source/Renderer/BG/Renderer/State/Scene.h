@@ -16,7 +16,7 @@
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    MERCHANTABILITY or FITEVMS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
 
     You should have received a copy of the GNU Affero General Public License
@@ -43,7 +43,7 @@
 
 
 namespace BG {
-namespace NES {
+namespace EVM {
 namespace Renderer {
 namespace State {
 
@@ -59,7 +59,7 @@ struct Scene {
     vsg::ref_ptr<vsg::Group> Group_; /**Group that contains the scene graph*/
 
     // Note: that we will likely need to make a list of cameras in the
-    // future that can be switched between as most scenes will likely have more than one camera
+    // future that can be switched between as most sceEVM will likely have more than one camera
     vsg::ref_ptr<vsg::Camera> Camera_; /**Camera object for the scene*/
 
 

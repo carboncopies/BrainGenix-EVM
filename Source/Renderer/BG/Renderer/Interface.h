@@ -3,7 +3,7 @@
 //=================================//
 
 /*
-    Description: This file contains the NES Rendering system interface code.
+    Description: This file contains the EVM Rendering system interface code.
     Additional Notes: None
     Date Created: 2023-09-17
     Author(s): Thomas Liao
@@ -18,7 +18,7 @@
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    MERCHANTABILITY or FITEVMS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
 
     You should have received a copy of the GNU Affero General Public License
@@ -55,13 +55,13 @@
 
 
 namespace BG {
-namespace NES {
+namespace EVM {
 namespace Renderer {
 
 
 
 /**
- * @brief Rendering system interface for NES. This system is used to generate virtual scan data from models.
+ * @brief Rendering system interface for EVM. This system is used to generate virtual scan data from models.
  */
 class Interface {
 

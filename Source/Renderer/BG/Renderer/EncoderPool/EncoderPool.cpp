@@ -11,7 +11,7 @@
 
 
 namespace BG {
-namespace NES {
+namespace EVM {
 namespace Renderer {
 
 
@@ -141,5 +141,5 @@ void EncoderPool::QueueEncodeOperation(Image* _Img) {
 
 
 }; // Close Namespace Simulator
-}; // Close Namespace NES
+}; // Close Namespace EVM
 }; // Close Namespace BG

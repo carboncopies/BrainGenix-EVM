@@ -15,7 +15,7 @@
 
 
 namespace BG {
-namespace NES {
+namespace EVM {
 namespace API {
 
 
@@ -39,7 +39,7 @@ HandlerData::HandlerData(const std::string& _JSONRequest, BG::Common::Logger::Lo
 
     // // If this Handler was called while loading and a Simulation was not created
     // // yet then only allow requests that do not need one ("NoSimulation"), such
-    // // as "SimulationCreate" and "NESRequest".
+    // // as "SimulationCreate" and "EVMRequest".
     // if (isloadingsim && (!ManTaskData->HasReplacementSimID()) && (!NoSimulation)) {
     //     Man.Logger()->Log(Source+" needs a Sim, but we are still Loading and have not come across SimulationCreate yet.", 8);
     //     Status = BGStatusCode::BGStatusInvalidParametersPassed;
@@ -77,10 +77,10 @@ BGStatusCode HandlerData::GetStatus() const {
 //       nlohmann::json, as that is a way to accidentally a JSON object
 //       into JSON containing a single string, e.g. by accidentally
 //       passing ResponseJSON.dump() instead of ResponseJSON.
-// Note: Calling this from NESRequest uses store==false, because we only
+// Note: Calling this from EVMRequest uses store==false, because we only
 //       want to store the calls from their actual handlers, not from the
-//       NESRequest batch handler. We don't want to double-count the calls,
-//       and we want to store the individual ones, because they may be
+//       EVMRequest batch handler. We don't want to double-count the calls,
+//       and we want to store the individual oEVM, because they may be
 //       intended for different simulations (dependeing on their SimulationID).
 std::string HandlerData::ResponseAndStoreRequest(nlohmann::json& ResponseJSON,  bool store) {
     // if (store && (Status == BGStatusCode::BGStatusSuccess)) {
@@ -285,5 +285,5 @@ bool HandlerData::GetParVecFloat(const std::string& ParName, std::vector<float>&
 
 
 }; // Close Namespace API
-}; // Close Namespace NES
+}; // Close Namespace EVM
 }; // Close Namespace BG
