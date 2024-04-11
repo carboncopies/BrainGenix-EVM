@@ -51,6 +51,7 @@ private:
 
     std::unique_ptr<SafeClient> APIClient_; /**Instance of the smartclient, allows us to talk back to the API's RPC server */
 
+
     std::map<std::string, std::function<std::string(std::string _JSONRequest)>> RequestHandlers_;
 
 

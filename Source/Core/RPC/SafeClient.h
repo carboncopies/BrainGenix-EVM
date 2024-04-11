@@ -45,6 +45,10 @@ private:
 
     std::thread ClientManager_; /**Thread that owns the client, and autoreconnects, etc.*/
 
+    bool LastState_ = false;
+
+
+
     std::string RPCHost_ = "";
     int RPCPort_ = -1;
     int RPCTimeout_ms = -1;

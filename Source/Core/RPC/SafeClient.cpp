@@ -38,8 +38,12 @@ bool SafeClient::RunVersionCheck() {
     ::rpc::client::connection_state RPCStatus = Client_->get_connection_state();
     if (RPCStatus != ::rpc::client::connection_state::connected) {
         Logger_->Log("Unable to connect to RPC Service", 3);
+        LastState_ = false;
     } else {
-        Logger_->Log("NES RPC Connection SERVICE_HEALTHY", 1);
+        if (!LastState_) {
+            Logger_->Log("NES RPC Connection SERVICE_HEALTHY", 1);
+            LastState_ = true;
+        }
     }
 
     // Check Version again (used as a heartbeat 'isAlive' check)
