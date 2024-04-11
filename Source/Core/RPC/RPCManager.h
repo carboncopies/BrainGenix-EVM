@@ -62,7 +62,13 @@ private:
      */
     void AddRequestHandler(std::string _RouteName, RouteAndHandler _Handler);
 
-
+    /**
+     * @brief Simple echo tool that will make NES echo back the request, then return it to the user.
+     * 
+     * @param _Request 
+     * @return std::string 
+     */
+    std::string DoubleEcho(std::string _Request);
 
 public:
 

@@ -43,7 +43,8 @@ RPCManager::RPCManager(Config::Config* _Config, BG::Common::Logger::LoggingSyste
 
     // Add EVM Routes
     AddRoute("Debug/Echo", std::bind(Echo, std::placeholders::_1));
-    // AddRoute("Debug/Echo", std::bind(&RPCManager::Echo, this, std::placeholders::_1))
+    AddRoute("Debug/DoubleEcho", std::bind(&RPCManager::DoubleEcho, this, std::placeholders::_1));
+    // AddRoute("Debug/Echo", std::bind(&RPCManager::Echo, this, std::placeholders::_1));
     
 
     int ThreadCount = std::thread::hardware_concurrency();
@@ -70,13 +71,6 @@ void RPCManager::AddRoute(std::string _RouteHandle, std::function<std::string(st
 }
 
 
-bool BadReqID(int ReqID) {
-    // *** TODO: Add some rules here for ReqIDs that should be refused.
-    //           For example, keep track of the largest ReqID received
-    //           and reject if ReqID is smaller than that. This is
-    //           useful if ReqIDs are made using clock time or something.
-    return false;
-}
 
 
 std::string RPCManager::SetupCallback(std::string _JSONRequest) {
@@ -200,6 +194,28 @@ std::string RPCManager::EVMRequest(std::string _JSONRequest, int _SimulationIDOv
 
     return Handle.ResponseAndStoreRequest(ResponseJSON, false); // See comments at ResponseAndStoreRequest().
 }
+
+
+
+std::string RPCManager::DoubleEcho(std::string _Request) {
+    Logger_->Log("Echoing '" + _Request + "' To NES", 1);
+
+
+    std::string EchoRequest = "[{\"ReqID\":0,\"Echo\":" + _Request + "}]";
+
+    std::string Response = "";
+    bool Status = APIClient_->MakeJSONQuery("NES", EchoRequest, &Response);
+    // Response = "{" + Response + "}";
+
+    if (!Status) {
+        Logger_->Log("Error During Query To NES", 7);
+        return "{\"StatusCode\":9999}";
+    }
+
+    Logger_->Log("Got Back Echo Reply '" + Response + "'", 1);
+    return nlohmann::json::parse(Response)[0].dump();
+}
+
 
 
 
