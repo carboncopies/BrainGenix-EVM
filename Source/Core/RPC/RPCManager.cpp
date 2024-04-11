@@ -204,7 +204,7 @@ std::string RPCManager::DoubleEcho(std::string _Request) {
     std::string EchoRequest = "[{\"ReqID\":0,\"Echo\":" + _Request + "}]";
 
     std::string Response = "";
-    bool Status = APIClient_->MakeJSONQuery("NES", EchoRequest, &Response);
+    bool Status = APIClient_->MakeJSONQuery("Echo", EchoRequest, &Response);
     // Response = "{" + Response + "}";
 
     if (!Status) {
