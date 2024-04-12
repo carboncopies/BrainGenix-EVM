@@ -9,6 +9,8 @@
     "gtest",
     "nlohmann-json",
     "rpclib",
-    "cpp-base64"
+    "cpp-base64",
+    "openmpi",
+    "glog"
   ]
 }

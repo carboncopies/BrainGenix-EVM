@@ -72,6 +72,10 @@ find_package(yaml-cpp CONFIG REQUIRED)
 # find_package(vsgXchange CONFIG REQUIRED)
 
 
+# Add Libgrape
+add_subdirectory(${LIB_DIR}/libgrape-lite)
+
+
 
 # Compiler optimizations
 find_package(AVX)
