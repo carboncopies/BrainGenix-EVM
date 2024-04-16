@@ -17,10 +17,8 @@
 
 
 namespace BG {
-namespace EVM {
-namespace API {
 
-std::string RPCManager::DoubleEcho(std::string _Request) {
+std::string SimpleRegistration(std::string _Request) {
     Logger_->Log("Echoing '" + _Request + "' To NES", 1);
 
 
@@ -39,6 +37,4 @@ std::string RPCManager::DoubleEcho(std::string _Request) {
     return nlohmann::json::parse(Response)[0].dump();
 }
 
-}; // Close Namespace API
-}; // Close Namespace EVM
 }; // Close Namespace BG
