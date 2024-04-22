@@ -45,6 +45,8 @@ set(MAIN_SOURCES
 
   ${SRC_DIR}/Core/Validation/SCValidation.cpp
   ${SRC_DIR}/Core/Validation/SCValidation.h
+  ${SRC_DIR}/Core/Validation/ValidationRPCInterface.cpp
+  ${SRC_DIR}/Core/Validation/ValidationRPCInterface.h
 
 )
 
