@@ -50,7 +50,7 @@ bool GetNESStatus(SafeClient & _Client, BGStatusCode & _StatusCode) {
 	return true;
 }
 
-bool AwaitNESOutcome(SafeClient & _Client, unsigned long _Timeout_ms = 100000) {
+bool AwaitNESOutcome(SafeClient & _Client, unsigned long _Timeout_ms) {
 	unsigned long Timeout_ms = _Timeout_ms;
 	while (true) {
 		BGStatusCode StatusCode;
@@ -87,7 +87,7 @@ bool AwaitNESOutcome(SafeClient & _Client, unsigned long _Timeout_ms = 100000) {
  * @param _Timeout_ms Timeout that ensures this function cannot become stuck forever (e.g. due to broken connection),
  * @return True if loading was successful.
  */
-bool AwaitNESSimLoad(SafeClient & _Client, const std::string & _SimSaveName, int & _SimID, unsigned long _Timeout_ms = 100000) {
+bool AwaitNESSimLoad(SafeClient & _Client, const std::string & _SimSaveName, int & _SimID, unsigned long _Timeout_ms) {
 
 	Logger_->Log("Await NES Sim Load '" + _SimSaveName + "'", 1);
 

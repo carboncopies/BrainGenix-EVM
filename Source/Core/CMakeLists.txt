@@ -15,6 +15,12 @@ set(MAIN_SOURCES
   ${SRC_DIR}/Core/Config/ConfigDefaults.cpp
   ${SRC_DIR}/Core/Config/ConfigDefaults.h
 
+  ${SRC_DIR}/Core/NESInteraction/NESSimLoad.cpp
+  ${SRC_DIR}/Core/NESInteraction/NESSimLoad.h
+
+  ${SRC_DIR}/Core/PCRegistration/SimpleRegistration.cpp
+  ${SRC_DIR}/Core/PCRegistration/SimpleRegistration.h
+
   ${SRC_DIR}/Core/RPC/RPCManager.cpp
   ${SRC_DIR}/Core/RPC/RPCManager.h
   ${SRC_DIR}/Core/RPC/APIStatusCode.cpp
@@ -34,6 +40,8 @@ set(MAIN_SOURCES
   ${SRC_DIR}/Core/Util/LogLogo.cpp
   ${SRC_DIR}/Core/Util/LogLogo.h
 
+  ${SRC_DIR}/Core/Validation/SCValidation.cpp
+  ${SRC_DIR}/Core/Validation/SCValidation.h
 
 )
 
