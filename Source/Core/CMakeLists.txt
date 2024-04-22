@@ -15,6 +15,9 @@ set(MAIN_SOURCES
   ${SRC_DIR}/Core/Config/ConfigDefaults.cpp
   ${SRC_DIR}/Core/Config/ConfigDefaults.h
 
+  ${SRC_DIR}/Core/Metrics/N1Metrics.cpp
+  ${SRC_DIR}/Core/Metrics/N1Metrics.h
+
   ${SRC_DIR}/Core/NESInteraction/NESSimLoad.cpp
   ${SRC_DIR}/Core/NESInteraction/NESSimLoad.h
 

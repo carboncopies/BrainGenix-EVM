@@ -9,6 +9,9 @@
 // Third-Party Libraries (BG convention: use <> instead of "")
 
 // Internal Libraries (BG convention: use <> instead of "")
+#include <NESSimLoad.h>
+#include <SimpleRegistration.h>
+#include <SCValidation.h>
 
 namespace BG {
 
@@ -45,7 +48,15 @@ bool SCVAlidate(SafeClient & _Client, const std::string & _KGTSaveName, const st
 		return false;
 	}
 
+	// Apply the N1 success-criteria metrics
+	N1Metrics N1Metrics_(_Client, KGTSimID, EmuSimID, KGT2Emu);
+	if (!N1Metrics_.Validate()) {
+		return false;
+	}
 
+	// *** There need to be more metrics applied here!
+
+	return true;
 }
 
 } // BG
