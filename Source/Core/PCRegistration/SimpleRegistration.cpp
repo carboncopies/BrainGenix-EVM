@@ -30,7 +30,7 @@ namespace BG {
  */
 bool SimpleRegistration(SafeClient & _Client, int _SimIDA, int _SimIDB, std::vector<int> & _RegistrationMap) {
 
-	Logger_->Log("Simple Registration of one simulation network onto another", 1);
+	SafeClient.Logger_->Log("Simple Registration of one simulation network onto another", 1);
 
 	// 1. Request the soma positions of SimIDA
 	std::string SimIDASomasRequest("[{\"ReqID\":0,\"Simulation/GetSomaPositions\": { \"SimID\": "+std::to_string(_SimIDA)+" } }]");

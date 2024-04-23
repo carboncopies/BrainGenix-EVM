@@ -34,14 +34,14 @@ namespace EVM {
 
 
 class SafeClient {
+public:
+    BG::Common::Logger::LoggingSystem* Logger_ = nullptr; /**Pointer to the instance of the logging system, public for shared use*/
 
 private:
 
     std::unique_ptr<::rpc::client> Client_; /**Client to upstream NES Service*/
     std::atomic_bool IsHealthy_; /**Boolean indicating if the client is healhy or not*/
     std::atomic_bool RequestExit_; /**Indicates if the thread is to be terminated or not*/
-    
-    BG::Common::Logger::LoggingSystem* Logger_ = nullptr; /**Pointer to the instance of the logging system*/
 
     std::thread ClientManager_; /**Thread that owns the client, and autoreconnects, etc.*/
 

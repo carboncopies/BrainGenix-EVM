@@ -28,7 +28,7 @@ namespace BG {
  */
 bool SCVAlidate(SafeClient & _Client, const std::string & _KGTSaveName, const std::string & _EmuSaveName, const ValidationConfig & _Config) {
 
-	Logger_->Log("Commencing validation of Simple Compartmental ground-truth and emulation systems.",1);
+	SafeClient.Logger_->Log("Commencing validation of Simple Compartmental ground-truth and emulation systems.",1);
 
 	// Load the specified ground-truth system.
 	int KGTSimID;

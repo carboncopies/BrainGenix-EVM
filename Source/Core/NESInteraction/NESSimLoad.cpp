@@ -79,8 +79,9 @@ bool AwaitNESOutcome(SafeClient & _Client, unsigned long _Timeout_ms) {
  * @return True if loading was successful.
  */
 bool AwaitNESSimLoad(SafeClient & _Client, const std::string & _SimSaveName, int & _SimID, unsigned long _Timeout_ms) {
+	
 
-	Logger_->Log("Await NES Sim Load '" + _SimSaveName + "'", 1);
+	SafeClient.Logger_->Log("Await NES Sim Load '" + _SimSaveName + "'", 1);
 
 	// Start a simulation load request.
 
@@ -89,14 +90,14 @@ bool AwaitNESSimLoad(SafeClient & _Client, const std::string & _SimSaveName, int
 	bool Status = _Client.MakeJSONQuery("Simulation/Load", SimLoadRequest, &Response);
 
 	if (!Status) {
-        Logger_->Log("Error During Simulation Load Request To NES", 7);
+        SafeClient.Logger_->Log("Error During Simulation Load Request To NES", 7);
         return false;
     }
 
 	// Wait for status to indicate that loading completed or failed.
 
 	if (!AwaitNESOutcome(_Client, _Timeout_ms)) {
-		Logger_->Log("Awaiting completion of NES load request failed", 7);
+		SafeClient.Logger_->Log("Awaiting completion of NES load request failed", 7);
 		return false;
 	}
 
