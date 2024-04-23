@@ -5,7 +5,7 @@
 // Local libraries
 #include <ValidationRPCInterface.h>
 #include <RPC/APIStatusCode.h>
-#include <JSONUtils.h>
+#include <Util/JSONUtils.h>
 
 
 namespace BG {
