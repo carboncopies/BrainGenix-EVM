@@ -38,6 +38,7 @@ private:
 
     BG::Common::Logger::LoggingSystem* Logger_ = nullptr; /**Pointer to the instance of the logging system*/
 
+    SafeClient& NESAPIClient_;
 
 public:
 

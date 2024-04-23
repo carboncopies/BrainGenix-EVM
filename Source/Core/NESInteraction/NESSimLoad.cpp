@@ -11,17 +11,8 @@
 #include <nlohmann/json.hpp>
 
 // Internal Libraries (BG convention: use <> instead of "")
+#include <BGStatusCode.h>
 #include <NESSimLoad.h>
-
-enum BGStatusCode {
-    BGStatusSuccess = 0,
-    BGStatusGeneralFailure = 1,
-    BGStatusInvalidParametersPassed = 2,
-    BGStatusUpstreamGatewayUnavailable = 3,
-    BGStatusUnauthorizedInvalidNoToken = 4,
-    BGStatusSimulationBusy = 5,
-    NUMBGStatusCode
-};
 
 namespace BG {
 

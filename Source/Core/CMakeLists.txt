@@ -2,6 +2,7 @@
 set(MAIN_SOURCES 
 
 
+  ${SRC_DIR}/Core/BGStatusCode.h
   ${SRC_DIR}/Core/Main.cpp
   ${SRC_DIR}/Core/Main.h
   
@@ -40,6 +41,8 @@ set(MAIN_SOURCES
 
   ${SRC_DIR}/Core/Util/JSONHelpers.cpp
   ${SRC_DIR}/Core/Util/JSONHelpers.h
+  ${SRC_DIR}/Core/Util/JSONUtils.cpp
+  ${SRC_DIR}/Core/Util/JSONUtils.h
   ${SRC_DIR}/Core/Util/LogLogo.cpp
   ${SRC_DIR}/Core/Util/LogLogo.h
 
