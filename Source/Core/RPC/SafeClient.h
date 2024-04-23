@@ -30,7 +30,6 @@
 
 
 namespace BG {
-namespace EVM {
 
 
 class SafeClient {
@@ -88,5 +87,4 @@ public:
 
 };
 
-}; // Close Namespace EVM
 }; // Close Namespace BG

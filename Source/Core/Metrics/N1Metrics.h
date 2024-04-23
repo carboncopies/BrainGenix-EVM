@@ -11,12 +11,14 @@
 #pragma once
 
 // Standard Libraries (BG convention: use <> instead of "")
+#include <vector>
 
 // Third-Party Libraries (BG convention: use <> instead of "")
 //#include <nlohmann/json.hpp>
 
 
 // Internal Libraries (BG convention: use <> instead of "")
+#include <RPC/SafeClient.h>
 
 
 namespace BG {
@@ -33,7 +35,7 @@ protected:
     SafeClient & Client_;
     int KGTSimID_ = -1;
     int EmuSimID_ = -1;
-    const std:vector<int>& KGT2Emu_;
+    const std::vector<int>& KGT2Emu_;
 public:
     N1Metrics(SafeClient & _Client, int _KGTSimID, int _EmuSimID, const std::vector<int>& _KGT2Emu):
         Client_(_Client), KGTSimID_(_KGTSimID), EmuSimID_(_EmuSimID), KGT2Emu_(_KGT2Emu) {}

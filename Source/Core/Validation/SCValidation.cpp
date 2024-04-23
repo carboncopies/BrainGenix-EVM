@@ -9,9 +9,9 @@
 // Third-Party Libraries (BG convention: use <> instead of "")
 
 // Internal Libraries (BG convention: use <> instead of "")
-#include <NESSimLoad.h>
-#include <SimpleRegistration.h>
-#include <SCValidation.h>
+#include <NESInteraction/NESSimLoad.h>
+#include <PCRegistration/SimpleRegistration.h>
+#include <Validation/SCValidation.h>
 
 namespace BG {
 

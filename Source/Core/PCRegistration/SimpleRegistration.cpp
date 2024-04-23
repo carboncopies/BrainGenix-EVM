@@ -9,7 +9,7 @@
 // Third-Party Libraries (BG convention: use <> instead of "")
 
 // Internal Libraries (BG convention: use <> instead of "")
-#include <SimpleRegistration.h>
+#include <PCRegistration/SimpleRegistration.h>
 
 namespace BG {
 

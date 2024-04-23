@@ -17,6 +17,7 @@
 
 
 // Internal Libraries (BG convention: use <> instead of "")
+#include <RPC/SafeClient.h>
 
 
 namespace BG {
