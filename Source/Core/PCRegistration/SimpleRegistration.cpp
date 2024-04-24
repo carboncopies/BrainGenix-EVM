@@ -9,7 +9,7 @@
 // Third-Party Libraries (BG convention: use <> instead of "")
 
 // Internal Libraries (BG convention: use <> instead of "")
-#include <SimpleRegistration.h>
+#include <PCRegistration/SimpleRegistration.h>
 
 namespace BG {
 
@@ -30,7 +30,7 @@ namespace BG {
  */
 bool SimpleRegistration(SafeClient & _Client, int _SimIDA, int _SimIDB, std::vector<int> & _RegistrationMap) {
 
-	SafeClient.Logger_->Log("Simple Registration of one simulation network onto another", 1);
+	_Client.Logger_->Log("Simple Registration of one simulation network onto another", 1);
 
 	// 1. Request the soma positions of SimIDA
 	std::string SimIDASomasRequest("[{\"ReqID\":0,\"Simulation/GetSomaPositions\": { \"SimID\": "+std::to_string(_SimIDA)+" } }]");

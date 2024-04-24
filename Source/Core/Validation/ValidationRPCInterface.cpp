@@ -3,7 +3,7 @@
 #include <mutex>
 
 // Local libraries
-#include <ValidationRPCInterface.h>
+#include <Validation/ValidationRPCInterface.h>
 #include <RPC/APIStatusCode.h>
 #include <Util/JSONUtils.h>
 

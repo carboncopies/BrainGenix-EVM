@@ -12,7 +12,7 @@
 
 // Internal Libraries (BG convention: use <> instead of "")
 #include <BGStatusCode.h>
-#include <NESSimLoad.h>
+#include <NESInteraction/NESSimLoad.h>
 
 namespace BG {
 
@@ -21,19 +21,19 @@ bool GetNESStatus(SafeClient & _Client, BGStatusCode & _StatusCode) {
 	bool Status = _Client.MakeJSONQuery("", CheckStatusRequest, &Response);
 
 	if (!Status) {
-		Logger_->Log("Status request to NES failed", 7);
+		_Client.Logger_->Log("Status request to NES failed", 7);
     	return false;
 	}
 
 	nlohmann::json ResponseJSON(Response);
 	auto Iterator = Response.find("StatusCode");
 	if (Iterator == Response.end()) {
-		Logger_->Log("No 'StatusCode' in loading status response", 7);
+		_Client.Logger_->Log("No 'StatusCode' in loading status response", 7);
 		return false;
 	}
 
 	if (!Iterator.value().is_number()) {
-        Logger_->Log("Error StatusCode is not a number", 7);
+        _Client.Logger_->Log("Error StatusCode is not a number", 7);
         return false;
 	}
 
@@ -46,7 +46,7 @@ bool AwaitNESOutcome(SafeClient & _Client, unsigned long _Timeout_ms) {
 	while (true) {
 		BGStatusCode StatusCode;
 		if (!GetNESStatus(_Client, StatusCode)) {
-			Logger_->Log("NES Status request failed while waiting for process to complete", 7);
+			_Client.Logger_->Log("NES Status request failed while waiting for process to complete", 7);
 			return false;
 		}
 
@@ -55,13 +55,13 @@ bool AwaitNESOutcome(SafeClient & _Client, unsigned long _Timeout_ms) {
     	}
 
     	if (StatusCode != BGStatusSimulationBusy) {
-    		Logger_->Log("NES Process status code returned error: "+std::to_string(static_cast<int>(StatusCode)), 7);
+    		_Client.Logger_->Log("NES Process status code returned error: "+std::to_string(static_cast<int>(StatusCode)), 7);
 	        return false;
     	}
 
 		Timeout_ms--;
 		if (Timeout_ms==0) {
-			Logger_->Log("Awaiting NES Process request timed out after "+std::to_string(_Timeout_ms)+" ms", 7);
+			_Client.Logger_->Log("Awaiting NES Process request timed out after "+std::to_string(_Timeout_ms)+" ms", 7);
         	return false;
 		}
 		std::this_thread::sleep_for (std::chrono::milliseconds(1));
@@ -79,9 +79,9 @@ bool AwaitNESOutcome(SafeClient & _Client, unsigned long _Timeout_ms) {
  * @return True if loading was successful.
  */
 bool AwaitNESSimLoad(SafeClient & _Client, const std::string & _SimSaveName, int & _SimID, unsigned long _Timeout_ms) {
-	
 
-	SafeClient.Logger_->Log("Await NES Sim Load '" + _SimSaveName + "'", 1);
+
+	_Client.Logger_->Log("Await NES Sim Load '" + _SimSaveName + "'", 1);
 
 	// Start a simulation load request.
 
@@ -90,14 +90,14 @@ bool AwaitNESSimLoad(SafeClient & _Client, const std::string & _SimSaveName, int
 	bool Status = _Client.MakeJSONQuery("Simulation/Load", SimLoadRequest, &Response);
 
 	if (!Status) {
-        SafeClient.Logger_->Log("Error During Simulation Load Request To NES", 7);
+        _Client.Logger_->Log("Error During Simulation Load Request To NES", 7);
         return false;
     }
 
 	// Wait for status to indicate that loading completed or failed.
 
 	if (!AwaitNESOutcome(_Client, _Timeout_ms)) {
-		SafeClient.Logger_->Log("Awaiting completion of NES load request failed", 7);
+		_Client.Logger_->Log("Awaiting completion of NES load request failed", 7);
 		return false;
 	}
 

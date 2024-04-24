@@ -10,8 +10,8 @@
 
 // Internal Libraries (BG convention: use <> instead of "")
 #include <NESSimLoad.h>
-#include <SimpleRegistration.h>
-#include <SCValidation.h>
+#include <PCRegistration/SimpleRegistration.h>
+#include <Validation/SCValidation.h>
 
 namespace BG {
 
@@ -28,7 +28,7 @@ namespace BG {
  */
 bool SCVAlidate(SafeClient & _Client, const std::string & _KGTSaveName, const std::string & _EmuSaveName, const ValidationConfig & _Config) {
 
-	SafeClient.Logger_->Log("Commencing validation of Simple Compartmental ground-truth and emulation systems.",1);
+	_Client.Logger_->Log("Commencing validation of Simple Compartmental ground-truth and emulation systems.",1);
 
 	// Load the specified ground-truth system.
 	int KGTSimID;
