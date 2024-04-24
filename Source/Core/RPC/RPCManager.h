@@ -91,7 +91,7 @@ public:
     ~RPCManager();
 
 
-
+    SafeClient* GetAPIClient() const { return APIClient_.get(); }
  
     /**
      * @brief Adds a route to the EVM RPC Handler.

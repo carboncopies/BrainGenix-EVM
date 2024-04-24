@@ -20,7 +20,6 @@
 
 
 namespace BG {
-namespace EVM {
 
 
 bool SafeClient::RunVersionCheck() {
@@ -190,5 +189,4 @@ void SafeClient::RPCManagerThread() {
     }
 }
 
-}; // Close Namespace EVM
 }; // Close Namespace BG

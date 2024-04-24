@@ -4,21 +4,18 @@
 
 // Local libraries
 #include <Validation/ValidationRPCInterface.h>
+#include <Validation/SCValidation.h>
 #include <RPC/APIStatusCode.h>
 #include <Util/JSONUtils.h>
 
 
 namespace BG {
 
-ValidationRPCInterface::ValidationRPCInterface(BG::Common::Logger::LoggingSystem* _Logger, API::RPCManager* _RPCManager) {
-    assert(_Logger != nullptr);
-    assert(_RPCManager != nullptr);
-
-    Logger_ = _Logger;
-    NESAPIClient_ = *(_RPCManager->APIClient_.get());
+ValidationRPCInterface::ValidationRPCInterface(BG::Common::Logger::LoggingSystem& _Logger, EVM::API::RPCManager& _RPCManager):
+    Logger_(_Logger), NESAPIClient_(*(_RPCManager.GetAPIClient())) {
 
     // Register Callbacks
-    _RPCManager->AddRoute("Validation/SCValidation", std::bind(&ValidationRPCInterface::SCValidation, this, std::placeholders::_1));
+    _RPCManager.AddRoute("Validation/SCValidation", std::bind(&ValidationRPCInterface::SCValidation, this, std::placeholders::_1));
 
 }
 
@@ -30,19 +27,22 @@ std::string ValidationRPCInterface::SCValidation(std::string _JSONRequest) {
 
     // Obtain required parameters
     std::string KGTSaveName;
-    if (GetParString(RequestJSON, "KGTSaveName", KGTSaveName) != BGStatusCode::BGStatusSuccess) {
+    if (GetParString(Logger_, RequestJSON, "KGTSaveName", KGTSaveName) != BGStatusCode::BGStatusSuccess) {
         return ErrResponse(BGStatusCode::BGStatusInvalidParametersPassed, "Missing KGTSaveName parameter.");
     }
     std::string EmuSaveName;
-    if (GetParString(RequestJSON, "EmuSaveName", EmuSaveName) != BGStatusCode::BGStatusSuccess) {
+    if (GetParString(Logger_, RequestJSON, "EmuSaveName", EmuSaveName) != BGStatusCode::BGStatusSuccess) {
         return ErrResponse(BGStatusCode::BGStatusInvalidParametersPassed, "Missing EmuSaveName parameter.");
     }
 
     // Obtain optional (configuration) parameters
     ValidationConfig Config; // Build this with default settings.
-    GetParInt(RequestJSON, "Timeout_ms", Config.Timeout_ms);
+    long Timeout_ms;
+    if (GetParInt(Logger_, RequestJSON, "Timeout_ms", Timeout_ms) == BGStatusCode::BGStatusSuccess) {
+        Config.Timeout_ms = Timeout_ms;
+    }
 
-    if (!SCVAlidate(NESAPIClient, KGTSaveName, EmuSaveName, Config)) {
+    if (!SCVAlidate(NESAPIClient_, KGTSaveName, EmuSaveName, Config)) {
         return ErrResponse(BGStatusCode::BGStatusGeneralFailure, "SC Validation failed.");
     }
 

@@ -5,20 +5,25 @@
  * more tests to prevent serious errors or crashes of the server. (R.K.)
  */
 
+#include <string>
+
+#include <nlohmann/json.hpp>
+
+#include <BG/Common/Logger/Logger.h>
 #include <BGStatusCode.h>
 
 
 namespace BG {
 
-BGStatusCode FindPar(const nlohmann::json& _JSON, const std::string& _ParName, nlohmann::json::iterator& _Iterator);
-BGStatusCode GetParBool(const nlohmann::json& _JSON, const std::string& ParName, bool& Value);
-BGStatusCode GetParInt(const nlohmann::json& _JSON, const std::string& ParName, int& Value);
-BGStatusCode GetParFloat(const nlohmann::json& _JSON, const std::string& ParName, float& Value);
-BGStatusCode GetParString(const nlohmann::json& _JSON, const std::string& ParName, std::string& Value);
+BGStatusCode FindPar(BG::Common::Logger::LoggingSystem& Logger_, const nlohmann::json& _JSON, const std::string& _ParName, nlohmann::json::iterator& _Iterator);
+BGStatusCode GetParBool(BG::Common::Logger::LoggingSystem& Logger_, const nlohmann::json& _JSON, const std::string& ParName, bool& Value);
+BGStatusCode GetParInt(BG::Common::Logger::LoggingSystem& Logger_, const nlohmann::json& _JSON, const std::string& ParName, long& Value);
+BGStatusCode GetParFloat(BG::Common::Logger::LoggingSystem& Logger_, const nlohmann::json& _JSON, const std::string& ParName, float& Value);
+BGStatusCode GetParString(BG::Common::Logger::LoggingSystem& Logger_, const nlohmann::json& _JSON, const std::string& ParName, std::string& Value);
 
 std::string Response(const nlohmann::json& ResponseJSON);
 std::string ErrResponse(int _Status);
-std::string ErrResponse(int _Status, const std::string & _ErrStr)
+std::string ErrResponse(int _Status, const std::string & _ErrStr);
 std::string ErrResponse(BGStatusCode _Status);
 std::string ErrResponse(BGStatusCode _Status, const std::string & _ErrStr);
 std::string SuccessResponse();

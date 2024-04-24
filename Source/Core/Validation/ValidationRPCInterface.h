@@ -23,7 +23,7 @@
 // Internal Libraries (BG convention: use <> instead of "")
 #include <RPC/RPCManager.h>
 #include <RPC/RPCHandlerHelper.h>
-
+#include <RPC/SafeClient.h>
 #include <BG/Common/Logger/Logger.h>
 
 
@@ -36,7 +36,7 @@ class ValidationRPCInterface {
 
 private:
 
-    BG::Common::Logger::LoggingSystem* Logger_ = nullptr; /**Pointer to the instance of the logging system*/
+    BG::Common::Logger::LoggingSystem& Logger_; /**Reference to the instance of the logging system*/
 
     SafeClient& NESAPIClient_;
 
@@ -50,9 +50,9 @@ public:
      * @param _Config 
      * @param _RPCManager
      */
-    ValidationRPCInterface(BG::Common::Logger::LoggingSystem* _Logger, API::RPCManager* _RPCManager);
+    ValidationRPCInterface(BG::Common::Logger::LoggingSystem& _Logger, EVM::API::RPCManager& _RPCManager);
 
-    ~ModelRPCInterface();
+    ~ValidationRPCInterface();
 
     /**
      * @brief Various routes for API

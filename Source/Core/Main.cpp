@@ -1,3 +1,5 @@
+#include <Validation/ValidationRPCInterface.h>
+
 #include <Main.h>
 
 
@@ -25,7 +27,8 @@ int main(int NumArguments, char** ArgumentValues) {
     // Setup API Server
     BG::EVM::API::RPCManager APIManager(&SystemConfiguration, &Logger);
 
-
+    // Setup Validation RPC Interface
+    BG::ValidationRPCInterface ValidationRPCInterface_(Logger, APIManager);
 
     // Print ASCII BrainGenix Logo To Console
     BG::EVM::Util::LogLogo(&Logger);

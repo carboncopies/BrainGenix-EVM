@@ -9,9 +9,10 @@
 // Third-Party Libraries (BG convention: use <> instead of "")
 
 // Internal Libraries (BG convention: use <> instead of "")
-#include <NESSimLoad.h>
+#include <NESInteraction/NESSimLoad.h>
 #include <PCRegistration/SimpleRegistration.h>
 #include <Validation/SCValidation.h>
+#include <Metrics/N1Metrics.h>
 
 namespace BG {
 
@@ -32,13 +33,13 @@ bool SCVAlidate(SafeClient & _Client, const std::string & _KGTSaveName, const st
 
 	// Load the specified ground-truth system.
 	int KGTSimID;
-	if (!AwaitNESSimLoad(_Client, _KGTSaveName, KGTSimID, Config.Timeout_ms)) {
+	if (!AwaitNESSimLoad(_Client, _KGTSaveName, KGTSimID, _Config.Timeout_ms)) {
 		return false;
 	}
 
 	// Load the specified emulation system.
 	int EmuSimID;
-	if (!AwaitNESSimLoad(_Client, _EmuSaveName, EmuSimID, Config.Timeout_ms)) {
+	if (!AwaitNESSimLoad(_Client, _EmuSaveName, EmuSimID, _Config.Timeout_ms)) {
 		return false;
 	}
 

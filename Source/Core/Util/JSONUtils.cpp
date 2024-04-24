@@ -5,7 +5,7 @@
  * more tests to prevent serious errors or crashes of the server. (R.K.)
  */
 
-#include <Utils/JSONUtils.h>
+#include <Util/JSONUtils.h>
 
 namespace BG {
 
@@ -20,64 +20,64 @@ namespace BG {
  * @param _Iterator Reference that returns the parameter if found.
  * @return True if found.
  */
-BGStatusCode FindPar(const nlohmann::json& _JSON, const std::string& _ParName, nlohmann::json::iterator& _Iterator) {
-    Iterator = _JSON.find(ParName);
+BGStatusCode FindPar(BG::Common::Logger::LoggingSystem& Logger_, const nlohmann::json& _JSON, const std::string& _ParName, nlohmann::json::iterator& _Iterator) {
+    auto Iterator = _JSON.find(_ParName);
     if (Iterator == _JSON.end()) {
-        Logger_->Log("Error Finding Parameter '" + ParName + "', Request Is: " + _JSON.dump(), 7);
+        Logger_.Log("Error Finding Parameter '" + _ParName + "', Request Is: " + _JSON.dump(), 7);
         return BGStatusCode::BGStatusInvalidParametersPassed;
     }
     return BGStatusCode::BGStatusSuccess;
 }
 
-BGStatusCode GetParBool(const nlohmann::json& _JSON, const std::string& ParName, bool& Value) {
+BGStatusCode GetParBool(BG::Common::Logger::LoggingSystem& Logger_, const nlohmann::json& _JSON, const std::string& ParName, bool& Value) {
     nlohmann::json::iterator it;
-    if (FindPar(_JSON, ParName, it) != BGStatusCode::BGStatusSuccess) {
+    if (FindPar(Logger_, _JSON, ParName, it) != BGStatusCode::BGStatusSuccess) {
         return BGStatusCode::BGStatusInvalidParametersPassed;
     }
     if (!it.value().is_boolean()) {
-        Logger_->Log("Error Parameter '" + ParName + "', Wrong Type (expected bool) Request Is: " + _JSON.dump(), 7);
+        Logger_.Log("Error Parameter '" + ParName + "', Wrong Type (expected bool) Request Is: " + _JSON.dump(), 7);
         return BGStatusCode::BGStatusInvalidParametersPassed;
     }
     Value = it.value().template get<bool>();
     return BGStatusCode::BGStatusSuccess;
 }
 
-BGStatusCode GetParInt(const nlohmann::json& _JSON, const std::string& ParName, int& Value) {
+BGStatusCode GetParInt(BG::Common::Logger::LoggingSystem& Logger_, const nlohmann::json& _JSON, const std::string& ParName, long& Value) {
     nlohmann::json::iterator it;
-    if (FindPar(_JSON, ParName, it) != BGStatusCode::BGStatusSuccess) {
+    if (FindPar(Logger_, _JSON, ParName, it) != BGStatusCode::BGStatusSuccess) {
         return BGStatusCode::BGStatusInvalidParametersPassed;
     }
     if (!it.value().is_number()) {
-        Logger_->Log("Error Parameter '" + ParName + "', Wrong Type (expected number) Request Is: " + _JSON.dump(), 7);
-        Status = BGStatusCode::BGStatusInvalidParametersPassed;
+        Logger_.Log("Error Parameter '" + ParName + "', Wrong Type (expected number) Request Is: " + _JSON.dump(), 7);
+        BGStatusCode Status = BGStatusCode::BGStatusInvalidParametersPassed;
         return BGStatusCode::BGStatusInvalidParametersPassed;
     }
-    Value = it.value().template get<int>();
+    Value = it.value().template get<long>();
     return BGStatusCode::BGStatusSuccess;
 }
 
-BGStatusCode GetParFloat(const nlohmann::json& _JSON, const std::string& ParName, float& Value) {
+BGStatusCode GetParFloat(BG::Common::Logger::LoggingSystem& Logger_, const nlohmann::json& _JSON, const std::string& ParName, float& Value) {
     nlohmann::json::iterator it;
-    if (FindPar(_JSON, ParName, it) != BGStatusCode::BGStatusSuccess) {
-        return false;
+    if (FindPar(Logger_, _JSON, ParName, it) != BGStatusCode::BGStatusSuccess) {
+        return BGStatusCode::BGStatusInvalidParametersPassed;
     }
     if (!it.value().is_number()) {
-        Logger_->Log("Error Parameter '" + ParName + "', Wrong Type (expected number) Request Is: " + _JSON.dump(), 7);
-        Status = BGStatusCode::BGStatusInvalidParametersPassed;
+        Logger_.Log("Error Parameter '" + ParName + "', Wrong Type (expected number) Request Is: " + _JSON.dump(), 7);
+        BGStatusCode Status = BGStatusCode::BGStatusInvalidParametersPassed;
         return BGStatusCode::BGStatusInvalidParametersPassed;
     }
     Value = it.value().template get<float>();
     return BGStatusCode::BGStatusSuccess;
 }
 
-BGStatusCode GetParString(const nlohmann::json& _JSON, const std::string& ParName, std::string& Value) {
+BGStatusCode GetParString(BG::Common::Logger::LoggingSystem& Logger_, const nlohmann::json& _JSON, const std::string& ParName, std::string& Value) {
     nlohmann::json::iterator it;
-    if (FindPar(_JSON, ParName, it) != BGStatusCode::BGStatusSuccess) {
+    if (FindPar(Logger_, _JSON, ParName, it) != BGStatusCode::BGStatusSuccess) {
         return BGStatusCode::BGStatusInvalidParametersPassed;
     }
     if (!it.value().is_string()) {
-        Logger_->Log("Error Parameter '" + ParName + "', Wrong Type (expected string) Request Is: " + _JSON.dump(), 7);
-        Status = BGStatusCode::BGStatusInvalidParametersPassed;
+        Logger_.Log("Error Parameter '" + ParName + "', Wrong Type (expected string) Request Is: " + _JSON.dump(), 7);
+        BGStatusCode Status = BGStatusCode::BGStatusInvalidParametersPassed;
         return BGStatusCode::BGStatusInvalidParametersPassed;
     }
     Value = it.value().template get<std::string>();

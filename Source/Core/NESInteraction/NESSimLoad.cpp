@@ -18,6 +18,7 @@ namespace BG {
 
 bool GetNESStatus(SafeClient & _Client, BGStatusCode & _StatusCode) {
 	std::string CheckStatusRequest("");
+	std::string Response;
 	bool Status = _Client.MakeJSONQuery("", CheckStatusRequest, &Response);
 
 	if (!Status) {
@@ -26,8 +27,8 @@ bool GetNESStatus(SafeClient & _Client, BGStatusCode & _StatusCode) {
 	}
 
 	nlohmann::json ResponseJSON(Response);
-	auto Iterator = Response.find("StatusCode");
-	if (Iterator == Response.end()) {
+	auto Iterator = ResponseJSON.find("StatusCode");
+	if (Iterator == ResponseJSON.end()) {
 		_Client.Logger_->Log("No 'StatusCode' in loading status response", 7);
 		return false;
 	}
