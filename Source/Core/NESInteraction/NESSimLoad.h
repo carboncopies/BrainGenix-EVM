@@ -17,13 +17,29 @@
 
 
 // Internal Libraries (BG convention: use <> instead of "")
+#include <RPC/SafeClient.h>
+
+#include <BG/Common/Logger/Logger.h>
 
 
 namespace BG {
 
-bool GetNESStatus(SafeClient & _Client, BGStatusCode & _StatusCode);
 
-bool AwaitNESOutcome(SafeClient & _Client, unsigned long _Timeout_ms = 100000);
+enum BGStatusCode {
+    BGStatusSuccess = 0,
+    BGStatusGeneralFailure = 1,
+    BGStatusInvalidParametersPassed = 2,
+    BGStatusUpstreamGatewayUnavailable = 3,
+    BGStatusUnauthorizedInvalidNoToken = 4,
+    BGStatusSimulationBusy = 5,
+    NUMBGStatusCode
+};
+
+
+
+bool GetNESStatus(BG::Common::Logger::LoggingSystem* _Logger, SafeClient& _Client, BGStatusCode& _StatusCode);
+
+bool AwaitNESOutcome(BG::Common::Logger::LoggingSystem* _Logger, SafeClient& _Client, unsigned long _Timeout_ms = 100000);
 
 /**
  * Ask NES to load a previously saved simulation and wait for loading
@@ -35,6 +51,6 @@ bool AwaitNESOutcome(SafeClient & _Client, unsigned long _Timeout_ms = 100000);
  * @param _Timeout_ms Timeout that ensures this function cannot become stuck forever (e.g. due to broken connection),
  * @return True if loading was successful.
  */
-bool AwaitNESSimLoad(SafeClient & _Client, const std::string & _SimSaveName, int & _SimID, unsigned long _Timeout_ms = 100000);
+bool AwaitNESSimLoad(BG::Common::Logger::LoggingSystem* _Logger, SafeClient& _Client, const std::string& _SimSaveName, int& _SimID, unsigned long _Timeout_ms = 100000);
 
 } // BG

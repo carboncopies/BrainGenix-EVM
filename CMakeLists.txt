@@ -73,7 +73,7 @@ find_package(yaml-cpp CONFIG REQUIRED)
 
 
 # Add Libgrape
-add_subdirectory(${LIB_DIR}/libgrape-lite)
+# add_subdirectory(${LIB_DIR}/libgrape-lite)
 
 
 

@@ -10,7 +10,6 @@
     "nlohmann-json",
     "rpclib",
     "cpp-base64",
-    "openmpi",
     "glog"
   ]
 }
