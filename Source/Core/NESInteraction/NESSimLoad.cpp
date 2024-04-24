@@ -12,61 +12,52 @@
 
 // Internal Libraries (BG convention: use <> instead of "")
 #include <BGStatusCode.h>
+#include <NESInteraction/NESRequest.h>
 #include <NESInteraction/NESSimLoad.h>
+#include <Util/JSONUtils.h>
 
 namespace BG {
 
-bool GetNESStatus(SafeClient & _Client, BGStatusCode & _StatusCode) {
-	std::string CheckStatusRequest("");
-	std::string Response;
-	bool Status = _Client.MakeJSONQuery("", CheckStatusRequest, &Response);
+bool GetNESStatus(SafeClient & _Client, long _TaskID, BGStatusCode & _StatusCode, nlohmann::json& _ResultJSON) {
 
-	if (!Status) {
-		_Client.Logger_->Log("Status request to NES failed", 7);
-    	return false;
-	}
-
-	nlohmann::json ResponseJSON(Response);
-	auto Iterator = ResponseJSON.find("StatusCode");
-	if (Iterator == ResponseJSON.end()) {
-		_Client.Logger_->Log("No 'StatusCode' in loading status response", 7);
-		return false;
-	}
-
-	if (!Iterator.value().is_number()) {
-        _Client.Logger_->Log("Error StatusCode is not a number", 7);
+    if (!MakeNESRequest(_Client, "ManTaskStatus", nlohmann::json("{ \"TaskID\": "+std::to_string(_TaskID)+" }"), _ResultJSON)) {
         return false;
-	}
+    }
+    nlohmann::json& FirstResonse = _ResultJSON[0];
 
-	_StatusCode = static_cast<BGStatusCode>(Iterator.value().template get<int>());
-	return true;
+    long StatusCodeInt;
+    if (!GetParInt(*_Client.Logger_, FirstResonse, "StatusCode", StatusCodeInt) != BGStatusCode::BGStatusSuccess) {
+        return false;
+    }
+    _StatusCode = BGStatusCode(StatusCodeInt);
+    return true;
 }
 
-bool AwaitNESOutcome(SafeClient & _Client, unsigned long _Timeout_ms) {
-	unsigned long Timeout_ms = _Timeout_ms;
-	while (true) {
-		BGStatusCode StatusCode;
-		if (!GetNESStatus(_Client, StatusCode)) {
-			_Client.Logger_->Log("NES Status request failed while waiting for process to complete", 7);
-			return false;
-		}
+bool AwaitNESOutcome(SafeClient & _Client, long _TaskID, nlohmann::json& _ResultJSON, unsigned long _Timeout_ms) {
+    unsigned long Timeout_ms = _Timeout_ms;
+    while (true) {
+        BGStatusCode StatusCode;
+        if (!GetNESStatus(_Client, _TaskID, StatusCode, _ResultJSON)) {
+            _Client.Logger_->Log("NES Status request failed while waiting for process to complete", 7);
+            return false;
+        }
 
-    	if (StatusCode == BGStatusSuccess) {
-    		return true; // Process appears to be done.
-    	}
+        if (StatusCode == BGStatusSuccess) {
+            return true; // Process appears to be done.
+        }
 
-    	if (StatusCode != BGStatusSimulationBusy) {
-    		_Client.Logger_->Log("NES Process status code returned error: "+std::to_string(static_cast<int>(StatusCode)), 7);
-	        return false;
-    	}
+        if (StatusCode != BGStatusSimulationBusy) {
+            _Client.Logger_->Log("NES Process status code returned error: "+std::to_string(static_cast<int>(StatusCode)), 7);
+            return false;
+        }
 
-		Timeout_ms--;
-		if (Timeout_ms==0) {
-			_Client.Logger_->Log("Awaiting NES Process request timed out after "+std::to_string(_Timeout_ms)+" ms", 7);
-        	return false;
-		}
-		std::this_thread::sleep_for (std::chrono::milliseconds(1));
-	}
+        Timeout_ms--;
+        if (Timeout_ms==0) {
+            _Client.Logger_->Log("Awaiting NES Process request timed out after "+std::to_string(_Timeout_ms)+" ms", 7);
+            return false;
+        }
+        std::this_thread::sleep_for (std::chrono::milliseconds(1));
+    }
 }
 
 /**
@@ -81,33 +72,38 @@ bool AwaitNESOutcome(SafeClient & _Client, unsigned long _Timeout_ms) {
  */
 bool AwaitNESSimLoad(SafeClient & _Client, const std::string & _SimSaveName, int & _SimID, unsigned long _Timeout_ms) {
 
+    _Client.Logger_->Log("Await NES Sim Load '" + _SimSaveName + "'", 1);
 
-	_Client.Logger_->Log("Await NES Sim Load '" + _SimSaveName + "'", 1);
+    // Start a simulation load request.
+    nlohmann::json ResponseJSON;
+    if (!MakeNESRequest(_Client, "Simulation/Load", nlohmann::json("{ \"SavedSimName\": "+_SimSaveName+" }"), ResponseJSON)) {
+        return false;
+    }
+    nlohmann::json& FirstResponse = ResponseJSON[0];
 
-	// Start a simulation load request.
-
-	std::string SimLoadRequest("[{\"ReqID\":0,\"Simulation/Load\": { \"SavedSimName\": "+_SimSaveName+" } }]");
-	std::string Response;
-	bool Status = _Client.MakeJSONQuery("Simulation/Load", SimLoadRequest, &Response);
-
-	if (!Status) {
-        _Client.Logger_->Log("Error During Simulation Load Request To NES", 7);
+    // Get TaskID.
+    long TaskID = -1;
+    if (GetParInt(*_Client.Logger_, FirstResponse, "TaskID", TaskID) != BGStatusCode::BGStatusSuccess) {
+        _Client.Logger_->Log("Missing loading task ID.", 7);
         return false;
     }
 
-	// Wait for status to indicate that loading completed or failed.
+    // Wait for status to indicate that loading completed or failed.
+    nlohmann::json ResultJSON;
+    if (!AwaitNESOutcome(_Client, TaskID, ResultJSON, _Timeout_ms)) {
+        _Client.Logger_->Log("Awaiting completion of NES load request failed", 7);
+        return false;
+    }
+    nlohmann::json& FirstResult = ResultJSON[0];
 
-	if (!AwaitNESOutcome(_Client, _Timeout_ms)) {
-		_Client.Logger_->Log("Awaiting completion of NES load request failed", 7);
-		return false;
-	}
+    // If successful then return the simulation ID.
+    long SimID = -1;
+    if (GetParInt(*_Client.Logger_, FirstResult, "SimulationID", SimID) != BGStatusCode::BGStatusSuccess) {
+        return false;
+    }
+    _SimID = SimID;
 
-	// If successful then return the simulation ID.
-
-	// *** Right... this needs some special support, because loading right now does not
-	//     work as a process that can be awaited...
-
-	return true;
+    return true;
 }
 
 } // BG

@@ -33,16 +33,36 @@ bool SimpleRegistration(SafeClient & _Client, int _SimIDA, int _SimIDB, std::vec
 	_Client.Logger_->Log("Simple Registration of one simulation network onto another", 1);
 
 	// 1. Request the soma positions of SimIDA
-	std::string SimIDASomasRequest("[{\"ReqID\":0,\"Simulation/GetSomaPositions\": { \"SimID\": "+std::to_string(_SimIDA)+" } }]");
-	std::string ResponseA;
-	bool StatusA = _Client.MakeJSONQuery("Simulation/GetSomaPositions", SimIDASomasRequest, &ResponseA);
+	nlohmann::json ResponseA;
+	if (!MakeNESRequest(_Client, "Simulation/GetSomaPositions", nlohmann::json("{ \"SimID\": "+std::to_string(_SimIDA)+" }"), ResponseA)) {
+		return false;
+	}
+	nlohmann::json& FirstResponseA = ResponseA[0];
+	std::vector<Vec3D> SomaCentersA;
+	if (GetParVecVec3D(*_Client.Logger_, FirstResponseA, "SomaCenters", SomaCentersA) != BGStatusCode::BGStatusSuccess) {
+		return false;
+	}
 
 	// 2. Request the soma positions of SimIDB
-	std::string SimIDBSomasRequest("[{\"ReqID\":0,\"Simulation/GetSomaPositions\": { \"SimID\": "+std::to_string(_SimIDB)+" } }]");
-	std::string ResponseB;
-	bool StatusB = _Client.MakeJSONQuery("Simulation/GetSomaPositions", SimIDASomasRequest, &ResponseB);
+	nlohmann::json ResponseB;
+	if (!MakeNESRequest(_Client, "Simulation/GetSomaPositions", nlohmann::json("{ \"SimID\": "+std::to_string(_SimIDB)+" }"), ResponseB)) {
+		return false;
+	}
+	nlohmann::json& FirstResponseB = ResponseB[0];
+	std::vector<Vec3D> SomaCentersB;
+	if (GetParVecVec3D(*_Client.Logger_, FirstResponseB, "SomaCenters", SomaCentersB) != BGStatusCode::BGStatusSuccess) {
+		return false;
+	}
 
 	// 3. Center both networks.
+	Vec3D centroidA = GeometricCenter(SomaCentersA);
+	for (auto & v : SomaCentersA) {
+		v -= centroidA;
+	}
+	Vec3D centroidB = GeometricCenter(SomaCentersB);
+	for (auto & v : SomaCentersB) {
+		v -= centroidB;
+	}
 
 	// 4. Check proximity score for various angle combinations to find best score.
 

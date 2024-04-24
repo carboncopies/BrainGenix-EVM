@@ -21,6 +21,11 @@
 
 namespace BG {
 
+long SafeClient::GetRequestID() {
+    long id = RequestID_;
+    RequestID_++;
+    return id;
+}
 
 bool SafeClient::RunVersionCheck() {
 

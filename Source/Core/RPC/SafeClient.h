@@ -46,7 +46,7 @@ private:
 
     bool LastState_ = false;
 
-
+    long RequestID_ = 0; // Next request ID for NES request.
 
     std::string RPCHost_ = "";
     int RPCPort_ = -1;
@@ -76,6 +76,10 @@ public:
      */
     ~SafeClient();
 
+    /**
+     * @brief Get next request ID and genrate the next one.
+     */
+    long GetRequestID();
 
     bool SetTimeout(int _Timeout_ms);
     bool SetHostPort(std::string _Host, int _Port);

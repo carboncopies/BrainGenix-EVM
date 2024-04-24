@@ -19,6 +19,8 @@ set(MAIN_SOURCES
   ${SRC_DIR}/Core/Metrics/N1Metrics.cpp
   ${SRC_DIR}/Core/Metrics/N1Metrics.h
 
+  ${SRC_DIR}/Core/NESInteraction/NESRequest.cpp
+  ${SRC_DIR}/Core/NESInteraction/NESRequest.h
   ${SRC_DIR}/Core/NESInteraction/NESSimLoad.cpp
   ${SRC_DIR}/Core/NESInteraction/NESSimLoad.h
 
@@ -50,6 +52,9 @@ set(MAIN_SOURCES
   ${SRC_DIR}/Core/Validation/SCValidation.h
   ${SRC_DIR}/Core/Validation/ValidationRPCInterface.cpp
   ${SRC_DIR}/Core/Validation/ValidationRPCInterface.h
+
+  ${SRC_DIR}/Core/Vector/Vec3D.cpp
+  ${SRC_DIR}/Core/Vector/Vec3D.h
 
 )
 

@@ -35,9 +35,9 @@ enum BGStatusCode {
 
 
 
-bool GetNESStatus(SafeClient& _Client, BGStatusCode& _StatusCode);
+bool GetNESStatus(SafeClient & _Client, long _TaskID, BGStatusCode & _StatusCode, nlohmann::json& ResultJSON);
 
-bool AwaitNESOutcome(SafeClient& _Client, unsigned long _Timeout_ms = 100000);
+bool AwaitNESOutcome(SafeClient & _Client, long _TaskID, nlohmann::json& _ResultJSON, unsigned long _Timeout_ms = 100000);
 
 /**
  * Ask NES to load a previously saved simulation and wait for loading
