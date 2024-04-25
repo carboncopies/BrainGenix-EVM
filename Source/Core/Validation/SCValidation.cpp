@@ -45,7 +45,7 @@ bool SCVAlidate(SafeClient & _Client, const std::string & _KGTSaveName, const st
 
 	// Get a registration mapping from neurons in ground-truth to emulation.
 	std::vector<int> KGT2Emu;
-	if (!SimpleRegistration(_Client, KGTSimID, EmuSimID, KGT2Emu)) {
+	if (!SimpleRegistration(_Client, KGTSimID, EmuSimID, KGT2Emu, Config.TryAngles)) {
 		return false;
 	}
 

@@ -22,6 +22,15 @@ ValidationRPCInterface::ValidationRPCInterface(BG::Common::Logger::LoggingSystem
 ValidationRPCInterface::~ValidationRPCInterface() {
 }
 
+/**
+ * Required parameters:
+ *   "KGTSaveName": <string>
+ *   "EmuSaveName": <string>
+ * 
+ * Optional parameters:
+ *   "Timeout_ms": <unsigned long>
+ *   "TryAngles": <unsigned int>
+ */
 std::string ValidationRPCInterface::SCValidation(std::string _JSONRequest) {
     nlohmann::json RequestJSON(_JSONRequest);
 
@@ -40,6 +49,10 @@ std::string ValidationRPCInterface::SCValidation(std::string _JSONRequest) {
     long Timeout_ms;
     if (GetParInt(Logger_, RequestJSON, "Timeout_ms", Timeout_ms) == BGStatusCode::BGStatusSuccess) {
         Config.Timeout_ms = Timeout_ms;
+    }
+    long TryAngles;
+    if (GetParInt(Logger_, RequestJSON, "TryAngles", TryAngles) == BGStatusCode::BGStatusSuccess) {
+        Config.TryAngles = TryAngles;
     }
 
     if (!SCVAlidate(NESAPIClient_, KGTSaveName, EmuSaveName, Config)) {

@@ -55,7 +55,17 @@ public:
     ~ValidationRPCInterface();
 
     /**
-     * @brief Various routes for API
+     * @brief API Handler for route "Validation/SCValidatio"
+     * 
+     * In _JSONRequest:
+     * 
+     *   Required parameters:
+     *     "KGTSaveName": <string>
+     *     "EmuSaveName": <string>
+     * 
+     *   Optional parameters:
+     *     "Timeout_ms": <unsigned long>
+     *     "TryAngles": <unsigned int>
      * 
      * @param _JSONRequest 
      * @return std::string 

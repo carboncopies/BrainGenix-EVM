@@ -15,7 +15,6 @@ namespace BG {
 
 bool N1Metrics::Validate() {
 
-
 	// Derive the connectome (connectivity matrix).
 
 	// As needed, convert this to two di-graphs, one for the KGT, one for the EMU.
