@@ -17,6 +17,7 @@
 
 
 // Internal Libraries (BG convention: use <> instead of "")
+#include <Validation/ValidationConfig.h>
 #include <RPC/SafeClient.h>
 
 
@@ -50,13 +51,10 @@ void MakeRegistrationMapUnique(const std::vector<Vec3D>& SomaCentersA, const std
  * with their numerical IDs.
  * 
  * @param _Client Reference to NES-connected client object.
- * @param _SimIDA Identifier of saved system A (typically a ground-truth system).
- * @param _SimIDB Identifier of saved system B (typically an emulation system).
- * @param _RegistrationMap Vector of cell indices specifying which neuron in B maps
- *        to the vector index neuron in A.
- * @param _TryAngles Number of angles to try on each axis.
+ * @param _Config Configuration settings used.
+ * @param _CollectedData A shared object in which KGT and EMU data is progressively collected.
  * @return True if successfully registered.
  */
-bool SimpleRegistration(SafeClient & _Client, int _SimIDA, int _SimIDB, std::vector<int> & _RegistrationMap, unsigned int _TryAngles = 12);
+bool SimpleRegistration(SafeClient & _Client, const ValidationConfig & _Config, DataCollector& _CollectedData);
 
 } // BG

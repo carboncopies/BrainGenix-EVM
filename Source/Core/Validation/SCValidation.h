@@ -17,14 +17,10 @@
 
 
 // Internal Libraries (BG convention: use <> instead of "")
+#include <Validation/ValidationConfig.h>
 
 
 namespace BG {
-
-struct ValidationConfig {
-    unsigned long Timeout_ms = 100000;
-    unsigned int TryAngles = 12;
-};
 
 /**
  * This is a simple entry point through which to carry out validation

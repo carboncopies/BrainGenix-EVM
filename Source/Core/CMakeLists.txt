@@ -48,6 +48,9 @@ set(MAIN_SOURCES
   ${SRC_DIR}/Core/Util/LogLogo.cpp
   ${SRC_DIR}/Core/Util/LogLogo.h
 
+  ${SRC_DIR}/Core/Validation/ValidationConfig.h
+  ${SRC_DIR}/Core/Validation/DataCollector.cpp
+  ${SRC_DIR}/Core/Validation/DataCollector.h
   ${SRC_DIR}/Core/Validation/SCValidation.cpp
   ${SRC_DIR}/Core/Validation/SCValidation.h
   ${SRC_DIR}/Core/Validation/ValidationRPCInterface.cpp
