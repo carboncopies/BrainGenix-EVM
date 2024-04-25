@@ -48,6 +48,9 @@ struct Vec3D {
     //! Vector != Vector
     bool operator!=(const Vec3D &other) const;
 
+    //! Indexed access to x, y, z (modulo 3)
+    float& operator[](size_t idx);
+
     //! Vector <= Vector (all elements)
     bool AllElementsLTE(const Vec3D &other) const;
     

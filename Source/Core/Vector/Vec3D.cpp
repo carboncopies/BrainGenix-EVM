@@ -47,6 +47,13 @@ bool Vec3D::operator!=(const Vec3D &other) const {
     return (this->x != other.x) || (this->y != other.y) || (this->z != other.z);
 };
 
+//! Indexed access to x, y, z (modulo 3)
+float& operator[](size_t idx) {
+    idx %= 3;
+    if (idx==0) return x;
+    if (idx==1) return y;
+    return z;
+}
 
 //! Vector <= Vector
 bool Vec3D::AllElementsLTE(const Vec3D &other) const {

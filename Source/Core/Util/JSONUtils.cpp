@@ -49,7 +49,6 @@ BGStatusCode GetParInt(BG::Common::Logger::LoggingSystem& Logger_, const nlohman
     }
     if (!it.value().is_number()) {
         Logger_.Log("Error Parameter '" + ParName + "', Wrong Type (expected number) Request Is: " + _JSON.dump(), 7);
-        BGStatusCode Status = BGStatusCode::BGStatusInvalidParametersPassed;
         return BGStatusCode::BGStatusInvalidParametersPassed;
     }
     Value = it.value().template get<long>();
@@ -63,7 +62,6 @@ BGStatusCode GetParFloat(BG::Common::Logger::LoggingSystem& Logger_, const nlohm
     }
     if (!it.value().is_number()) {
         Logger_.Log("Error Parameter '" + ParName + "', Wrong Type (expected number) Request Is: " + _JSON.dump(), 7);
-        BGStatusCode Status = BGStatusCode::BGStatusInvalidParametersPassed;
         return BGStatusCode::BGStatusInvalidParametersPassed;
     }
     Value = it.value().template get<float>();
@@ -77,10 +75,59 @@ BGStatusCode GetParString(BG::Common::Logger::LoggingSystem& Logger_, const nloh
     }
     if (!it.value().is_string()) {
         Logger_.Log("Error Parameter '" + ParName + "', Wrong Type (expected string) Request Is: " + _JSON.dump(), 7);
-        BGStatusCode Status = BGStatusCode::BGStatusInvalidParametersPassed;
         return BGStatusCode::BGStatusInvalidParametersPassed;
     }
     Value = it.value().template get<std::string>();
+    return BGStatusCode::BGStatusSuccess;
+}
+
+BGStatusCode ExtractVec3D(BG::Common::Logger::LoggingSystem& Logger_, const nlohmann::json& _JSON, Vec3D& Value) {
+    if (!_JSON.is_array()) {
+        Logger_.Log("Error Parameter '" + ParName + "', Wrong Type (expected array) Request Is: " + _JSON.dump(), 7);
+        return BGStatusCode::BGStatusInvalidParametersPassed;
+    }
+    if (_JSON.size() != 3) {
+        Logger_.Log("Error, Wrong array size (expected 3D vector). Request excerpt is: " + _JSON.dump(), 7);
+        return BGStatusCode::BGStatusInvalidParametersPassed;
+    }
+    for (size_t j = 0; j < 3; j++) {
+        if (!_JSON[j].is_number()) {
+            Logger_.Log("Error, Wrong Type (expected 3D float vector). Request excerpt is: " + _JSON.dump(), 7);
+            return BGStatusCode::BGStatusInvalidParametersPassed;
+        }
+        Value[j] = _JSON[j].template get<float>();
+    }
+    return BGStatusCode::BGStatusSuccess;
+}
+
+BGStatusCode GetParVec3D(BG::Common::Logger::LoggingSystem& Logger_, const nlohmann::json& _JSON, const std::string& ParName, Vec3D& Value) {
+    nlohmann::json::iterator it;
+    if (FindPar(Logger_, _JSON, ParName, it) != BGStatusCode::BGStatusSuccess) {
+        return BGStatusCode::BGStatusInvalidParametersPassed;
+    }
+    if (ExtractVec3D(Logger_, it.value(), Value) != BGStatusCode::BGStatusSuccess) {
+        return BGStatusCode::BGStatusInvalidParametersPassed;
+    }
+    return BGStatusCode::BGStatusSuccess;
+}
+
+BGStatusCode GetParVecVec3D(BG::Common::Logger::LoggingSystem& Logger_, const nlohmann::json& _JSON, const std::string& ParName, std::vector<Vec3D>& Values) {
+    nlohmann::json::iterator it;
+    if (FindPar(Logger_, _JSON, ParName, it) != BGStatusCode::BGStatusSuccess) {
+        return BGStatusCode::BGStatusInvalidParametersPassed;
+    }
+    if (!it.value().is_array()) {
+        Logger_.Log("Error Parameter '" + ParName + "', Wrong Type (expected array) Request Is: " + _JSON.dump(), 7);
+        return BGStatusCode::BGStatusInvalidParametersPassed;
+    }
+    nlohmann::json& list(it.value());
+    size_t listsize = list.size();
+    Values.resize(listsize);
+    for (size_t i = 0; i < listsize; i++) {
+        if (ExtractVec3D(Logger_, list[i], Values[i]) != BGStatusCode::BGStatusSuccess) {
+            return BGStatusCode::BGStatusInvalidParametersPassed;
+        }
+    }
     return BGStatusCode::BGStatusSuccess;
 }
 
