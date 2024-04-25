@@ -1,4 +1,5 @@
 #include <sstream>
+#include <limits>
 
 #include <Vector/Vec3D.h>
 
@@ -206,6 +207,31 @@ Vec3D GeometricCenter(const std::vector<Vec3D> _Vectors) {
     }
     centroid /= _Vectors.size();
     return centroid;
+}
+
+size_t NearestVec3D(const Vec3D & _Point, const std::vector<Vec3D> & _Candidates, float* _NearestDistance) {
+    float smallest = std::numeric_limits<float>::max;
+    size_t smallest_idx = 0;
+    for (size_t i = 0; i < _Candidates.size(); i++) {
+        float d = _Point.Distance(_Candidates.at(i));
+        if (d < smallest) {
+            smallest = d;
+            smallest_idx = i;
+        }
+    }
+    if (_NearestDistance) {
+        (*_NearestDistance) = smallest;
+    }
+    return smallest_idx;
+}
+
+std::vector<Vec3D> RotatedSet3D(const std::vector<Vec3D>& _Points, float _xangle, float _yangle, float _zangle) {
+    std::vector<Vec3D> rotated;
+    rotated.resize(_Points.size());
+    for (size_t i=0; i < _Points.size(); i++) {
+        rotated[i] = _Points.at(i).rotate_around_xyz(_xangle, _yangle, _zangle);
+    }
+    return rotated;
 }
 
 }; // namespace BG

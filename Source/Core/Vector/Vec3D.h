@@ -99,4 +99,8 @@ struct Vec3D {
 
 Vec3D GeometricCenter(const std::vector<Vec3D> _Vectors);
 
+size_t NearestVec3D(const Vec3D & _Point, const std::vector<Vec3D> & _Candidates, float* _NearestDistance = nullptr);
+
+std::vector<Vec3D> RotatedSet3D(const std::vector<Vec3D>& _Points, float _xangle, float _yangle, float _zangle);
+
 }; // namespace BG
