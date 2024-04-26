@@ -36,7 +36,6 @@ bool NetworkData::EnsureGotSomaPositions(SafeClient & _Client, const ValidationC
 	if (GetParVecVec3D(*_Client.Logger_, FirstResponse, "SomaCenters", SomaCenters) != BGStatusCode::BGStatusSuccess) {
 		return false;
 	}
-	// *** TODO: Implement GetParIntVec and the delivery of SomaTypes by NES.
 	if (GetParIntVec(*_Client.Logger_, FirstResponse, "SomaTypes", SomaTypes) != BGStatusCode::BGStatusSuccess) {
 		return false
 	}

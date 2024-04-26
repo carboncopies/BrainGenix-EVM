@@ -20,6 +20,7 @@ BGStatusCode GetParBool(BG::Common::Logger::LoggingSystem& Logger_, const nlohma
 BGStatusCode GetParInt(BG::Common::Logger::LoggingSystem& Logger_, const nlohmann::json& _JSON, const std::string& ParName, long& Value);
 BGStatusCode GetParFloat(BG::Common::Logger::LoggingSystem& Logger_, const nlohmann::json& _JSON, const std::string& ParName, float& Value);
 BGStatusCode GetParString(BG::Common::Logger::LoggingSystem& Logger_, const nlohmann::json& _JSON, const std::string& ParName, std::string& Value);
+BGStatusCode GetParIntVec(BG::Common::Logger::LoggingSystem& Logger_, const nlohmann::json& _JSON, const std::string& ParName, std::vector<long>& Values);
 BGStatusCode GetParVec3D(BG::Common::Logger::LoggingSystem& Logger_, const nlohmann::json& _JSON, const std::string& ParName, Vec3D& Value);
 BGStatusCode GetParVecVec3D(BG::Common::Logger::LoggingSystem& Logger_, const nlohmann::json& _JSON, const std::string& ParName, std::vector<Vec3D>& Values);
 
