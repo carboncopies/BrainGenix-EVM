@@ -36,6 +36,16 @@ bool NetworkData::EnsureGotSomaPositions(SafeClient & _Client, const ValidationC
 	if (GetParVecVec3D(*_Client.Logger_, FirstResponse, "SomaCenters", SomaCenters) != BGStatusCode::BGStatusSuccess) {
 		return false;
 	}
+	// *** TODO: Implement GetParIntVec and the delivery of SomaTypes by NES.
+	if (GetParIntVec(*_Client.Logger_, FirstResponse, "SomaTypes", SomaTypes) != BGStatusCode::BGStatusSuccess) {
+		return false
+	}
+	return true;
+}
+
+bool NetworkData::EnsureGotConnections(SafeClient & _Client, const ValidationConfig & _Config) {
+	// *** TODO: Implement this.
+
 	return true;
 }
 
@@ -58,7 +68,47 @@ bool NetworkData::EnsureCentered(SafeClient & _Client, const ValidationConfig & 
 	return true;
 }
 
-DataCollector::DataCollector(const std::string& _KGTSaveName, const std::string& _EMUSaveName) {
+/**
+ * As connectomes are built, they are built such that the vertex numbers are already co-registered,
+ * meaning vertex 0 in KGT corresponds to vertex 1 in KGT. To do this, each network must know if it
+ * is the KGT or the EMU, and the KGT2Emu registration information must be provided.
+ */
+bool NetworkData::EnsureConnectome(SafeClient & _Client, const ValidationConfig & _Config, const std::vector<int>& KGT2Emu, size_t _NumVertices) {
+	if (BuiltConnectome) return true;
+
+	if (!EnsureGotConnections(_Client, _Config)) return false;
+
+	NumVertices = _NumVertices;
+	_Connectome.Vertices.resize(NumVertices);
+	if (IsKGT) {
+		// Create a vertex for each KGT neuron and create its edges based on connections.
+		for (size_t i = 0; i < KGT2Emu.size(); i++) {
+			_Connectome.Vertices[i] = std::make_unique<Vertex>(/* *** TODO: this needs to know the neuron type */);
+			// From KGT neuron i to Vertex i, add connections.
+			for (/* *** TODO: This needs to know the connections in the network */) {
+
+			}
+		}
+	} else {
+		// Make a reverse conversion map.
+		std::map<int, int> Emu2KGT;
+		for (size_t i = 0; i < SomaCenters.size(); i++) Emu2KGT.emplace(i, -1);
+		for (size_t i = 0; i < KGT2Emu.size(); i++) Emu2KGT[KGT2Emu[i]] = i;
+		// Create a vertex for each EMU neuron and create its edges based on connections.
+		for (size_t i = 0; i < Emu2KGT.size(); i++) {
+			_Connectome.Vertices[Emu2KGT[i]] = std::make_unique<Vertex>(/* *** TODO: this needs to know the neuron type */);
+			// From EMU neuron i to Vertex Emu2KGT[i], add connections using Emu2KGT target translations.
+			for (/* *** TODO: This needs to know the connections in the network */) { 
+			}
+		}
+	}
+
+	BuiltConnectome = true;
+	return true;
+}
+
+DataCollector::DataCollector(const std::string& _KGTSaveName, const std::string& _EMUSaveName):
+	KGTData(true), EMUData(false) {
 	KGTData.SaveName = _KGTSaveName;
 	EMUData.SaveName = _EMUSaveName;
 }
@@ -80,6 +130,16 @@ bool DataCollector::EnsureRegistered(SafeClient & _Client, const ValidationConfi
 
 	Registered = SimpleRegistration(_Client, _Config, *this);
 	return Registered;
+}
+
+bool DataCollector::EnsureConnectomes(SafeClient & _Client, const ValidationConfig & _Config) {
+	if (Connectomes) return true;
+
+	if (!EnsureRegistered(_Client, _Config)) return false;
+
+	size_t NumVertices = KGTData.SomaCenters.size() > EMUData.SomaCenters.size() ? KGTData.SomaCenters.size() : EMUData.SomaCenters.size();
+	Connectomes = KGTData.EnsureConnectome(_Client, _Config, KGT2Emu, NumVertices) && EMUData.EnsureConnectome(_Client, _Config, KGT2Emu, NumVertices);
+	return Connectomes;
 }
 
 } // BG

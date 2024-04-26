@@ -48,6 +48,7 @@ set(MAIN_SOURCES
   ${SRC_DIR}/Core/Util/LogLogo.cpp
   ${SRC_DIR}/Core/Util/LogLogo.h
 
+  ${SRC_DIR}/Core/Validation/Connectome.h
   ${SRC_DIR}/Core/Validation/ValidationConfig.h
   ${SRC_DIR}/Core/Validation/DataCollector.cpp
   ${SRC_DIR}/Core/Validation/DataCollector.h

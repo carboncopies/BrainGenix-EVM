@@ -18,12 +18,14 @@
 
 // Internal Libraries (BG convention: use <> instead of "")
 #include <RPC/SafeClient.h>
+#include <Validation/Connectome.h>
 #include <Validation/ValidationConfig.h>
 
 namespace BG {
 
 struct NetworkData {
     std::string SaveName;
+    bool IsKGT = false;
 
     bool Loaded = false;
     int SimID;
@@ -36,11 +38,24 @@ struct NetworkData {
 
     bool NetworkCentered = false;
 
+    bool BuiltConnectome = false;
+    size_t NumVertices = 0; // This is always the max of KGT and EMU number of neurons.
+    Connectome _Connectome;
+
+    NetworkData(bool _IsKGT): IsKGT(_IsKGT) {}
+
     bool EnsureLoaded(SafeClient & _Client, const ValidationConfig & _Config);
 
     bool EnsureGotSomaPositions(SafeClient & _Client, const ValidationConfig & _Config);
 
     bool EnsureCentered(SafeClient & _Client, const ValidationConfig & _Config);
+
+    /**
+     * As connectomes are built, they are built such that the vertex numbers are already co-registered,
+     * meaning vertex 0 in KGT corresponds to vertex 1 in KGT. To do this, each network must know if it
+     * is the KGT or the EMU, and the KGT2Emu registration information must be provided.
+     */
+    bool EnsureConnectome(SafeClient & _Client, const ValidationConfig & _Config, const std::vector<int>& KGT2Emu, size_t _NumVertices);
 
 };
 
@@ -59,6 +74,8 @@ struct DataCollector {
     Vec3D BestRotationAngles;
     std::vector<int> KGT2Emu; // Values specify which index in EMU matches the indexed one in KGT, e.g. emu_idx = KGT2Emu[kgt_idx].
 
+    bool Connectomes = false;
+
     N1MetricsData N1Metrics;
 
     DataCollector(const std::string& _KGTSaveName, const std::string& _EMUSaveName);
@@ -68,6 +85,8 @@ struct DataCollector {
     bool EnsureGotSomaPositions(SafeClient & _Client, const ValidationConfig & _Config);
 
     bool EnsureRegistered(SafeClient & _Client, const ValidationConfig & _Config);
+
+    bool EnsureConnectomes(SafeClient & _Client, const ValidationConfig & _Config);
 
 };
 

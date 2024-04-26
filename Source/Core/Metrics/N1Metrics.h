@@ -42,6 +42,19 @@ public:
 public:
     N1Metrics(SafeClient& _Client, const ValidationConfig& _Config, DataCollector& _CollectedData): Client_(_Client), Config(_Config), CollectedData(_CollectedData) {}
 
+    /**
+     * This is an efficient, simplified implementation of the Graph Edit Distance
+     * that depends on pre-registration of the two graphs being compared. Having
+     * pre-registered the graphs, as is possible by knowing neuron locations,
+     * calculating the number and types of edits required to convert the Emmulation
+     * graph into one isomorphic with the Known Ground-Truth graph is relatively
+     * easy and quick.
+     * 
+     * Before calling this, ensure that the connectome di-graph has been obtained
+     * for both networks.
+     */
+    bool PreRegisteredGED();
+
     bool ValidateAccurateSystemIdentification();
 
     bool ValidateAccurateTuning();
