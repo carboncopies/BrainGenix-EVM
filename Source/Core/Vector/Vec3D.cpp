@@ -15,11 +15,23 @@ Vec3D::Vec3D(const std::vector<float> & vec) : x(vec.at(0)), y(vec.at(1)), z(vec
 Vec3D Vec3D::operator+(const Vec3D &other) const {
     return Vec3D(this->x + other.x, this->y + other.y, this->z + other.z);
 };
+Vec3D Vec3D::operator+=(const Vec3D &other) {
+    x += other.x;
+    y += other.y;
+    z += other.z;
+    return *this;
+};
 
 //! Vector - Vector
 Vec3D Vec3D::operator-(const Vec3D &other) const {
     return Vec3D(this->x - other.x, this->y - other.y, this->z - other.z);
 };
+Vec3D Vec3D::operator-=(const Vec3D &other) {
+    x -= other.x;
+    y -= other.y;
+    z -= other.z;
+    return *this;
+}
 
 //! Vector * Vector
 Vec3D Vec3D::operator*(const Vec3D other) const {
@@ -48,7 +60,7 @@ bool Vec3D::operator!=(const Vec3D &other) const {
 };
 
 //! Indexed access to x, y, z (modulo 3)
-float& operator[](size_t idx) {
+float& Vec3D::operator[](size_t idx) {
     idx %= 3;
     if (idx==0) return x;
     if (idx==1) return y;

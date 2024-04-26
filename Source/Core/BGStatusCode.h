@@ -1,3 +1,4 @@
+#pragma once
 
 enum BGStatusCode {
     BGStatusSuccess = 0,

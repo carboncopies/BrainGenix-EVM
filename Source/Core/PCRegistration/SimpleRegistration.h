@@ -17,6 +17,7 @@
 
 
 // Internal Libraries (BG convention: use <> instead of "")
+#include <Validation/DataCollector.h>
 #include <Validation/ValidationConfig.h>
 #include <RPC/SafeClient.h>
 

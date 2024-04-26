@@ -18,6 +18,7 @@
 
 // Internal Libraries (BG convention: use <> instead of "")
 #include <RPC/SafeClient.h>
+#include <Vector/Vec3D.h>
 #include <Validation/Connectome.h>
 #include <Validation/ValidationConfig.h>
 
@@ -48,6 +49,8 @@ struct NetworkData {
 
     bool EnsureGotSomaPositions(SafeClient & _Client, const ValidationConfig & _Config);
 
+    bool EnsureGotConnections(SafeClient & _Client, const ValidationConfig & _Config);
+
     bool EnsureCentered(SafeClient & _Client, const ValidationConfig & _Config);
 
     /**
@@ -66,9 +69,9 @@ struct N1MetricsData {
 
 struct DataCollector {
 
-    NeuronPositionData KGTData;
+    NetworkData KGTData;
 
-    NeuronPositionData EMUData;
+    NetworkData EMUData;
 
     bool Registered = false;
     Vec3D BestRotationAngles;
@@ -83,6 +86,8 @@ struct DataCollector {
     bool EnsureLoaded(SafeClient & _Client, const ValidationConfig & _Config);
 
     bool EnsureGotSomaPositions(SafeClient & _Client, const ValidationConfig & _Config);
+
+    bool EnsureCentered(SafeClient & _Client, const ValidationConfig & _Config);
 
     bool EnsureRegistered(SafeClient & _Client, const ValidationConfig & _Config);
 

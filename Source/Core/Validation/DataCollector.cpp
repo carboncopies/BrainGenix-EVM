@@ -13,6 +13,7 @@
 #include <NESInteraction/NESRequest.h>
 #include <NESInteraction/NESSimLoad.h>
 #include <Vector/Vec3D.h>
+#include <Util/JSONUtils.h>
 #include <PCRegistration/SimpleRegistration.h>
 #include <Validation/DataCollector.h>
 
@@ -85,9 +86,9 @@ bool NetworkData::EnsureConnectome(SafeClient & _Client, const ValidationConfig 
 		for (size_t i = 0; i < KGT2Emu.size(); i++) {
 			_Connectome.Vertices[i] = std::make_unique<Vertex>(/* *** TODO: this needs to know the neuron type */);
 			// From KGT neuron i to Vertex i, add connections.
-			for (/* *** TODO: This needs to know the connections in the network */) {
+			// for (/* *** TODO: This needs to know the connections in the network */) {
 
-			}
+			// }
 		}
 	} else {
 		// Make a reverse conversion map.
@@ -98,8 +99,8 @@ bool NetworkData::EnsureConnectome(SafeClient & _Client, const ValidationConfig 
 		for (size_t i = 0; i < Emu2KGT.size(); i++) {
 			_Connectome.Vertices[Emu2KGT[i]] = std::make_unique<Vertex>(/* *** TODO: this needs to know the neuron type */);
 			// From EMU neuron i to Vertex Emu2KGT[i], add connections using Emu2KGT target translations.
-			for (/* *** TODO: This needs to know the connections in the network */) { 
-			}
+			// for (/* *** TODO: This needs to know the connections in the network */) { 
+			// }
 		}
 	}
 

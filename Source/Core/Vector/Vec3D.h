@@ -35,8 +35,10 @@ struct Vec3D {
     //! Operators
     //! Vector + Vector
     Vec3D operator+(const Vec3D &other) const;
+    Vec3D operator+=(const Vec3D &other);
     //! Vector - Vector
     Vec3D operator-(const Vec3D &other) const;
+    Vec3D operator-=(const Vec3D &other);
     //! Vector * Vector (Elementwise)
     Vec3D operator*(const Vec3D other) const;
     //! scalar * Vector
