@@ -24,6 +24,14 @@
 
 namespace BG {
 
+// These correspond to the SomaTypes obtained.
+enum NeuronType: int {
+    UnknownNeuron = 0,
+    GenericPrincipalNeuron = 1,
+    GenericInterneuron = 2,
+    NUMNeuronType
+};
+
 struct NetworkData {
     std::string SaveName;
     bool IsKGT = false;
@@ -33,6 +41,7 @@ struct NetworkData {
 
     bool SomaPositionsLoaded = false;
     std::vector<Vec3D> SomaCenters;
+    std::vector<int> SomaTypes;
 
     bool CentroidCalculated = false;
     Vec3D centroid;
