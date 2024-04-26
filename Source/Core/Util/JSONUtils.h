@@ -11,6 +11,7 @@
 
 #include <BG/Common/Logger/Logger.h>
 #include <BGStatusCode.h>
+#include <Vector/Vec3D.h>
 
 
 namespace BG {

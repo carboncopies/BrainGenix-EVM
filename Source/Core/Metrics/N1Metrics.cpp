@@ -45,9 +45,9 @@ const std::map<GEDoperations, float> GEDOpCost = {
  */
 bool N1Metrics::PreRegisteredGED() {
 	// 1. Find vertices in EMU that are not in KGT and delete them plus their connections.
-	for (size_t i = 0; i < CollectedData.EMUData.Connectome.Vertices.size(); i++) {
-		if (CollectedData.EMUData.Connectome.Vertices[i]) { // Exists in EMU.
-			if (!CollectedData.KGTData.Connectome.Vertices[i]) { // Does not exist in KGT.
+	for (size_t i = 0; i < CollectedData.EMUData._Connectome.Vertices.size(); i++) {
+		if (CollectedData.EMUData._Connectome.Vertices[i]) { // Exists in EMU.
+			if (!CollectedData.KGTData._Connectome.Vertices[i]) { // Does not exist in KGT.
 				// *** TODO: Continue here...
 			}
 		}
@@ -96,9 +96,9 @@ bool N1Metrics::ValidateAccurateTuning() {
 
 bool N1Metrics::Validate() {
 
-	if (!CollectedData.EnsureRegistered(_Client, _Config)) return false;
+	if (!CollectedData.EnsureRegistered(Client_, Config)) return false;
 
-	if (!CollectedData.EnsureConnectomes(_Client, _Config)) return false;
+	if (!CollectedData.EnsureConnectomes(Client_, Config)) return false;
 
 	ValidateAccurateSystemIdentification();
 

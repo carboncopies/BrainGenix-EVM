@@ -37,7 +37,7 @@ float ProximityError(const std::vector<Vec3D>& _PointsA, const std::vector<Vec3D
 }
 
 Vec3D BruteForceBestMatchAngles(const std::vector<Vec3D> _PointsA, const std::vector<Vec3D> _PointsB, std::vector<size_t>* _FromANearestInB, unsigned int try_angles) {
-	float smallest_error = std::numeric_limits<float>::max;
+	float smallest_error = std::numeric_limits<float>::max();
 	float fraction = 2.0*M_PI/float(try_angles);
 	Vec3D best_angles;
 	std::vector<size_t> fromAnearestinB;
@@ -52,8 +52,8 @@ Vec3D BruteForceBestMatchAngles(const std::vector<Vec3D> _PointsA, const std::ve
 				float x_angle = float(x)*fraction;
 				float y_angle = float(y)*fraction;
 				float z_angle = float(z)*fraction;
-				std::vector<Vec3D> rotatedB = RotatedSet3D(SomaCentersB, x_angle, y_angle, z_angle);
-				float error = ProximityError(SomaCentersA, rotatedB, fromAnearestinBptr);
+				std::vector<Vec3D> rotatedB = RotatedSet3D(_PointsB, x_angle, y_angle, z_angle);
+				float error = ProximityError(_PointsA, rotatedB, fromAnearestinBptr);
 				if (error < smallest_error) {
 					smallest_error = error;
 					best_angles = Vec3D(x_angle, y_angle, z_angle);
@@ -80,7 +80,7 @@ void MakeRegistrationMapUnique(const std::vector<Vec3D>& SomaCentersA, const std
 			// Find all A indices that point to this B index.
 			std::vector<size_t> BtoA;
 			BtoA.emplace_back(i);
-			for (size_t j = i+1l j < _RegistrationMap.size(); j++) {
+			for (size_t j = i+1; j < _RegistrationMap.size(); j++) {
 				if (_RegistrationMap[j] == B_idx) {
 					BtoA.emplace_back(j);
 				}
@@ -140,7 +140,7 @@ bool SimpleRegistration(SafeClient & _Client, const ValidationConfig & _Config, 
 	if (_CollectedData.KGTData.SomaCenters.size() > _CollectedData.EMUData.SomaCenters.size()) {
 		MakeRegistrationMapUnique(_CollectedData.KGTData.SomaCenters, _CollectedData.EMUData.SomaCenters, _CollectedData.BestRotationAngles, _CollectedData.KGT2Emu);
 	}
-	_CollectedData.Registered = true
+	_CollectedData.Registered = true;
 
 	// 5. Return registered correspondence ID map.
 	return true;

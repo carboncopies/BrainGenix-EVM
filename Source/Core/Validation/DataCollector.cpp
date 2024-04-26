@@ -38,7 +38,7 @@ bool NetworkData::EnsureGotSomaPositions(SafeClient & _Client, const ValidationC
 		return false;
 	}
 	if (GetParIntVec(*_Client.Logger_, FirstResponse, "SomaTypes", SomaTypes) != BGStatusCode::BGStatusSuccess) {
-		return false
+		return false;
 	}
 	return true;
 }
@@ -83,7 +83,7 @@ bool NetworkData::EnsureConnectome(SafeClient & _Client, const ValidationConfig 
 	if (IsKGT) {
 		// Create a vertex for each KGT neuron and create its edges based on connections.
 		for (size_t i = 0; i < KGT2Emu.size(); i++) {
-			_Connectome.Vertices[i] = std::make_unique<Vertex>(/* *** TODO: this needs to know the neuron type */);
+			//_Connectome.Vertices[i] = std::make_unique<Vertex>(/* *** TODO: this needs to know the neuron type */);
 			// From KGT neuron i to Vertex i, add connections.
 			// for (/* *** TODO: This needs to know the connections in the network */) {
 
@@ -96,7 +96,7 @@ bool NetworkData::EnsureConnectome(SafeClient & _Client, const ValidationConfig 
 		for (size_t i = 0; i < KGT2Emu.size(); i++) Emu2KGT[KGT2Emu[i]] = i;
 		// Create a vertex for each EMU neuron and create its edges based on connections.
 		for (size_t i = 0; i < Emu2KGT.size(); i++) {
-			_Connectome.Vertices[Emu2KGT[i]] = std::make_unique<Vertex>(/* *** TODO: this needs to know the neuron type */);
+			//_Connectome.Vertices[Emu2KGT[i]] = std::make_unique<Vertex>(/* *** TODO: this needs to know the neuron type */);
 			// From EMU neuron i to Vertex Emu2KGT[i], add connections using Emu2KGT target translations.
 			// for (/* *** TODO: This needs to know the connections in the network */) { 
 			// }

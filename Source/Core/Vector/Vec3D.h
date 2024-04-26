@@ -43,8 +43,10 @@ struct Vec3D {
     Vec3D operator*(const Vec3D other) const;
     //! scalar * Vector
     Vec3D operator*(const float other) const;
+    Vec3D operator*=(const float other);
     //! Vector / scalar
     Vec3D operator/(const float other) const;
+    Vec3D operator/=(const float other);
     //! Vector == Vector
     bool operator==(const Vec3D &other) const;
     //! Vector != Vector

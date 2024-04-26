@@ -21,9 +21,23 @@
 
 namespace BG {
 
+enum EdgeType {
+    UnknownConnection = 0,
+    ExcitatoryConnection = 1,
+    InhibitoryConnection = 2,
+    NUMEdgeType
+};
+
 struct Edge {
-    EdgeType type_;
-    float weight_;
+    EdgeType type_ = UnknownConnection;
+    float weight_ = 0.0;
+};
+
+enum VertexType: int {
+    UnknownVertex = 0,
+    PrincipalNeuron = 1,
+    Interneuron = 2,
+    NUMVertexType
 };
 
 /**
@@ -39,9 +53,9 @@ struct Edge {
  * points can receive their own 'vertex type'.
  */
 struct Vertex {
-    VertexType type_;
+    VertexType type_ = UnknownVertex;
     // < target vertex ID, edge data >
-    std::map<unsigned int, std::unique_ptr<Edge>>
+    std::map<unsigned int, std::unique_ptr<Edge>> Edges;
 
     Vertex(VertexType _type): type_(_type) {}
 };

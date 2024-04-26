@@ -41,7 +41,7 @@ struct NetworkData {
 
     bool SomaPositionsLoaded = false;
     std::vector<Vec3D> SomaCenters;
-    std::vector<int> SomaTypes;
+    std::vector<long> SomaTypes;
 
     bool CentroidCalculated = false;
     Vec3D centroid;

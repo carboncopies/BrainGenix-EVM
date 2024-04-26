@@ -5,6 +5,7 @@
  * more tests to prevent serious errors or crashes of the server. (R.K.)
  */
 
+#include <Vector/Vec3D.h>
 #include <Util/JSONUtils.h>
 
 namespace BG {
@@ -105,7 +106,7 @@ BGStatusCode GetParIntVec(BG::Common::Logger::LoggingSystem& Logger_, const nloh
 
 BGStatusCode ExtractVec3D(BG::Common::Logger::LoggingSystem& Logger_, const nlohmann::json& _JSON, Vec3D& Value) {
     if (!_JSON.is_array()) {
-        Logger_.Log("Error Parameter '" + ParName + "', Wrong Type (expected array) Request Is: " + _JSON.dump(), 7);
+        Logger_.Log("Error, Wrong Type (expected array) Request Is: " + _JSON.dump(), 7);
         return BGStatusCode::BGStatusInvalidParametersPassed;
     }
     if (_JSON.size() != 3) {

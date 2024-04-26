@@ -42,12 +42,24 @@ Vec3D Vec3D::operator*(const Vec3D other) const {
 Vec3D Vec3D::operator*(const float other) const {
     return Vec3D(this->x * other, this->y * other, this->z * other);
 };
+Vec3D Vec3D::operator*=(const float other) {
+    x *= other;
+    y *= other;
+    z *= other;
+    return *this;
+}
 
 //! Vector / scalar
 Vec3D Vec3D::operator/(const float other) const {
     assert(other != 0.0);
     return Vec3D(this->x / other, this->y / other, this->z / other);
 };
+Vec3D Vec3D::operator/=(const float other) {
+    x /= other;
+    y /= other;
+    z /= other;
+    return *this;
+}
 
 //! Vector == Vector
 bool Vec3D::operator==(const Vec3D &other) const {
@@ -229,7 +241,7 @@ Vec3D GeometricCenter(const std::vector<Vec3D> _Vectors) {
 }
 
 size_t NearestVec3D(const Vec3D & _Point, const std::vector<Vec3D> & _Candidates, float* _NearestDistance) {
-    float smallest = std::numeric_limits<float>::max;
+    float smallest = std::numeric_limits<float>::max();
     size_t smallest_idx = 0;
     for (size_t i = 0; i < _Candidates.size(); i++) {
         float d = _Point.Distance(_Candidates.at(i));

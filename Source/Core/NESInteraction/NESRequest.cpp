@@ -24,7 +24,7 @@ const std::vector<std::string> BgErrorStr = {
 bool MakeNESRequest(SafeClient& _Client, const std::string& _Route, const nlohmann::json& _Data, nlohmann::json& _Result) {
 	if (_Route.empty()) {
 		_Client.Logger_->Log("Route must be non-empty string.", 7);
-		return false
+		return false;
 	}
 	nlohmann::json RequestJSON;
 	RequestJSON["ReqID"] = _Client.GetRequestID();
