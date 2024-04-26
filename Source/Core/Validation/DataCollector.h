@@ -48,6 +48,11 @@ struct NetworkData {
 
     bool NetworkCentered = false;
 
+    bool ConnectionsLoaded = false;
+    std::vector<std::vector<long>> ConnectionTargets;
+    std::vector<std::vector<long>> ConnectionTypes;
+    std::vector<std::vector<float>> ConnectionWeights;
+
     bool BuiltConnectome = false;
     size_t NumVertices = 0; // This is always the max of KGT and EMU number of neurons.
     Connectome _Connectome;

@@ -27,6 +27,8 @@ bool NetworkData::EnsureLoaded(SafeClient & _Client, const ValidationConfig & _C
 }
 
 bool NetworkData::EnsureGotSomaPositions(SafeClient & _Client, const ValidationConfig & _Config) {
+	if (SomaPositionsLoaded) return true;
+
 	if (!EnsureLoaded(_Client, _Config)) return false;
 
 	nlohmann::json Response;
@@ -40,12 +42,30 @@ bool NetworkData::EnsureGotSomaPositions(SafeClient & _Client, const ValidationC
 	if (GetParIntVec(*_Client.Logger_, FirstResponse, "SomaTypes", SomaTypes) != BGStatusCode::BGStatusSuccess) {
 		return false;
 	}
+	SomaPositionsLoaded = true;
 	return true;
 }
 
 bool NetworkData::EnsureGotConnections(SafeClient & _Client, const ValidationConfig & _Config) {
-	// *** TODO: Implement this.
+	if (ConnectionsLoaded) return true;
 
+	if (!EnsureLoaded(_Client, _Config)) return false;
+
+	nlohmann::json Response;
+	if (!MakeNESRequest(_Client, "Simulation/GetConnectome", nlohmann::json("{ \"SimID\": "+std::to_string(SimID)+" }"), Response)) {
+		return false;
+	}
+	nlohmann::json& FirstResponse = Response[0];
+	if (GetParVecIntVec(*_Client.Logger_, FirstResponse, "ConnectionTargets", ConnectionTargets) != BGStatusCode::BGStatusSuccess) {
+		return false;
+	}
+	if (GetParVecIntVec(*_Client.Logger_, FirstResponse, "ConnectionTypes", ConnectionTypes) != BGStatusCode::BGStatusSuccess) {
+		return false;
+	}
+	if (GetParVecFloatVec(*_Client.Logger_, FirstResponse, "ConnectionWeights", ConnectionWeights) != BGStatusCode::BGStatusSuccess) {
+		return false;
+	}
+	ConnectionsLoaded = true;
 	return true;
 }
 
@@ -83,11 +103,14 @@ bool NetworkData::EnsureConnectome(SafeClient & _Client, const ValidationConfig 
 	if (IsKGT) {
 		// Create a vertex for each KGT neuron and create its edges based on connections.
 		for (size_t i = 0; i < KGT2Emu.size(); i++) {
-			//_Connectome.Vertices[i] = std::make_unique<Vertex>(/* *** TODO: this needs to know the neuron type */);
+			_Connectome.Vertices[i] = std::make_unique<Vertex>(VertexType(SomaTypes[i]));
 			// From KGT neuron i to Vertex i, add connections.
-			// for (/* *** TODO: This needs to know the connections in the network */) {
-
-			// }
+			//_Connectome.Vertices[i]->Edges.resize(ConnectionTargets[i].size()); -- Sparse option...
+			_Connectome.Vertices[i]->Edges.resize(NumVertices);
+			for (size_t j = 0; j < ConnectionTargets[i].size(); j++) {
+				int target_id = ConnectionTargets[i][j];
+				_Connectome.Vertices[i]->Edges[target_id] = std::make_unique<Edge>(ConnectionTypes[i][j], ConnectionWeights[i][j]);
+			}
 		}
 	} else {
 		// Make a reverse conversion map.
@@ -95,11 +118,15 @@ bool NetworkData::EnsureConnectome(SafeClient & _Client, const ValidationConfig 
 		for (size_t i = 0; i < SomaCenters.size(); i++) Emu2KGT.emplace(i, -1);
 		for (size_t i = 0; i < KGT2Emu.size(); i++) Emu2KGT[KGT2Emu[i]] = i;
 		// Create a vertex for each EMU neuron and create its edges based on connections.
-		for (size_t i = 0; i < Emu2KGT.size(); i++) {
-			//_Connectome.Vertices[Emu2KGT[i]] = std::make_unique<Vertex>(/* *** TODO: this needs to know the neuron type */);
+		for (size_t Emu_i = 0; Emu_i < Emu2KGT.size(); Emu_i++) {
+			int KGT_i = Emu2KGT[i];
+			_Connectome.Vertices[KGT_i] = std::make_unique<Vertex>(VertexType(SomaTypes[Emu_i]));
 			// From EMU neuron i to Vertex Emu2KGT[i], add connections using Emu2KGT target translations.
-			// for (/* *** TODO: This needs to know the connections in the network */) { 
-			// }
+			_Connectome.Vertices[KGT_i]->Edges.resize(NumVertices);
+			for (size_t Emu_j = 0; Emu_j < ConnectionTargets[Emu_i].size(); Emu_j++) {
+				int target_id = Emu2KGT[ConnectionTargets[Emu_i][Emu_j]];
+				_Connectome.Vertices[KGT_i]->Edges[target_id] = std::make_unique<Edge>(ConnectionTypes[Emu_i][Emu_j], ConnectionWeights[Emu_i][Emu_j]);
+			}
 		}
 	}
 

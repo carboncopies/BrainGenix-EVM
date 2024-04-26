@@ -31,6 +31,8 @@ enum EdgeType {
 struct Edge {
     EdgeType type_ = UnknownConnection;
     float weight_ = 0.0;
+
+    Edge(EdgeType _type, float _weight): type_(_type), weight_(_weight) {}
 };
 
 enum VertexType: int {

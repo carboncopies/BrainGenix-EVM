@@ -46,11 +46,17 @@ const std::map<GEDoperations, float> GEDOpCost = {
 bool N1Metrics::PreRegisteredGED() {
 	// 1. Find vertices in EMU that are not in KGT and delete them plus their connections.
 	for (size_t i = 0; i < CollectedData.EMUData._Connectome.Vertices.size(); i++) {
-		if (CollectedData.EMUData._Connectome.Vertices[i]) { // Exists in EMU.
-			if (!CollectedData.KGTData._Connectome.Vertices[i]) { // Does not exist in KGT.
+		// *** Go through this differently... just go through Emu2KGT and see which
+		//     ones have no KGT equivalent
+		//if (CollectedData.EMUData._Connectome.Vertices[i]) { // Exists in EMU.
+			//if (!CollectedData.KGTData._Connectome.Vertices[i]) { // Does not exist in KGT.
 				// *** TODO: Continue here...
-			}
-		}
+				/*
+				  Attach to report, a vertex deletion for the vertex in Emu
+				  and colect the cost of that operation.
+				 */
+			//}
+		//}
 	}
 
 	// 2. Find vertices in KGT that have no equivalent in EMU and insert them.
