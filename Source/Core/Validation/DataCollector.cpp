@@ -109,7 +109,7 @@ bool NetworkData::EnsureConnectome(SafeClient & _Client, const ValidationConfig 
 			_Connectome.Vertices[i]->Edges.resize(NumVertices);
 			for (size_t j = 0; j < ConnectionTargets[i].size(); j++) {
 				int target_id = ConnectionTargets[i][j];
-				_Connectome.Vertices[i]->Edges[target_id] = std::make_unique<Edge>(ConnectionTypes[i][j], ConnectionWeights[i][j]);
+				_Connectome.Vertices[i]->Edges[target_id] = std::make_unique<Edge>(EdgeType(ConnectionTypes[i][j]), ConnectionWeights[i][j]);
 			}
 		}
 	} else {
@@ -125,7 +125,7 @@ bool NetworkData::EnsureConnectome(SafeClient & _Client, const ValidationConfig 
 			_Connectome.Vertices[KGT_i]->Edges.resize(NumVertices);
 			for (size_t Emu_j = 0; Emu_j < ConnectionTargets[Emu_i].size(); Emu_j++) {
 				int target_id = Emu2KGT[ConnectionTargets[Emu_i][Emu_j]];
-				_Connectome.Vertices[KGT_i]->Edges[target_id] = std::make_unique<Edge>(ConnectionTypes[Emu_i][Emu_j], ConnectionWeights[Emu_i][Emu_j]);
+				_Connectome.Vertices[KGT_i]->Edges[target_id] = std::make_unique<Edge>(EdgeType(ConnectionTypes[Emu_i][Emu_j]), ConnectionWeights[Emu_i][Emu_j]);
 			}
 		}
 	}
