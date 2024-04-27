@@ -89,9 +89,10 @@ struct DataCollector {
 
     bool Registered = false;
     Vec3D BestRotationAngles;
-    std::vector<int> KGT2Emu; // Values specify which index in EMU matches the indexed one in KGT, e.g. emu_idx = KGT2Emu[kgt_idx].
+    std::vector<int> KGT2Emu; // Values (when > 0) specify which index in EMU matches the indexed one in KGT, e.g. emu_idx = KGT2Emu[kgt_idx].
 
     bool Connectomes = false;
+    std::map<int, int> Emu2KGT; // This is set during EnsureConnectomes.
 
     N1MetricsData N1Metrics;
 

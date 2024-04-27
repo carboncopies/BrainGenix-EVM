@@ -13,16 +13,6 @@
 
 namespace BG {
 
-enum GEDoperations {
-	vertex_insertion,
-    vertex_deletion,
-    vertex_substitution,
-    edge_insertion,
-    edge_deletion,
-    edge_substitution,
-    NUMGEDoperations
-};
-
 const std::map<GEDoperations, float> GEDOpCost = {
 	{ vertex_insertion, 1.0 },
     { vertex_deletion, 1.0 },
@@ -44,10 +34,19 @@ const std::map<GEDoperations, float> GEDOpCost = {
  * for both networks.
  */
 bool N1Metrics::PreRegisteredGED() {
+	float total_GED_cost = 0.0;
+
 	// 1. Find vertices in EMU that are not in KGT and delete them plus their connections.
+	for (size_t Emu_i = 0; Emu_i < CollectedData.Emu2KGT.size(); Emu_i++) {
+		if (Emu2KGT[Emu_i] < 0) { // Does not exist in KGT.
+			float cost = GEDOpCost[vertex_deletion];
+			GraphEdits.emplace_back(vertex_deletion, std::to_string(Emu_i), cost);
+			total_GED_cost += cost;
+		}
+	}
+
+	// 2. Find vertices in KGT that have no equivalent in EMU and insert them and their edges.
 	for (size_t i = 0; i < CollectedData.EMUData._Connectome.Vertices.size(); i++) {
-		// *** Go through this differently... just go through Emu2KGT and see which
-		//     ones have no KGT equivalent
 		//if (CollectedData.EMUData._Connectome.Vertices[i]) { // Exists in EMU.
 			//if (!CollectedData.KGTData._Connectome.Vertices[i]) { // Does not exist in KGT.
 				// *** TODO: Continue here...
@@ -58,8 +57,6 @@ bool N1Metrics::PreRegisteredGED() {
 			//}
 		//}
 	}
-
-	// 2. Find vertices in KGT that have no equivalent in EMU and insert them.
 
 	// 3. For each vertex, check the type and switch it if necessary.
 

@@ -89,11 +89,16 @@ bool NetworkData::EnsureCentered(SafeClient & _Client, const ValidationConfig & 
 }
 
 /**
+ * *** TODO: I think we need to abandon the co-registration of the connectomes.
+ *           I think that instead we need to just build simple connectomes within the
+ *           indexing scheme of the KGT or EMU network itself. Then, apply the maps
+ *           in one direction or the other during comparison operations. Otherwise,
+ *           ther is a high risk that some data will not be available.
  * As connectomes are built, they are built such that the vertex numbers are already co-registered,
  * meaning vertex 0 in KGT corresponds to vertex 1 in KGT. To do this, each network must know if it
  * is the KGT or the EMU, and the KGT2Emu registration information must be provided.
  */
-bool NetworkData::EnsureConnectome(SafeClient & _Client, const ValidationConfig & _Config, const std::vector<int>& KGT2Emu, size_t _NumVertices) {
+bool NetworkData::EnsureConnectome(SafeClient & _Client, const ValidationConfig & _Config, const std::vector<int>& KGT2Emu, std::map<int, int>& Emu2KGT, size_t _NumVertices) {
 	if (BuiltConnectome) return true;
 
 	if (!EnsureGotConnections(_Client, _Config)) return false;
@@ -114,9 +119,8 @@ bool NetworkData::EnsureConnectome(SafeClient & _Client, const ValidationConfig 
 		}
 	} else {
 		// Make a reverse conversion map.
-		std::map<int, int> Emu2KGT;
 		for (size_t i = 0; i < SomaCenters.size(); i++) Emu2KGT.emplace(i, -1);
-		for (size_t i = 0; i < KGT2Emu.size(); i++) Emu2KGT[KGT2Emu[i]] = i;
+		for (size_t i = 0; i < KGT2Emu.size(); i++) if (KGT2Emu[i] >= 0) Emu2KGT[KGT2Emu[i]] = i;
 		// Create a vertex for each EMU neuron and create its edges based on connections.
 		for (size_t Emu_i = 0; Emu_i < Emu2KGT.size(); Emu_i++) {
 			int KGT_i = Emu2KGT[i];
@@ -165,7 +169,7 @@ bool DataCollector::EnsureConnectomes(SafeClient & _Client, const ValidationConf
 	if (!EnsureRegistered(_Client, _Config)) return false;
 
 	size_t NumVertices = KGTData.SomaCenters.size() > EMUData.SomaCenters.size() ? KGTData.SomaCenters.size() : EMUData.SomaCenters.size();
-	Connectomes = KGTData.EnsureConnectome(_Client, _Config, KGT2Emu, NumVertices) && EMUData.EnsureConnectome(_Client, _Config, KGT2Emu, NumVertices);
+	Connectomes = KGTData.EnsureConnectome(_Client, _Config, KGT2Emu, Emu2KGT, NumVertices) && EMUData.EnsureConnectome(_Client, _Config, KGT2Emu, Emu2KGT, NumVertices);
 	return Connectomes;
 }
 
