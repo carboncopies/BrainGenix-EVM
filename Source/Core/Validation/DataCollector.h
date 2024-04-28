@@ -54,7 +54,7 @@ struct NetworkData {
     std::vector<std::vector<float>> ConnectionWeights;
 
     bool BuiltConnectome = false;
-    size_t NumVertices = 0; // This is always the max of KGT and EMU number of neurons.
+    size_t NumVertices = 0; // This relates to the connetome generated from the cells as identified in this network. Use KGT2Emu and Emu2KGT maps for comparisons.
     Connectome _Connectome;
 
     NetworkData(bool _IsKGT): IsKGT(_IsKGT) {}
@@ -67,12 +67,7 @@ struct NetworkData {
 
     bool EnsureCentered(SafeClient & _Client, const ValidationConfig & _Config);
 
-    /**
-     * As connectomes are built, they are built such that the vertex numbers are already co-registered,
-     * meaning vertex 0 in KGT corresponds to vertex 1 in KGT. To do this, each network must know if it
-     * is the KGT or the EMU, and the KGT2Emu registration information must be provided.
-     */
-    bool EnsureConnectome(SafeClient & _Client, const ValidationConfig & _Config, const std::vector<int>& KGT2Emu, size_t _NumVertices);
+    bool EnsureConnectome(SafeClient & _Client, const ValidationConfig & _Config, const std::vector<int>& KGT2Emu, std::map<int, int>& Emu2KGT, size_t _NumVertices);
 
 };
 

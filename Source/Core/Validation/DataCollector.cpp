@@ -89,49 +89,35 @@ bool NetworkData::EnsureCentered(SafeClient & _Client, const ValidationConfig & 
 }
 
 /**
- * *** TODO: I think we need to abandon the co-registration of the connectomes.
- *           I think that instead we need to just build simple connectomes within the
- *           indexing scheme of the KGT or EMU network itself. Then, apply the maps
- *           in one direction or the other during comparison operations. Otherwise,
- *           ther is a high risk that some data will not be available.
- * As connectomes are built, they are built such that the vertex numbers are already co-registered,
- * meaning vertex 0 in KGT corresponds to vertex 1 in KGT. To do this, each network must know if it
- * is the KGT or the EMU, and the KGT2Emu registration information must be provided.
+ * Creates the flat Connectome info map for use in validation.
+ * Also creates an Emu2KGT equivalent of KGT2Emu for mapping between networks.
  */
 bool NetworkData::EnsureConnectome(SafeClient & _Client, const ValidationConfig & _Config, const std::vector<int>& KGT2Emu, std::map<int, int>& Emu2KGT, size_t _NumVertices) {
 	if (BuiltConnectome) return true;
 
 	if (!EnsureGotConnections(_Client, _Config)) return false;
 
-	NumVertices = _NumVertices;
+	NumVertices = ConnectionTargets.size();
 	_Connectome.Vertices.resize(NumVertices);
-	if (IsKGT) {
-		// Create a vertex for each KGT neuron and create its edges based on connections.
-		for (size_t i = 0; i < KGT2Emu.size(); i++) {
-			_Connectome.Vertices[i] = std::make_unique<Vertex>(VertexType(SomaTypes[i]));
-			// From KGT neuron i to Vertex i, add connections.
-			//_Connectome.Vertices[i]->Edges.resize(ConnectionTargets[i].size()); -- Sparse option...
-			_Connectome.Vertices[i]->Edges.resize(NumVertices);
-			for (size_t j = 0; j < ConnectionTargets[i].size(); j++) {
-				int target_id = ConnectionTargets[i][j];
-				_Connectome.Vertices[i]->Edges[target_id] = std::make_unique<Edge>(EdgeType(ConnectionTypes[i][j]), ConnectionWeights[i][j]);
-			}
+	// Create a vertex for each  euron and create its edges based on connections.
+	for (size_t i = 0; i < KGT2Emu.size(); i++) {
+		_Connectome.Vertices[i] = std::make_unique<Vertex>(VertexType(SomaTypes[i]));
+		// From neuron i to Vertex i, add connections.
+		for (size_t j = 0; j < ConnectionTargets[i].size(); j++) {
+			int target_id = ConnectionTargets[i][j];
+			int source_id = i;
+			EdgeType type_ = EdgeType(ConnectionTypes[i][j]);
+			float weight_ = ConnectionWeights[i][j];
+			// *** TODO: With all the allocations involved this is probably unnecessarily slow.
+			_Connectome.Vertices[source_id]->OutEdges[target_id] = std::make_unique<Edge>(type_, weight_);
+			_Connectome.Vertices[target_id]->InEdges[source_id] = std::make_unique<Edge>(type_, weight_);
 		}
-	} else {
+	}
+	
+	if (!IsKGT) {
 		// Make a reverse conversion map.
 		for (size_t i = 0; i < SomaCenters.size(); i++) Emu2KGT.emplace(i, -1);
 		for (size_t i = 0; i < KGT2Emu.size(); i++) if (KGT2Emu[i] >= 0) Emu2KGT[KGT2Emu[i]] = i;
-		// Create a vertex for each EMU neuron and create its edges based on connections.
-		for (size_t Emu_i = 0; Emu_i < Emu2KGT.size(); Emu_i++) {
-			int KGT_i = Emu2KGT[i];
-			_Connectome.Vertices[KGT_i] = std::make_unique<Vertex>(VertexType(SomaTypes[Emu_i]));
-			// From EMU neuron i to Vertex Emu2KGT[i], add connections using Emu2KGT target translations.
-			_Connectome.Vertices[KGT_i]->Edges.resize(NumVertices);
-			for (size_t Emu_j = 0; Emu_j < ConnectionTargets[Emu_i].size(); Emu_j++) {
-				int target_id = Emu2KGT[ConnectionTargets[Emu_i][Emu_j]];
-				_Connectome.Vertices[KGT_i]->Edges[target_id] = std::make_unique<Edge>(EdgeType(ConnectionTypes[Emu_i][Emu_j]), ConnectionWeights[Emu_i][Emu_j]);
-			}
-		}
 	}
 
 	BuiltConnectome = true;

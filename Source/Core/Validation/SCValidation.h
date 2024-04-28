@@ -22,6 +22,8 @@
 
 namespace BG {
 
+bool GenerateReport();
+
 /**
  * This is a simple entry point through which to carry out validation
  * using metrics that area suitable for a pair of emulation and

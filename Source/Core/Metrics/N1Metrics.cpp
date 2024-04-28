@@ -38,24 +38,48 @@ bool N1Metrics::PreRegisteredGED() {
 
 	// 1. Find vertices in EMU that are not in KGT and delete them plus their connections.
 	for (size_t Emu_i = 0; Emu_i < CollectedData.Emu2KGT.size(); Emu_i++) {
-		if (Emu2KGT[Emu_i] < 0) { // Does not exist in KGT.
-			float cost = GEDOpCost[vertex_deletion];
+		if (CollectedData.Emu2KGT[Emu_i] < 0) { // Does not exist in KGT.
+			// Delete outgoing edges.
+			for (const auto & [target_id, edge] : CollectedData.EMUData._Connectome.Vertices.at(Emu_i)->OutEdges) {
+				float cost = GEDOpCost.at(edge_deletion);
+				GraphEdits.emplace_back(edge_deletion, std::to_string(Emu_i)+'>'+std::to_string(target_id), cost);
+				total_GED_cost += cost;
+			}
+			// Delete incoming edges.
+			for (const auto & [source_id, edge] : CollectedData.EMUData._Connectome.Vertices.at(Emu_i)->InEdges) {
+				float cost = GEDOpCost.at(edge_deletion);
+				GraphEdits.emplace_back(edge_deletion, std::to_string(source_id)+'>'+std::to_string(Emu_i), cost);
+				total_GED_cost += cost;
+			}
+			// Delete vertex.
+			float cost = GEDOpCost.at(vertex_deletion);
 			GraphEdits.emplace_back(vertex_deletion, std::to_string(Emu_i), cost);
 			total_GED_cost += cost;
+
 		}
 	}
 
 	// 2. Find vertices in KGT that have no equivalent in EMU and insert them and their edges.
-	for (size_t i = 0; i < CollectedData.EMUData._Connectome.Vertices.size(); i++) {
-		//if (CollectedData.EMUData._Connectome.Vertices[i]) { // Exists in EMU.
-			//if (!CollectedData.KGTData._Connectome.Vertices[i]) { // Does not exist in KGT.
-				// *** TODO: Continue here...
-				/*
-				  Attach to report, a vertex deletion for the vertex in Emu
-				  and colect the cost of that operation.
-				 */
-			//}
-		//}
+	for (size_t KGT_i = 0; KGT_i < CollectedData.KGT2Emu.size(); KGT_i++) {
+		if (CollectedData.KGT2Emu[KGT_i] < 0) { // No equivalent in EMU.
+			// Insert missing vertex.
+			float cost = GEDOpCost.at(vertex_insertion);
+			GraphEdits.emplace_back(vertex_insertion, "KGT"+std::to_string(KGT_i), cost);
+			total_GED_cost += cost;
+			// Insert incoming edges.
+			for (const auto & [source_id, edge] : CollectedData.KGTData._Connectome.Vertices.at(KGT_i)->InEdges) {
+				float cost = GEDOpCost.at(edge_insertion);
+				GraphEdits.emplace_back(edge_insertion, "KGT"+std::to_string(source_id)+'>'+std::to_string(KGT_i), cost);
+				total_GED_cost += cost;
+			}
+			// Insert outgoing edges.
+			for (const auto & [target_id, edge] : CollectedData.KGTData._Connectome.Vertices.at(KGT_i)->OutEdges) {
+				float cost = GEDOpCost.at(edge_insertion);
+				GraphEdits.emplace_back(edge_insertion, "KGT"+std::to_string(KGT_i)+'>'+std::to_string(target_id), cost);
+				total_GED_cost += cost;
+			}
+			
+		}
 	}
 
 	// 3. For each vertex, check the type and switch it if necessary.

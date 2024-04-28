@@ -46,6 +46,11 @@ enum VertexType: int {
  * This version is very simple, as it merges all edges in one direction between a pair of
  * vertices into a single edge with combined weight.
  * 
+ * This creates a sparse representation of the Connectome. To simplify finding both
+ * incoming and outgoing connections of a vertex, it maintains two edge lists
+ * for each vertex.
+ * Editing the connectome has to edit both lists.
+ * 
  * TODO: *** More sophisticated versions of this will be needed to analyze and express
  * functional differences when the underlying neuronal circuits are more complex (e.g.
  * have multiple types of synapses, have multiple connections between a pair.)
@@ -57,7 +62,8 @@ enum VertexType: int {
 struct Vertex {
     VertexType type_ = UnknownVertex;
     // < target vertex ID, edge data >
-    std::map<unsigned int, std::unique_ptr<Edge>> Edges;
+    std::map<unsigned int, std::unique_ptr<Edge>> OutEdges;
+    std::map<unsigned int, std::unique_ptr<Edge>> InEdges;
 
     Vertex(VertexType _type): type_(_type) {}
 };

@@ -17,6 +17,14 @@
 
 namespace BG {
 
+bool GenerateReport() {
+	// Possibly include the two Connectomes
+	// Include the KGT2Emu mapping
+	// Include Graph Edits
+	// Include Scores
+	return true;
+}
+
 /**
  * This is a simple entry point through which to carry out validation
  * using metrics that area suitable for a pair of emulation and
@@ -41,6 +49,10 @@ bool SCVAlidate(SafeClient & _Client, const std::string & _KGTSaveName, const st
 	}
 
 	// *** There need to be more metrics applied here!
+
+	if (!GenerateReport()) {
+		return false;
+	}
 
 	return true;
 }
