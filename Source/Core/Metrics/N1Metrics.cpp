@@ -10,16 +10,28 @@
 
 // Internal Libraries (BG convention: use <> instead of "")
 #include <Metrics/N1Metrics.h>
+#include <Validation/Connectome.h>
+
 
 namespace BG {
 
 const std::map<GEDoperations, float> GEDOpCost = {
 	{ vertex_insertion, 1.0 },
     { vertex_deletion, 1.0 },
-    { vertex_substitution, 1.0 },
-    { edge_insertion, 0.5 },
-    { edge_deletion, 0.5 },
-    { edge_substitution, 0.5 },
+    { vertex_substitution, 1.0 }, // Or 2.0?
+    { edge_insertion, 1.0 }, // Or 0.5?
+    { edge_deletion, 1.0 }, // Or 0.5?
+    { edge_substitution, 1.0 }, // Or 0.75?
+};
+
+const std::map<VertexType, std::string> VertexType2Label = {
+	{ PrincipalNeuron, "PrincipalNeuron" },
+	{ Interneuron, "Interneuron" },
+};
+
+const std::map<EdgeType, std::string> EdgeType2Label = {
+	{ ExcitatoryConnection, "Excitatory" },
+	{ InhibitoryConnection, "Inhibitory" },
 };
 
 /**
@@ -32,6 +44,11 @@ const std::map<GEDoperations, float> GEDOpCost = {
  * 
  * Before calling this, ensure that the connectome di-graph has been obtained
  * for both networks.
+ * 
+ * The total score is given in two ways, namely:
+ * 1. The raw GED cost obtained by summing the cost of all operations needed.
+ * 2. A relative GED score that compares the total cost with the number of
+ *    vertices and edges in the KGT that need to be deduced correctly.
  */
 bool N1Metrics::PreRegisteredGED() {
 	float total_GED_cost = 0.0;
@@ -78,17 +95,79 @@ bool N1Metrics::PreRegisteredGED() {
 				GraphEdits.emplace_back(edge_insertion, "KGT"+std::to_string(KGT_i)+'>'+std::to_string(target_id), cost);
 				total_GED_cost += cost;
 			}
-			
+
 		}
 	}
 
 	// 3. For each vertex, check the type and switch it if necessary.
+	for (size_t Emu_i = 0; Emu_i < CollectedData.Emu2KGT.size(); Emu_i++) {
+		if (CollectedData.Emu2KGT[Emu_i] >= 0) {
+			auto EmuVertexType = CollectedData.EMUData._Connectome.Vertices.at(Emu_i)->type_;
+			auto KGTVertexType = CollectedData.KGTData._Connectome.Vertices.at(CollectedData.Emu2KGT[Emu_i])->type_;
+			if (EmuVertexType != KGTVertexType) {
+				float cost = GEDOpCost.at(vertex_substitution);
+				auto it = VertexType2Label.find(KGTVertexType);
+				if (it == VertexType2Label.end()) {
+					Client_.Logger_->Log("KGT vertex type refers to unknown type: "+std::to_string(int(KGTVertexType)), 7);
+					return false;
+				}
+				GraphEdits.emplace_back(vertex_substitution, it->second, cost);
+				total_GED_cost += cost;
+			}
 
-	// 4. For each vertex, check edges that should not exist and delete them.
+			// Check the types of outgoing edges only (we don't want to double-count errors).
+			for (const auto & [target_id, edge] : CollectedData.EMUData._Connectome.Vertices.at(Emu_i)->OutEdges) {
+				// Find equivalent edge in the KGT.
+				int KGT_source_id = CollectedData.Emu2KGT[Emu_i];
+				int KGT_target_id = CollectedData.Emu2KGT[target_id];
+				if ((KGT_source_id >= 0) && (KGT_target_id >= 0)) {
+					auto EmuEdgeType = edge->type_;
+					auto KGTEdgeType = CollectedData.KGTData._Connectome.Vertices.at(KGT_source_id)->OutEdges.at(KGT_target_id)->type_;
+					// Edit graph notes and cost if error.
+					if (EmuEdgeType != KGTEdgeType) {
+						float cost = GEDOpCost.at(edge_substitution);
+						auto it = EdgeType2Label.find(KGTEdgeType);
+						if (it == EdgeType2Label.end()) {
+							Client_.Logger_->Log("KGT edge type refers to unknown type: "+std::to_string(int(KGTEdgeType)), 7);
+							return false;
+						}
+					}
 
-	// 5. For each vertex, check edges that are missing and insert them.
+				} else { // Edge that should not exist.
+					float cost = GEDOpCost.at(edge_deletion);
+					GraphEdits.emplace_back(edge_deletion, std::to_string(Emu_i)+'>'+std::to_string(target_id), cost);
+					total_GED_cost += cost;
+				}
+			}
+		}
+	}
 
-	// 6. Calculate the final GED score.
+	// 4. For each vertex, check edges that are missing and insert them.
+	//    This is exclusively for edges between two vertices that both exist in EMU. The
+	//    cases where vertices were missed in EMU and all their edges were already dealt
+	//    with in step 2.
+	for (size_t Emu_i = 0; Emu_i < CollectedData.Emu2KGT.size(); Emu_i++) {
+		int KGT_i = CollectedData.Emu2KGT[Emu_i];
+		if (KGT_i >= 0) {
+			// Check each intended outgoing edge
+			for (const auto & [KGT_target_id, edge] : CollectedData.KGTData._Connectome.Vertices.at(KGT_i)->OutEdges) {
+				int EMU_target_id = CollectedData.KGT2Emu[KGT_target_id];
+				auto it = CollectedData.EMUData._Connectome.Vertices.at(Emu_i)->OutEdges.find(EMU_target_id);
+				if (it == CollectedData.EMUData._Connectome.Vertices.at(Emu_i)->OutEdges.end()) { // Missing edge.
+					float cost = GEDOpCost.at(edge_insertion);
+					GraphEdits.emplace_back(edge_insertion, std::to_string(Emu_i)+'>'+std::to_string(EMU_target_id), cost);
+					total_GED_cost += cost;
+				}
+			}
+		}
+	}
+
+	// 5. Calculate the final GED score.
+	GED_total_cost_raw = total_GED_cost;
+	KGT_elements_total = CollectedData.KGTData.GetConnectomeTotalElements();
+	GED_score = GED_total_cost_raw / float(KGT_elements_total);
+
+	return true;
 }
 
 bool N1Metrics::ValidateAccurateSystemIdentification() {
@@ -99,19 +178,14 @@ bool N1Metrics::ValidateAccurateSystemIdentification() {
 	CollectedData.N1Metrics.num_neurons_absdiff = (KGT_n > EMU_n) ? KGT_n - EMU_n : EMU_n - KGT_n;
 	CollectedData.N1Metrics.num_neurons_diff_pct = 100.0*float(CollectedData.N1Metrics.num_neurons_absdiff)/float(KGT_n);
 
-	// Derive the connectome (connectivity matrix).
-
-	// *** Build nx DiGraph.
-
-	// As needed, convert this to two di-graphs, one for the KGT, one for the EMU.
-
-	// Calculate the edit distance.
-
+	// Calculate the graph dit distance (GED).
 	if (!PreRegisteredGED()) return false;
 
 	// Calculate the Jaccard distance.
+	// *** Not yet implemented.
 
 	// Calculate the Quantum JSD.
+	// *** Not yet implemented.
 
 	return true;
 }

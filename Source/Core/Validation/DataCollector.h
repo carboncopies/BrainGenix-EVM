@@ -69,6 +69,8 @@ struct NetworkData {
 
     bool EnsureConnectome(SafeClient & _Client, const ValidationConfig & _Config, const std::vector<int>& KGT2Emu, std::map<int, int>& Emu2KGT, size_t _NumVertices);
 
+    size_t GetConnectomeTotalElements();
+
 };
 
 struct N1MetricsData {

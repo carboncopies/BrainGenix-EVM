@@ -124,6 +124,17 @@ bool NetworkData::EnsureConnectome(SafeClient & _Client, const ValidationConfig 
 	return true;
 }
 
+size_t NetworkData::GetConnectomeTotalElements() {
+	size_t elementcount = 0;
+	for (const auto & vert : _Connectome.Vertices) {
+		if (vert) {
+			elementcount++; // For the vertex.
+			elementcount += vert->OutEdges.size(); // For the edges.
+		}
+	}
+	return elementcount;
+}
+
 DataCollector::DataCollector(const std::string& _KGTSaveName, const std::string& _EMUSaveName):
 	KGTData(true), EMUData(false) {
 	KGTData.SaveName = _KGTSaveName;
