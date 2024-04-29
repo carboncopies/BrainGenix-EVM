@@ -76,7 +76,11 @@ bool AwaitNESSimLoad(SafeClient & _Client, const std::string & _SimSaveName, int
 
     // Start a simulation load request.
     nlohmann::json ResponseJSON;
-    if (!MakeNESRequest(_Client, "Simulation/Load", nlohmann::json("{ \"SavedSimName\": "+_SimSaveName+" }"), ResponseJSON)) {
+    
+    nlohmann::json Query;
+    Query["SavedSimName"] = _SimSaveName;
+
+    if (!MakeNESRequest(_Client, "Simulation/Load", Query, ResponseJSON)) {
         return false;
     }
     nlohmann::json& FirstResponse = ResponseJSON[0];

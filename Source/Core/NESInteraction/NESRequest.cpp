@@ -21,6 +21,25 @@ const std::vector<std::string> BgErrorStr = {
     "BGStatusSimulationBusy",
 };
 
+
+
+/*
+ * This expects requests of the following format:
+ * [
+ *   {
+ *     "ReqID": <request-id>,
+ *     "AddBSNeuron": {
+ *       "SimulationID": <SimID>, // Logically, this could belong outside AddBSNeuron, but we wish to reuse backward compatible functions. 
+ *       "Name": <name>,
+ *       "SomaID": <soma-id>,
+ *       "AxonID": <axon-id>,
+ *       <etc... all parameters>
+ *     }
+ *   },
+ *   <more requests>
+ * ]
+ */
+
 bool MakeNESRequest(SafeClient& _Client, const std::string& _Route, const nlohmann::json& _Data, nlohmann::json& _Result) {
 	if (_Route.empty()) {
 		_Client.Logger_->Log("Route must be non-empty string.", 7);
@@ -30,7 +49,12 @@ bool MakeNESRequest(SafeClient& _Client, const std::string& _Route, const nlohma
 	RequestJSON["ReqID"] = _Client.GetRequestID();
 	RequestJSON[_Route] = _Data;
     std::string ResultStr;
-	bool Status = _Client.MakeJSONQuery("NES", "[{\"" + _Route + "\": {" + RequestJSON.dump() + "}}]", &ResultStr);
+
+	std::string Query = "[" + RequestJSON.dump() + "]";
+	
+	_Client.Logger_->Log("DEBUG: NES Request: " + Query, 0);
+
+	bool Status = _Client.MakeJSONQuery("NES", Query, &ResultStr);
 	if (!Status) {
         _Client.Logger_->Log("Error During Simulation Load Request To NES", 7);
         return false;
