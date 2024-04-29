@@ -24,26 +24,6 @@
 
 namespace BG {
 
-enum GEDoperations: int {
-    vertex_insertion,
-    vertex_deletion,
-    vertex_substitution,
-    edge_insertion,
-    edge_deletion,
-    edge_substitution,
-    NUMGEDoperations
-};
-
-struct GraphEdit {
-    GEDoperations Op;
-    std::string Element;
-    float cost;
-
-    GraphEdit(GEDoperations _Op, const std::string& _Element, float _Cost): Op(_Op), Element(_Element), cost(_Cost) {}
-
-    nlohmann::json GetJSON();
-};
-
 /**
  * Methods with which to apply validation metrics for the success criterion:
  * N-1 Reconstruction of neuronal circuits through system identification
@@ -58,13 +38,6 @@ protected:
 
 public:
     DataCollector& CollectedData;
-
-    //! Graph edit details for report.
-    std::vector<GraphEdit> GraphEdits;
-
-    float GED_total_cost_raw = 0.0;
-    size_t KGT_elements_total = 0;
-    float GED_score = 0.0; // A smaller score (smaller distance) is better.
 
 public:
     N1Metrics(SafeClient& _Client, const ValidationConfig& _Config, DataCollector& _CollectedData): Client_(_Client), Config(_Config), CollectedData(_CollectedData) {}

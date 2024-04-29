@@ -48,8 +48,9 @@ public:
      * @param _Config Configuration settings used.
      * @return True if successfully carried out.
      */
-    Validation(SafeClient & _Client, const std::string & _KGTSaveName, const std::string & _EmuSaveName, const ValidationConfig & _Config):
-        Client_(_Client), KGTSaveName_(_KGTSaveName), EmuSaveName_(_EmuSaveName), Config_(_Config) {}
+    Validation(SafeClient & _Client, const std::string & _KGTSaveName, const std::string & _EmuSaveName, const ValidationConfig & _Config);
+
+    bool GenerateReport();
 
     /**
      * This is a simple entry point through which to carry out validation

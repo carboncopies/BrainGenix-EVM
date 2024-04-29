@@ -18,13 +18,13 @@ namespace BG {
 
 bool GenerateReportJSON(const DataCollector& _CollectedData, nlohmann::json& _ReportJSON) {
 
-	ReportJSON_["Connectomes"] = _CollectedData.GetConnectomesJSON();
+	_ReportJSON["Connectomes"] = _CollectedData.GetConnectomesJSON();
 
-	ReportJSON_["KGT2Emu"] = _CollectedData.GetKGT2EmuMapJSON();
+	_ReportJSON["KGT2Emu"] = _CollectedData.GetKGT2EmuMapJSON();
 
-	ReportJSON_["GraphEdits"] = _CollectedData.GetGraphEditsJSON();
+	_ReportJSON["GraphEdits"] = _CollectedData.GetGraphEditsJSON();
 
-	ReportJSON_["Scores"] = _CollectedData.GetScoresJSON();
+	_ReportJSON["Scores"] = _CollectedData.GetScoresJSON();
 
 	return true;
 }
@@ -55,7 +55,7 @@ Validation::Validation(SafeClient & _Client, const std::string & _KGTSaveName, c
 bool Validation::GenerateReport() {
 	auto it = ReportMap_.find(Config_.ReportType_);
     if (it == ReportMap_.end()) {
-        _Client.Logger_->Log("Report type unrecognized: "+std::to_string(int(Config_.ReportType_)), 7);
+        Client_.Logger_->Log("Report type unrecognized: "+std::to_string(int(Config_.ReportType_)), 7);
         return false;
     }
 	return (*it->second)(CollectedData_, ReportJSON_);
@@ -66,7 +66,7 @@ bool Validation::GenerateReport() {
  * using metrics that area suitable for a pair of emulation and
  * ground-truth systems expressed using Simple Compartmental neurons.
  */
-bool Validation::SCVAlidate() {
+bool Validation::SCValidate() {
 
 	Client_.Logger_->Log("Commencing validation of Simple Compartmental ground-truth and emulation systems.",1);
 

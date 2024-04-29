@@ -75,9 +75,36 @@ struct NetworkData {
 
 };
 
+enum GEDoperations: int {
+    vertex_insertion,
+    vertex_deletion,
+    vertex_substitution,
+    edge_insertion,
+    edge_deletion,
+    edge_substitution,
+    NUMGEDoperations
+};
+
+struct GraphEdit {
+    GEDoperations Op;
+    std::string Element;
+    float cost;
+
+    GraphEdit(GEDoperations _Op, const std::string& _Element, float _Cost): Op(_Op), Element(_Element), cost(_Cost) {}
+
+    nlohmann::json GetJSON() const;
+};
+
 struct N1MetricsData {
     size_t num_neurons_absdiff = 0;
     float num_neurons_diff_pct = 0.0;
+
+    //! Graph edit details for report.
+    std::vector<GraphEdit> GraphEdits;
+
+    float GED_total_cost_raw = 0.0;
+    size_t KGT_elements_total = 0;
+    float GED_score = 0.0; // A smaller score (smaller distance) is better.
 };
 
 struct DataCollector {

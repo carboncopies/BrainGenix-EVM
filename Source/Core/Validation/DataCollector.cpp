@@ -146,13 +146,22 @@ nlohmann::json NetworkData::GetConnectomeJSON() const {
 			nlohmann::json& edges = ConnectomeJSON[vertex_id]["Edges"];
 			for (const auto& [ target_id, e ] : _Connectome.Vertices.at(vertex_id)->OutEdges) {
 				if (e) {
-					edges.push_back(nlohmann::json.array({ target_id, int(e->type_), e->weight }));
+					edges.push_back(nlohmann::json::array({ target_id, int(e->type_), e->weight_ }));
 				}
 			}
 		}
 	}
 
 	return ConnectomeJSON;
+}
+
+
+nlohmann::json GraphEdit::GetJSON() const {
+	nlohmann::json GEJSON;
+	GEJSON["Op"] = int(Op);
+	GEJSON["Data"] = Element;
+	GEJSON["Cost"] = cost;
+	return GEJSON;
 }
 
 
@@ -191,7 +200,7 @@ bool DataCollector::EnsureConnectomes(SafeClient & _Client, const ValidationConf
 	return Connectomes;
 }
 
-nlohmann::json DataCollector::GetConnectomeJSON() const {
+nlohmann::json DataCollector::GetConnectomesJSON() const {
 	nlohmann::json ConnectomesJSON;
 
 	ConnectomesJSON["KGTConnectome"] = KGTData.GetConnectomeJSON();

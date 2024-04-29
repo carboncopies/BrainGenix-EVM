@@ -34,14 +34,6 @@ const std::map<EdgeType, std::string> EdgeType2Label = {
     { InhibitoryConnection, "Inhibitory" },
 };
 
-nlohmann::json GraphEdit::GetJSON() {
-	nlohmann::json GEJSON;
-	GEJSON["Op"] = int(Op);
-	GEJSON["Data"] = Element;
-	GEJSON["Cost"] = cost;
-	return GEJSON;
-}
-
 /**
  * This is an efficient, simplified implementation of the Graph Edit Distance
  * that depends on pre-registration of the two graphs being compared. Having
@@ -67,18 +59,18 @@ bool N1Metrics::PreRegisteredGED() {
 			// Delete outgoing edges.
 			for (const auto & [target_id, edge] : CollectedData.EMUData._Connectome.Vertices.at(Emu_i)->OutEdges) {
 				float cost = GEDOpCost.at(edge_deletion);
-				GraphEdits.emplace_back(edge_deletion, std::to_string(Emu_i)+'>'+std::to_string(target_id), cost);
+				CollectedData.N1Metrics.GraphEdits.emplace_back(edge_deletion, std::to_string(Emu_i)+'>'+std::to_string(target_id), cost);
 				total_GED_cost += cost;
 			}
 			// Delete incoming edges.
 			for (const auto & [source_id, edge] : CollectedData.EMUData._Connectome.Vertices.at(Emu_i)->InEdges) {
 				float cost = GEDOpCost.at(edge_deletion);
-				GraphEdits.emplace_back(edge_deletion, std::to_string(source_id)+'>'+std::to_string(Emu_i), cost);
+				CollectedData.N1Metrics.GraphEdits.emplace_back(edge_deletion, std::to_string(source_id)+'>'+std::to_string(Emu_i), cost);
 				total_GED_cost += cost;
 			}
 			// Delete vertex.
 			float cost = GEDOpCost.at(vertex_deletion);
-			GraphEdits.emplace_back(vertex_deletion, std::to_string(Emu_i), cost);
+			CollectedData.N1Metrics.GraphEdits.emplace_back(vertex_deletion, std::to_string(Emu_i), cost);
 			total_GED_cost += cost;
 
 		}
@@ -89,18 +81,18 @@ bool N1Metrics::PreRegisteredGED() {
 		if (CollectedData.KGT2Emu[KGT_i] < 0) { // No equivalent in EMU.
 			// Insert missing vertex.
 			float cost = GEDOpCost.at(vertex_insertion);
-			GraphEdits.emplace_back(vertex_insertion, "KGT"+std::to_string(KGT_i), cost);
+			CollectedData.N1Metrics.GraphEdits.emplace_back(vertex_insertion, "KGT"+std::to_string(KGT_i), cost);
 			total_GED_cost += cost;
 			// Insert incoming edges.
 			for (const auto & [source_id, edge] : CollectedData.KGTData._Connectome.Vertices.at(KGT_i)->InEdges) {
 				float cost = GEDOpCost.at(edge_insertion);
-				GraphEdits.emplace_back(edge_insertion, "KGT"+std::to_string(source_id)+'>'+std::to_string(KGT_i), cost);
+				CollectedData.N1Metrics.GraphEdits.emplace_back(edge_insertion, "KGT"+std::to_string(source_id)+'>'+std::to_string(KGT_i), cost);
 				total_GED_cost += cost;
 			}
 			// Insert outgoing edges.
 			for (const auto & [target_id, edge] : CollectedData.KGTData._Connectome.Vertices.at(KGT_i)->OutEdges) {
 				float cost = GEDOpCost.at(edge_insertion);
-				GraphEdits.emplace_back(edge_insertion, "KGT"+std::to_string(KGT_i)+'>'+std::to_string(target_id), cost);
+				CollectedData.N1Metrics.GraphEdits.emplace_back(edge_insertion, "KGT"+std::to_string(KGT_i)+'>'+std::to_string(target_id), cost);
 				total_GED_cost += cost;
 			}
 
@@ -119,7 +111,7 @@ bool N1Metrics::PreRegisteredGED() {
 					Client_.Logger_->Log("KGT vertex type refers to unknown type: "+std::to_string(int(KGTVertexType)), 7);
 					return false;
 				}
-				GraphEdits.emplace_back(vertex_substitution, it->second, cost);
+				CollectedData.N1Metrics.GraphEdits.emplace_back(vertex_substitution, it->second, cost);
 				total_GED_cost += cost;
 			}
 
@@ -143,7 +135,7 @@ bool N1Metrics::PreRegisteredGED() {
 
 				} else { // Edge that should not exist.
 					float cost = GEDOpCost.at(edge_deletion);
-					GraphEdits.emplace_back(edge_deletion, std::to_string(Emu_i)+'>'+std::to_string(target_id), cost);
+					CollectedData.N1Metrics.GraphEdits.emplace_back(edge_deletion, std::to_string(Emu_i)+'>'+std::to_string(target_id), cost);
 					total_GED_cost += cost;
 				}
 			}
@@ -163,7 +155,7 @@ bool N1Metrics::PreRegisteredGED() {
 				auto it = CollectedData.EMUData._Connectome.Vertices.at(Emu_i)->OutEdges.find(EMU_target_id);
 				if (it == CollectedData.EMUData._Connectome.Vertices.at(Emu_i)->OutEdges.end()) { // Missing edge.
 					float cost = GEDOpCost.at(edge_insertion);
-					GraphEdits.emplace_back(edge_insertion, std::to_string(Emu_i)+'>'+std::to_string(EMU_target_id), cost);
+					CollectedData.N1Metrics.GraphEdits.emplace_back(edge_insertion, std::to_string(Emu_i)+'>'+std::to_string(EMU_target_id), cost);
 					total_GED_cost += cost;
 				}
 			}
@@ -171,9 +163,9 @@ bool N1Metrics::PreRegisteredGED() {
 	}
 
 	// 5. Calculate the final GED score.
-	GED_total_cost_raw = total_GED_cost;
-	KGT_elements_total = CollectedData.KGTData.GetConnectomeTotalElements();
-	GED_score = GED_total_cost_raw / float(KGT_elements_total);
+	CollectedData.N1Metrics.GED_total_cost_raw = total_GED_cost;
+	CollectedData.N1Metrics.KGT_elements_total = CollectedData.KGTData.GetConnectomeTotalElements();
+	CollectedData.N1Metrics.GED_score = CollectedData.N1Metrics.GED_total_cost_raw / float(CollectedData.N1Metrics.KGT_elements_total);
 
 	return true;
 }
