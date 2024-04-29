@@ -241,9 +241,9 @@ nlohmann::json DataCollector::GetGraphEditsJSON() const {
 nlohmann::json DataCollector::GetScoresJSON() const {
 	nlohmann::json ScoresJSON;
 
-	ScoresJSON["GEDrawcost"] = N1Metrics.GED_total_cost_raw;
-	ScoresJSON["KGTtotelements"] = N1Metrics.KGT_elements_total;
-	ScoresJSON["GEDscore"] = N1Metrics.GED_score;
+	ScoresJSON["GraphEditRawCost"] = N1Metrics.GED_total_cost_raw;
+	ScoresJSON["NumElements"] = N1Metrics.KGT_elements_total;
+	ScoresJSON["GraphEditScore"] = N1Metrics.GED_score;
 
 	return ScoresJSON;
 }
