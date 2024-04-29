@@ -22,8 +22,8 @@ namespace BG {
  * @return True if found.
  */
 BGStatusCode FindPar(BG::Common::Logger::LoggingSystem& Logger_, const nlohmann::json& _JSON, const std::string& _ParName, nlohmann::json::iterator& _Iterator) {
-    _Iterator = _JSON.find(_ParName);
-    if (_Iterator == _JSON.end()) {
+    _Iterator = const_cast<nlohmann::json&>(_JSON).find(_ParName);
+    if (_Iterator == const_cast<nlohmann::json&>(_JSON).end()) {
         Logger_.Log("Error Finding Parameter '" + _ParName + "', Request Is: " + _JSON.dump(), 7);
         return BGStatusCode::BGStatusInvalidParametersPassed;
     }
