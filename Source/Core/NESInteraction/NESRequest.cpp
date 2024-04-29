@@ -30,7 +30,7 @@ bool MakeNESRequest(SafeClient& _Client, const std::string& _Route, const nlohma
 	RequestJSON["ReqID"] = _Client.GetRequestID();
 	RequestJSON[_Route] = _Data;
     std::string ResultStr;
-	bool Status = _Client.MakeJSONQuery(_Route, '['+RequestJSON.dump()+']', &ResultStr);
+	bool Status = _Client.MakeJSONQuery("NES", "[{\"" + _Route + "\": {" + RequestJSON.dump() + "}}]", &ResultStr);
 	if (!Status) {
         _Client.Logger_->Log("Error During Simulation Load Request To NES", 7);
         return false;
