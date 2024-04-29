@@ -55,11 +55,12 @@ std::string ValidationRPCInterface::SCValidation(std::string _JSONRequest) {
         Config.TryAngles = TryAngles;
     }
 
-    if (!SCVAlidate(NESAPIClient_, KGTSaveName, EmuSaveName, Config)) {
+    Validation(NESAPIClient_, KGTSaveName, EmuSaveName, Config);
+    if (!Validation.SCVAlidate()) {
         return ErrResponse(BGStatusCode::BGStatusGeneralFailure, "SC Validation failed.");
     }
 
-    return SuccessResponse();
+    return SuccessResponse(Validation.ReportJSON_);
 }
 
 } // BG

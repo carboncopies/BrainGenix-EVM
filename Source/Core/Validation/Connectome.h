@@ -42,6 +42,16 @@ enum VertexType: int {
     NUMVertexType
 };
 
+// const std::map<VertexType, std::string> VertexType2Label = {
+//     { PrincipalNeuron, "PrincipalNeuron" },
+//     { Interneuron, "Interneuron" },
+// };
+
+// const std::map<EdgeType, std::string> EdgeType2Label = {
+//     { ExcitatoryConnection, "Excitatory" },
+//     { InhibitoryConnection, "Inhibitory" },
+// };
+
 /**
  * This version is very simple, as it merges all edges in one direction between a pair of
  * vertices into a single edge with combined weight.

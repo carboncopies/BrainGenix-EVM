@@ -124,7 +124,7 @@ bool NetworkData::EnsureConnectome(SafeClient & _Client, const ValidationConfig 
 	return true;
 }
 
-size_t NetworkData::GetConnectomeTotalElements() {
+size_t NetworkData::GetConnectomeTotalElements() const {
 	size_t elementcount = 0;
 	for (const auto & vert : _Connectome.Vertices) {
 		if (vert) {
@@ -134,6 +134,27 @@ size_t NetworkData::GetConnectomeTotalElements() {
 	}
 	return elementcount;
 }
+
+nlohmann::json NetworkData::GetConnectomeJSON() const {
+	nlohmann::json ConnectomeJSON(nlohmann::json::value_t::array);
+
+	for (size_t vertex_id = 0; vertex_id < _Connectome.Vertices.size(); vertex_id++) {
+		ConnectomeJSON[vertex_id] = nlohmann::json::object();
+		if (_Connectome.Vertices.at(vertex_id)) {
+			ConnectomeJSON[vertex_id]["Type"] = int(_Connectome.Vertices.at(vertex_id)->type_); //VertexType2Label[_Connectome.Vertices.at(vertex_id)->type_];
+			ConnectomeJSON[vertex_id]["Edges"] = nlohmann::json::array();
+			nlohmann::json& edges = ConnectomeJSON[vertex_id]["Edges"];
+			for (const auto& [ target_id, e ] : _Connectome.Vertices.at(vertex_id)->OutEdges) {
+				if (e) {
+					edges.push_back(nlohmann::json.array({ target_id, int(e->type_), e->weight }));
+				}
+			}
+		}
+	}
+
+	return ConnectomeJSON;
+}
+
 
 DataCollector::DataCollector(const std::string& _KGTSaveName, const std::string& _EMUSaveName):
 	KGTData(true), EMUData(false) {
@@ -168,6 +189,45 @@ bool DataCollector::EnsureConnectomes(SafeClient & _Client, const ValidationConf
 	size_t NumVertices = KGTData.SomaCenters.size() > EMUData.SomaCenters.size() ? KGTData.SomaCenters.size() : EMUData.SomaCenters.size();
 	Connectomes = KGTData.EnsureConnectome(_Client, _Config, KGT2Emu, Emu2KGT, NumVertices) && EMUData.EnsureConnectome(_Client, _Config, KGT2Emu, Emu2KGT, NumVertices);
 	return Connectomes;
+}
+
+nlohmann::json DataCollector::GetConnectomeJSON() const {
+	nlohmann::json ConnectomesJSON;
+
+	ConnectomesJSON["KGTConnectome"] = KGTData.GetConnectomeJSON();
+	ConnectomesJSON["EMUConnectome"] = EMUData.GetConnectomeJSON();
+
+	return ConnectomesJSON;
+}
+
+nlohmann::json DataCollector::GetKGT2EmuMapJSON() const {
+	nlohmann::json KGT2EmuJSON(nlohmann::json::value_t::array);
+
+	for (const auto& Emu_i : KGT2Emu) {
+		KGT2EmuJSON.push_back(Emu_i);
+	}
+
+	return KGT2EmuJSON;
+}
+
+nlohmann::json DataCollector::GetGraphEditsJSON() const {
+	nlohmann::json GraphEditsJSON(nlohmann::json::value_t::array);
+
+	for (const auto& ge : N1Metrics.GraphEdits) {
+		GraphEditsJSON.push_back(ge.GetJSON());
+	}
+
+	return GraphEditsJSON;
+}
+
+nlohmann::json DataCollector::GetScoresJSON() const {
+	nlohmann::json ScoresJSON;
+
+	ScoresJSON["GEDrawcost"] = N1Metrics.GED_total_cost_raw;
+	ScoresJSON["KGTtotelements"] = N1Metrics.KGT_elements_total;
+	ScoresJSON["GEDscore"] = N1Metrics.GED_score;
+
+	return ScoresJSON;
 }
 
 } // BG

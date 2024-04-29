@@ -31,8 +31,11 @@ BGStatusCode GetParVecVec3D(BG::Common::Logger::LoggingSystem& Logger_, const nl
 std::string Response(const nlohmann::json& ResponseJSON);
 std::string ErrResponse(int _Status);
 std::string ErrResponse(int _Status, const std::string & _ErrStr);
+std::string ErrResponse(int _Status, nlohmann::json& ResponseJSON);
+std::string ErrResponse(int _Status, nlohmann::json& ResponseJSON, const std::string & _ErrStr);
 std::string ErrResponse(BGStatusCode _Status);
 std::string ErrResponse(BGStatusCode _Status, const std::string & _ErrStr);
 std::string SuccessResponse();
+std::string SuccessResponse(nlohmann::json& ResponseJSON);
 
 }

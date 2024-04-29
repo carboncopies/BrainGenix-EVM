@@ -242,6 +242,15 @@ std::string ErrResponse(int _Status, const std::string & _ErrStr) {
     ResponseJSON["ErrorMessage"] = _ErrStr;
     return Response(ResponseJSON);
 }
+std::string ErrResponse(int _Status, nlohmann::json& ResponseJSON) {
+    ResponseJSON["StatusCode"] = _Status;
+    return Response(ResponseJSON);
+}
+std::string ErrResponse(int _Status, nlohmann::json& ResponseJSON, const std::string & _ErrStr) {
+    ResponseJSON["StatusCode"] = _Status;
+    ResponseJSON["ErrorMessage"] = _ErrStr;
+    return Response(ResponseJSON);
+}
 std::string ErrResponse(BGStatusCode _Status) {
     return ErrResponse(int(_Status));
 }
@@ -250,6 +259,9 @@ std::string ErrResponse(BGStatusCode _Status, const std::string & _ErrStr) {
 }
 std::string SuccessResponse() {
     return ErrResponse(BGStatusCode::BGStatusSuccess);
+}
+std::string SuccessResponse(nlohmann::json& ResponseJSON) {
+    return ErrResponse(int(BGStatusCode::BGStatusSuccess), ResponseJSON);
 }
 
 } // BG

@@ -13,7 +13,7 @@
 // Standard Libraries (BG convention: use <> instead of "")
 
 // Third-Party Libraries (BG convention: use <> instead of "")
-//#include <nlohmann/json.hpp>
+#include <nlohmann/json.hpp>
 
 
 // Internal Libraries (BG convention: use <> instead of "")
@@ -69,7 +69,9 @@ struct NetworkData {
 
     bool EnsureConnectome(SafeClient & _Client, const ValidationConfig & _Config, const std::vector<int>& KGT2Emu, std::map<int, int>& Emu2KGT, size_t _NumVertices);
 
-    size_t GetConnectomeTotalElements();
+    size_t GetConnectomeTotalElements() const;
+
+    nlohmann::json GetConnectomeJSON() const;
 
 };
 
@@ -104,6 +106,14 @@ struct DataCollector {
     bool EnsureRegistered(SafeClient & _Client, const ValidationConfig & _Config);
 
     bool EnsureConnectomes(SafeClient & _Client, const ValidationConfig & _Config);
+
+    nlohmann::json GetConnectomesJSON() const;
+
+    nlohmann::json GetKGT2EmuMapJSON() const;
+
+    nlohmann::json GetGraphEditsJSON() const;
+
+    nlohmann::json GetScoresJSON() const;
 
 };
 

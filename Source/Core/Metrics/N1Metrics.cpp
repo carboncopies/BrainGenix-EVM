@@ -25,14 +25,22 @@ const std::map<GEDoperations, float> GEDOpCost = {
 };
 
 const std::map<VertexType, std::string> VertexType2Label = {
-	{ PrincipalNeuron, "PrincipalNeuron" },
-	{ Interneuron, "Interneuron" },
+    { PrincipalNeuron, "PrincipalNeuron" },
+    { Interneuron, "Interneuron" },
 };
 
 const std::map<EdgeType, std::string> EdgeType2Label = {
-	{ ExcitatoryConnection, "Excitatory" },
-	{ InhibitoryConnection, "Inhibitory" },
+    { ExcitatoryConnection, "Excitatory" },
+    { InhibitoryConnection, "Inhibitory" },
 };
+
+nlohmann::json GraphEdit::GetJSON() {
+	nlohmann::json GEJSON;
+	GEJSON["Op"] = int(Op);
+	GEJSON["Data"] = Element;
+	GEJSON["Cost"] = cost;
+	return GEJSON;
+}
 
 /**
  * This is an efficient, simplified implementation of the Graph Edit Distance

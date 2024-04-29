@@ -14,7 +14,7 @@
 #include <vector>
 
 // Third-Party Libraries (BG convention: use <> instead of "")
-//#include <nlohmann/json.hpp>
+#include <nlohmann/json.hpp>
 
 
 // Internal Libraries (BG convention: use <> instead of "")
@@ -24,7 +24,7 @@
 
 namespace BG {
 
-enum GEDoperations {
+enum GEDoperations: int {
     vertex_insertion,
     vertex_deletion,
     vertex_substitution,
@@ -40,6 +40,8 @@ struct GraphEdit {
     float cost;
 
     GraphEdit(GEDoperations _Op, const std::string& _Element, float _Cost): Op(_Op), Element(_Element), cost(_Cost) {}
+
+    nlohmann::json GetJSON();
 };
 
 /**
