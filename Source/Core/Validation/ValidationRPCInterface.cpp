@@ -32,7 +32,7 @@ ValidationRPCInterface::~ValidationRPCInterface() {
  *   "TryAngles": <unsigned int>
  */
 std::string ValidationRPCInterface::SCValidation(std::string _JSONRequest) {
-    nlohmann::json RequestJSON(_JSONRequest);
+    nlohmann::json RequestJSON(nlohmann::json::parse(_JSONRequest));
 
     // Obtain required parameters
     std::string KGTSaveName;
