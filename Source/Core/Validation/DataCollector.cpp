@@ -32,7 +32,7 @@ bool NetworkData::EnsureGotSomaPositions(SafeClient & _Client, const ValidationC
 	if (!EnsureLoaded(_Client, _Config)) return false;
 
 	nlohmann::json Response;
-	if (!MakeNESRequest(_Client, "Simulation/GetSomaPositions", nlohmann::json("{ \"SimID\": "+std::to_string(SimID)+" }"), Response)) {
+	if (!MakeNESRequest(_Client, "Simulation/GetSomaPositions", nlohmann::json::parse("{ \"SimulationID\": "+std::to_string(SimID)+" }"), Response)) {
 		return false;
 	}
 	nlohmann::json& FirstResponse = Response[0];
@@ -52,7 +52,7 @@ bool NetworkData::EnsureGotConnections(SafeClient & _Client, const ValidationCon
 	if (!EnsureLoaded(_Client, _Config)) return false;
 
 	nlohmann::json Response;
-	if (!MakeNESRequest(_Client, "Simulation/GetConnectome", nlohmann::json("{ \"SimID\": "+std::to_string(SimID)+" }"), Response)) {
+	if (!MakeNESRequest(_Client, "Simulation/GetConnectome", nlohmann::json::parse("{ \"SimulationID\": "+std::to_string(SimID)+" }"), Response)) {
 		return false;
 	}
 	nlohmann::json& FirstResponse = Response[0];

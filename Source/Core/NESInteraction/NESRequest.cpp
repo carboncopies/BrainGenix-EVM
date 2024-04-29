@@ -52,13 +52,16 @@ bool MakeNESRequest(SafeClient& _Client, const std::string& _Route, const nlohma
 
 	std::string Query = "[" + RequestJSON.dump() + "]";
 	
-	_Client.Logger_->Log("DEBUG: NES Request: " + Query, 0);
+	_Client.Logger_->Log("DEBUG: NES Request --> " + Query, 0);
 
 	bool Status = _Client.MakeJSONQuery("NES", Query, &ResultStr);
 	if (!Status) {
         _Client.Logger_->Log("Error During Simulation Load Request To NES", 7);
         return false;
     }
+	
+	_Client.Logger_->Log("DEBUG: NES Request <-- " + ResultStr, 0);
+	
     _Result = nlohmann::json::parse(ResultStr);
 
     if (!_Result.is_array()) {
