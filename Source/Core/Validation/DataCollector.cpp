@@ -99,13 +99,22 @@ bool NetworkData::EnsureConnectome(SafeClient & _Client, const ValidationConfig 
 
 	NumVertices = ConnectionTargets.size();
 	_Connectome.Vertices.resize(NumVertices);
-	// Create a vertex for each  euron and create its edges based on connections.
+
+
 	for (size_t i = 0; i < KGT2Emu.size(); i++) {
 		_Connectome.Vertices[i] = std::make_unique<Vertex>(VertexType(SomaTypes[i]));
+	}
+
+	// Create a vertex for each  euron and create its edges based on connections.
+	for (size_t i = 0; i < KGT2Emu.size(); i++) {
 		// From neuron i to Vertex i, add connections.
 		for (size_t j = 0; j < ConnectionTargets[i].size(); j++) {
 			int target_id = ConnectionTargets[i][j];
 			int source_id = i;
+
+			assert(source_id >= 0 && source_id < NumVertices && "SourceID Not Valid!");
+			assert(target_id >= 0 && target_id < NumVertices && "TargetID Not Valid!");
+
 			EdgeType type_ = EdgeType(ConnectionTypes[i][j]);
 			float weight_ = ConnectionWeights[i][j];
 			// *** TODO: With all the allocations involved this is probably unnecessarily slow.
