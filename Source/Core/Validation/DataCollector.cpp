@@ -243,7 +243,7 @@ nlohmann::json DataCollector::GetScoresJSON() const {
 
 	ScoresJSON["GraphEditRawCost"] = N1Metrics.GED_total_cost_raw;
 	ScoresJSON["NumElements"] = N1Metrics.KGT_elements_total;
-	ScoresJSON["GraphEditScore"] = N1Metrics.GED_score;
+	ScoresJSON["GraphEditDistanceScore"] = N1Metrics.GED_score;
 
 	return ScoresJSON;
 }
