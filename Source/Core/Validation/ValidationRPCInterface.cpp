@@ -26,6 +26,7 @@ ValidationRPCInterface::~ValidationRPCInterface() {
  * Required parameters:
  *   "KGTSaveName": <string>
  *   "EmuSaveName": <string>
+ *   "TestSimData": <JSON>
  * 
  * Optional parameters:
  *   "Timeout_ms": <unsigned long>
@@ -44,6 +45,12 @@ std::string ValidationRPCInterface::SCValidation(std::string _JSONRequest) {
         return ErrResponse(BGStatusCode::BGStatusInvalidParametersPassed, "Missing EmuSaveName parameter.");
     }
 
+    // Obtain required functional test data
+    ValidationTestData TestData_(Logger_, RequestJSON, "TestSimData");
+    if (!Testdata_.Valid()) {
+        return ErrResponse(BGStatusCode::BGStatusInvalidParametersPassed, "Invalid functional validation test data.")
+    }
+
     // Obtain optional (configuration) parameters
     ValidationConfig Config; // Build this with default settings.
     long Timeout_ms;
@@ -55,7 +62,7 @@ std::string ValidationRPCInterface::SCValidation(std::string _JSONRequest) {
         Config.TryAngles = TryAngles;
     }
 
-    Validation Validation_(NESAPIClient_, KGTSaveName, EmuSaveName, Config);
+    Validation Validation_(NESAPIClient_, KGTSaveName, EmuSaveName, ValidationTestData, Config);
     if (!Validation_.SCValidate()) {
         return ErrResponse(BGStatusCode::BGStatusGeneralFailure, "SC Validation failed.");
     }

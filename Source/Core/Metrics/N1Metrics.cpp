@@ -190,7 +190,36 @@ bool N1Metrics::ValidateAccurateSystemIdentification() {
 	return true;
 }
 
+// This test of functional operations correctly discovered in the emulation uses
+// the ValidationTestData provided in TestData_.
+// Before this is called, the KGT and EMU must already have been loaded and registered.
+// Acivity data associated with a specific neuron in KGT is associated with a neuron
+// in EMU in accordance with the registration map.
 bool N1Metrics::ValidateAccurateTuning() {
+
+	// 1. Use the KGT test data to prepare a remapped set of test data for the EMU simulation.
+	std::vector<SomaAPTime_ms> EMU_t_soma_fire_ms;
+	for (const auto& [neuron_id, t_fire] : TestData_.KGT_t_soma_fire_ms) {
+
+		if (neuron_id >= CollectedData.KGT2Emu.size()) {
+			Client_.Logger_->Log("Validation test data refers to KGT neuron that is not in the KGT2Emu map: "+std::to_string(neuron_id), 7);
+			return false;
+		}
+		if (CollectedData.KGT2Emu.at(neuron_id) < 0) {
+			Client_.Logger_->Log("Warning, skipping test input for KGT neruon that does not appear in EMU: "+std::to_string(neuron_id), 5);
+			continue;
+		}
+		EMU_t_soma_fire_ms.emplace_back(CollectedData.KGT2Emu.at(neuron_id), t_fire);
+
+	}
+
+	// 2. Ask NES to run a simulation in the KGT and retrieve the results.
+
+	// 3. Ask NES to run a simulation in the EMU and retrieve the results.
+
+	// 4. Compare the results.
+
+	// 5. Add information used in the report.
 
 	return true;
 }

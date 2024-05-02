@@ -21,6 +21,7 @@
 #include <RPC/SafeClient.h>
 #include <Validation/ValidationConfig.h>
 #include <Validation/DataCollector.h>
+#include <Validation/ValidationTestData.h>
 
 namespace BG {
 
@@ -33,14 +34,16 @@ namespace BG {
  */
 class N1Metrics {
 protected:
-    SafeClient & Client_;
-    const ValidationConfig & Config;
+    SafeClient& Client_;
+    const ValidationTestData& TestData_;
+    const ValidationConfig& Config;
 
 public:
     DataCollector& CollectedData;
 
 public:
-    N1Metrics(SafeClient& _Client, const ValidationConfig& _Config, DataCollector& _CollectedData): Client_(_Client), Config(_Config), CollectedData(_CollectedData) {}
+    N1Metrics(SafeClient& _Client, const ValidationTestData& _TestData, const ValidationConfig& _Config, DataCollector& _CollectedData):
+        Client_(_Client), Testdata_(_TestData), Config(_Config), CollectedData(_CollectedData) {}
 
     /**
      * This is an efficient, simplified implementation of the Graph Edit Distance

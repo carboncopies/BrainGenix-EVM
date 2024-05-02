@@ -19,6 +19,7 @@
 #include <RPC/SafeClient.h>
 #include <Validation/ValidationConfig.h>
 #include <Validation/DataCollector.h>
+#include <Validation/ValidationTestData.h>
 
 
 namespace BG {
@@ -33,6 +34,7 @@ protected:
     SafeClient& Client_;
     const std::string& KGTSaveName_;
     const std::string& EmuSaveName_;
+    const ValidationTestData& Testdata_;
     const ValidationConfig& Config_;
 
 public:
@@ -48,7 +50,7 @@ public:
      * @param _Config Configuration settings used.
      * @return True if successfully carried out.
      */
-    Validation(SafeClient & _Client, const std::string & _KGTSaveName, const std::string & _EmuSaveName, const ValidationConfig & _Config);
+    Validation(SafeClient & _Client, const std::string & _KGTSaveName, const std::string & _EmuSaveName, const ValidationTestData& _TestData, const ValidationConfig & _Config);
 
     bool GenerateReport();
 

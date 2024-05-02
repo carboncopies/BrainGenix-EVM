@@ -46,8 +46,8 @@ const ReportMap ReportMap_ = {
 	{ MDReport, GenerateReportMD },
 };
 
-Validation::Validation(SafeClient & _Client, const std::string & _KGTSaveName, const std::string & _EmuSaveName, const ValidationConfig & _Config):
-    Client_(_Client), KGTSaveName_(_KGTSaveName), EmuSaveName_(_EmuSaveName), Config_(_Config), CollectedData_(_KGTSaveName, _EmuSaveName) {
+Validation::Validation(SafeClient & _Client, const std::string & _KGTSaveName, const std::string & _EmuSaveName, const ValidationTestData& _TestData, const ValidationConfig & _Config):
+    Client_(_Client), KGTSaveName_(_KGTSaveName), EmuSaveName_(_EmuSaveName), TestData_(_TestData), Config_(_Config), CollectedData_(_KGTSaveName, _EmuSaveName) {
 
 }
 
@@ -71,7 +71,7 @@ bool Validation::SCValidate() {
 	Client_.Logger_->Log("Commencing validation of Simple Compartmental ground-truth and emulation systems.",1);
 
 	// Apply the N1 success-criteria metrics
-	N1Metrics N1Metrics_(Client_, Config_, CollectedData_);
+	N1Metrics N1Metrics_(Client_, TestData_, Config_, CollectedData_);
 	if (!N1Metrics_.Validate()) {
 		return false;
 	}
