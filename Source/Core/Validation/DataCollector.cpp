@@ -32,7 +32,7 @@ bool NetworkData::EnsureGotSomaPositions(SafeClient & _Client, const ValidationC
 	if (!EnsureLoaded(_Client, _Config)) return false;
 
 	nlohmann::json Response;
-	if (!MakeNESRequest(_Client, "Simulation/GetSomaPositions", nlohmann::json("{ \"SimID\": "+std::to_string(SimID)+" }"), Response)) {
+	if (!MakeNESRequest(_Client, "Simulation/GetSomaPositions", nlohmann::json::parse("{ \"SimulationID\": "+std::to_string(SimID)+" }"), Response)) {
 		return false;
 	}
 	nlohmann::json& FirstResponse = Response[0];
@@ -52,7 +52,7 @@ bool NetworkData::EnsureGotConnections(SafeClient & _Client, const ValidationCon
 	if (!EnsureLoaded(_Client, _Config)) return false;
 
 	nlohmann::json Response;
-	if (!MakeNESRequest(_Client, "Simulation/GetConnectome", nlohmann::json("{ \"SimID\": "+std::to_string(SimID)+" }"), Response)) {
+	if (!MakeNESRequest(_Client, "Simulation/GetConnectome", nlohmann::json::parse("{ \"SimulationID\": "+std::to_string(SimID)+" }"), Response)) {
 		return false;
 	}
 	nlohmann::json& FirstResponse = Response[0];
@@ -99,13 +99,22 @@ bool NetworkData::EnsureConnectome(SafeClient & _Client, const ValidationConfig 
 
 	NumVertices = ConnectionTargets.size();
 	_Connectome.Vertices.resize(NumVertices);
-	// Create a vertex for each  euron and create its edges based on connections.
+
+
 	for (size_t i = 0; i < KGT2Emu.size(); i++) {
 		_Connectome.Vertices[i] = std::make_unique<Vertex>(VertexType(SomaTypes[i]));
+	}
+
+	// Create a vertex for each  euron and create its edges based on connections.
+	for (size_t i = 0; i < KGT2Emu.size(); i++) {
 		// From neuron i to Vertex i, add connections.
 		for (size_t j = 0; j < ConnectionTargets[i].size(); j++) {
 			int target_id = ConnectionTargets[i][j];
 			int source_id = i;
+
+			assert(source_id >= 0 && source_id < NumVertices && "SourceID Not Valid!");
+			assert(target_id >= 0 && target_id < NumVertices && "TargetID Not Valid!");
+
 			EdgeType type_ = EdgeType(ConnectionTypes[i][j]);
 			float weight_ = ConnectionWeights[i][j];
 			// *** TODO: With all the allocations involved this is probably unnecessarily slow.
@@ -232,9 +241,9 @@ nlohmann::json DataCollector::GetGraphEditsJSON() const {
 nlohmann::json DataCollector::GetScoresJSON() const {
 	nlohmann::json ScoresJSON;
 
-	ScoresJSON["GEDrawcost"] = N1Metrics.GED_total_cost_raw;
-	ScoresJSON["KGTtotelements"] = N1Metrics.KGT_elements_total;
-	ScoresJSON["GEDscore"] = N1Metrics.GED_score;
+	ScoresJSON["GraphEditRawCost"] = N1Metrics.GED_total_cost_raw;
+	ScoresJSON["NumElements"] = N1Metrics.KGT_elements_total;
+	ScoresJSON["GraphEditDistanceScore"] = N1Metrics.GED_score;
 
 	return ScoresJSON;
 }

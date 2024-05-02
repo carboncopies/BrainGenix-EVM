@@ -18,45 +18,41 @@
 
 namespace BG {
 
-bool GetNESStatus(SafeClient & _Client, long _TaskID, BGStatusCode & _StatusCode, nlohmann::json& _ResultJSON) {
+bool GetNESStatus(SafeClient& _Client, long _TaskID, int& _TaskStatus, nlohmann::json& _ResultJSON) {
 
-    if (!MakeNESRequest(_Client, "ManTaskStatus", nlohmann::json("{ \"TaskID\": "+std::to_string(_TaskID)+" }"), _ResultJSON)) {
+    if (!MakeNESRequest(_Client, "ManTaskStatus", nlohmann::json::parse("{ \"TaskID\": "+std::to_string(_TaskID)+" }"), _ResultJSON)) {
         return false;
     }
-    nlohmann::json& FirstResonse = _ResultJSON[0];
+    nlohmann::json& FirstResponse = _ResultJSON[0];
 
     long StatusCodeInt;
-    if (!GetParInt(*_Client.Logger_, FirstResonse, "StatusCode", StatusCodeInt) != BGStatusCode::BGStatusSuccess) {
+    if (GetParInt(*_Client.Logger_, FirstResponse, "TaskStatus", StatusCodeInt) != BGStatusCode::BGStatusSuccess) {
         return false;
     }
-    _StatusCode = BGStatusCode(StatusCodeInt);
+    _TaskStatus = StatusCodeInt;
     return true;
 }
 
 bool AwaitNESOutcome(SafeClient & _Client, long _TaskID, nlohmann::json& _ResultJSON, unsigned long _Timeout_ms) {
     unsigned long Timeout_ms = _Timeout_ms;
     while (true) {
-        BGStatusCode StatusCode;
-        if (!GetNESStatus(_Client, _TaskID, StatusCode, _ResultJSON)) {
+        int TaskStatus;
+        if (!GetNESStatus(_Client, _TaskID, TaskStatus, _ResultJSON)) {
             _Client.Logger_->Log("NES Status request failed while waiting for process to complete", 7);
             return false;
         }
 
-        if (StatusCode == BGStatusSuccess) {
+        if (TaskStatus == 0) { // done
             return true; // Process appears to be done.
         }
 
-        if (StatusCode != BGStatusSimulationBusy) {
-            _Client.Logger_->Log("NES Process status code returned error: "+std::to_string(static_cast<int>(StatusCode)), 7);
-            return false;
-        }
 
         Timeout_ms--;
         if (Timeout_ms==0) {
             _Client.Logger_->Log("Awaiting NES Process request timed out after "+std::to_string(_Timeout_ms)+" ms", 7);
             return false;
         }
-        std::this_thread::sleep_for (std::chrono::milliseconds(1));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 }
 
@@ -76,7 +72,11 @@ bool AwaitNESSimLoad(SafeClient & _Client, const std::string & _SimSaveName, int
 
     // Start a simulation load request.
     nlohmann::json ResponseJSON;
-    if (!MakeNESRequest(_Client, "Simulation/Load", nlohmann::json("{ \"SavedSimName\": "+_SimSaveName+" }"), ResponseJSON)) {
+    
+    nlohmann::json Query;
+    Query["SavedSimName"] = _SimSaveName;
+
+    if (!MakeNESRequest(_Client, "Simulation/Load", Query, ResponseJSON)) {
         return false;
     }
     nlohmann::json& FirstResponse = ResponseJSON[0];

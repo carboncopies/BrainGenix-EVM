@@ -41,7 +41,7 @@ std::string ValidationRPCInterface::SCValidation(std::string _JSONRequest) {
         return ErrResponse(BGStatusCode::BGStatusInvalidParametersPassed, "Missing KGTSaveName parameter.");
     }
     std::string EmuSaveName;
-    if (GetParString(Logger_, RequestJSON, "EmuSaveName", EmuSaveName) != BGStatusCode::BGStatusSuccess) {
+    if (GetParString(Logger_, RequestJSON, "EMUSaveName", EmuSaveName) != BGStatusCode::BGStatusSuccess) {
         return ErrResponse(BGStatusCode::BGStatusInvalidParametersPassed, "Missing EmuSaveName parameter.");
     }
 
