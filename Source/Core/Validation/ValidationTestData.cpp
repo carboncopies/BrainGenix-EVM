@@ -8,7 +8,8 @@
 // Third-Party Libraries (BG convention: use <> instead of "")
 
 // Internal Libraries (BG convention: use <> instead of "")
-#include <Validation/ValidationTestdata.h>
+#include <Util/JSONUtils.h>
+#include <Validation/ValidationTestData.h>
 
 namespace BG {
 
@@ -59,6 +60,24 @@ ValidationTestData::ValidationTestData(BG::Common::Logger::LoggingSystem& _Logge
     } else { // Not one of the recognized test data formats
         Logger_.Log("Error Test Data format unrecognized. Request Is: " + _RequestJSON.dump(), 7);
     }
+}
+
+ValidationTestData::ValidationTestData(const ValidationTestData& _Source, const std::vector<int>& Source2This): Logger_(_Source.Logger_), MaxRecordTime_ms(_Source.MaxRecordTime_ms) {
+	for (const auto& SomaIDTfirePair : _Source.KGT_t_soma_fire_ms) {
+
+		if (SomaIDTfirePair.SomaID >= Source2This.size()) {
+			Logger_.Log("Validation test data refers to KGT neuron that is not in the KGT2Emu map: "+std::to_string(SomaIDTfirePair.SomaID), 7);
+			return;
+		}
+		if (Source2This.at(SomaIDTfirePair.SomaID) < 0) {
+			Logger_.Log("Warning, skipping test input for KGT neruon that does not appear in EMU: "+std::to_string(SomaIDTfirePair.SomaID), 5);
+			continue;
+		}
+		KGT_t_soma_fire_ms.emplace_back(Source2This.at(SomaIDTfirePair.SomaID), SomaIDTfirePair.t_fire);
+
+	}
+
+	IsValid_ = true;
 }
 
 nlohmann::json ValidationTestData::GetSomaAPTimes() const {

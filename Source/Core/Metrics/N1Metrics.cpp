@@ -191,14 +191,14 @@ bool N1Metrics::ValidateAccurateSystemIdentification() {
 	return true;
 }
 
-bool RunValidationTestSimulation(SafeClient& _Client, int _SimID, const std::vector<SomaAPTime_ms>& TfireSomeIDPairsList, float _SimulationDuration_ms, nlohmann::json& _ResultJSON) {
-	if (!RecordAll(_Client, _SimID, _SimulationDuration_ms)) {
+bool RunValidationTestSimulation(SafeClient& _Client, int _SimID, const ValidationTestData& _TestData, nlohmann::json& _ResultJSON) {
+	if (!RecordAll(_Client, _SimID, _TestData.MaxRecordTime_ms)) {
 		return false;
 	}
-	if (!SetSpecificAPTimes(_Client, _SimID, TfireSomeIDPairsList)) {
+	if (!SetSpecificAPTimes(_Client, _SimID, _TestData.GetSomaAPTimes())) {
 		return false;
 	}
-	if (!AwaitSimulationRunFor(_Client, _SimID, _SimulationDuration_ms)) {
+	if (!AwaitSimulationRunFor(_Client, _SimID, _TestData.MaxRecordTime_ms)) {
 		return false;
 	}
 	if (!GetRecording(_Client, _SimID, _ResultJSON)) {
@@ -219,31 +219,21 @@ bool N1Metrics::ValidateAccurateTuning() {
 	}
 
 	// 1. Use the KGT test data to prepare a remapped set of test data for the EMU simulation.
-	std::vector<SomaAPTime_ms> EMU_t_soma_fire_ms;
-	for (const auto& [neuron_id, t_fire] : TestData_.KGT_t_soma_fire_ms) {
-
-		if (neuron_id >= CollectedData.KGT2Emu.size()) {
-			Client_.Logger_->Log("Validation test data refers to KGT neuron that is not in the KGT2Emu map: "+std::to_string(neuron_id), 7);
-			return false;
-		}
-		if (CollectedData.KGT2Emu.at(neuron_id) < 0) {
-			Client_.Logger_->Log("Warning, skipping test input for KGT neruon that does not appear in EMU: "+std::to_string(neuron_id), 5);
-			continue;
-		}
-		EMU_t_soma_fire_ms.emplace_back(CollectedData.KGT2Emu.at(neuron_id), t_fire);
-
+	ValidationTestData EMUTestData(TestData_, CollectedData.KGT2Emu);
+	if (!EMUTestData.Valid()) {
+		return false;
 	}
 
 	// 2. Ask NES to run a simulation in the KGT and retrieve the results.
 	nlohmann::json KGTResultJSON;
-	if (!RunValidationTestSimulation(Client_, CollectedData.KGTData.SimID, TestData_.KGT_t_soma_fire_ms, TestData_.MaxRecordTime_ms, KGTResultJSON)) {
+	if (!RunValidationTestSimulation(Client_, CollectedData.KGTData.SimID, TestData_, KGTResultJSON)) {
 		return false;
 	}
 	nlohmann::json& KGTRecordingJSON = KGTResultJSON[0];
 
 	// 3. Ask NES to run a simulation in the EMU and retrieve the results.
 	nlohmann::json EMUResultJSON;
-	if (!RunValidationTestSimulation(Client_, CollectedData.EMUData.SimID, EMU_t_soma_fire_ms, TestData_.MaxRecordTime_ms, EMUResultJSON)) {
+	if (!RunValidationTestSimulation(Client_, CollectedData.EMUData.SimID, EMUTestData, EMUResultJSON)) {
 		return false;
 	}
 	nlohmann::json& EMURecordingJSON = EMUResultJSON[0];

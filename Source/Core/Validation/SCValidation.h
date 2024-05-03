@@ -34,7 +34,7 @@ protected:
     SafeClient& Client_;
     const std::string& KGTSaveName_;
     const std::string& EmuSaveName_;
-    const ValidationTestData& Testdata_;
+    const ValidationTestData& TestData_;
     const ValidationConfig& Config_;
 
 public:

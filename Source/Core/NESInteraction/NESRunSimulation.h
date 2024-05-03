@@ -27,7 +27,7 @@ namespace BG {
 
 bool RecordAll(SafeClient & _Client, int _SimID, float _MaxRecordTime_ms);
 
-bool SetSpecificAPTimes(SafeClient& _Client, int _SimID, const std::vector<SomaAPTime_ms>& _SomaIDTFirePairsList);
+bool SetSpecificAPTimes(SafeClient& _Client, int _SimID, const nlohmann::json& _SomaIDTFirePairsList);
 
 bool GetSimulationStatus(SafeClient& _Client, int _SimID, nlohmann::json& _ResponseJSON);
 bool GetSimulationStatus(SafeClient& _Client, int _SimID, float& _InSimulationTime_ms, bool& IsSimulating);

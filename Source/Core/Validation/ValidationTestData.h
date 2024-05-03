@@ -50,6 +50,9 @@ public:
     //! Constructor that obtains test data from JSON provided by an RPC call.
     ValidationTestData(BG::Common::Logger::LoggingSystem& _Logger, const nlohmann::json& _RequestJSON, const std::string& _DataLabel);
 
+    //! Constructor that obtains test data from another set of test data with remapping.
+    ValidationTestData(const ValidationTestData& _Source, const std::vector<int>& Source2This);
+
 
     bool Valid() const { return IsValid_; }
 

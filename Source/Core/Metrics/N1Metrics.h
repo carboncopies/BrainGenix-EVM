@@ -43,7 +43,7 @@ public:
 
 public:
     N1Metrics(SafeClient& _Client, const ValidationTestData& _TestData, const ValidationConfig& _Config, DataCollector& _CollectedData):
-        Client_(_Client), Testdata_(_TestData), Config(_Config), CollectedData(_CollectedData) {}
+        Client_(_Client), TestData_(_TestData), Config(_Config), CollectedData(_CollectedData) {}
 
     /**
      * This is an efficient, simplified implementation of the Graph Edit Distance

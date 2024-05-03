@@ -47,8 +47,8 @@ std::string ValidationRPCInterface::SCValidation(std::string _JSONRequest) {
 
     // Obtain required functional test data
     ValidationTestData TestData_(Logger_, RequestJSON, "TestSimData");
-    if (!Testdata_.Valid()) {
-        return ErrResponse(BGStatusCode::BGStatusInvalidParametersPassed, "Invalid functional validation test data.")
+    if (!TestData_.Valid()) {
+        return ErrResponse(BGStatusCode::BGStatusInvalidParametersPassed, "Invalid functional validation test data.");
     }
 
     // Obtain optional (configuration) parameters
@@ -62,7 +62,7 @@ std::string ValidationRPCInterface::SCValidation(std::string _JSONRequest) {
         Config.TryAngles = TryAngles;
     }
 
-    Validation Validation_(NESAPIClient_, KGTSaveName, EmuSaveName, ValidationTestData, Config);
+    Validation Validation_(NESAPIClient_, KGTSaveName, EmuSaveName, TestData_, Config);
     if (!Validation_.SCValidate()) {
         return ErrResponse(BGStatusCode::BGStatusGeneralFailure, "SC Validation failed.");
     }

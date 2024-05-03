@@ -27,13 +27,13 @@ bool RecordAll(SafeClient& _Client, int _SimID, float _MaxRecordTime_ms) {
     return MakeNESRequest(_Client, "Simulation/RecordAll", Data);
 }
 
-bool SetSpecificAPTimes(SafeClient& _Client, int _SimID, const std::vector<SomaAPTime_ms>& _SomaIDTFirePairsList) {
+bool SetSpecificAPTimes(SafeClient& _Client, int _SimID, const nlohmann::json& _SomaIDTFirePairsList) {
 
     nlohmann::json Data;
     Data["SimulationID"] = _SimID;
-    Data["TimeNeuronPairs"] = _SomaIDTFirePairsList.GetSomaAPTimes();
+    Data["TimeNeuronPairs"] = _SomaIDTFirePairsList;
 
-    return MakeNESRequest(_Client, "Simulation/SetSpecificAPTimes", Data));
+    return MakeNESRequest(_Client, "Simulation/SetSpecificAPTimes", Data);
 }
 
 bool GetSimulationStatus(SafeClient& _Client, int _SimID, nlohmann::json& _ResponseJSON) {
@@ -51,10 +51,10 @@ bool GetSimulationStatus(SafeClient& _Client, int _SimID, float& _InSimulationTi
     }
 
     nlohmann::json& SimStatusFirstResponse = SimStatusJSON[0];
-    if (!GetParFloat(*_Client.Logger_, SimStatusFirstResponse, "InSimulationTime_ms", _InSimulationTime_ms)) {
+    if (!GetParFloat(*(_Client.Logger_), SimStatusFirstResponse, "InSimulationTime_ms", _InSimulationTime_ms)) {
         return false;
     }
-    if (!GetParBool(*Client_.Logger_, SimStatusFirstResponse, "IsSimulating", IsSimulating)) {
+    if (!GetParBool(*(_Client.Logger_), SimStatusFirstResponse, "IsSimulating", IsSimulating)) {
         return false;
     }
 
