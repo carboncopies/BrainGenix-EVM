@@ -22,9 +22,8 @@ const std::vector<std::string> BgErrorStr = {
 };
 
 
-
 /*
- * This expects requests of the following format:
+ * This uses requests of the following format:
  * [
  *   {
  *     "ReqID": <request-id>,
@@ -38,8 +37,11 @@ const std::vector<std::string> BgErrorStr = {
  *   },
  *   <more requests>
  * ]
+ * 
+ * The ReqID does not need to be provided, as it is generated within this function.
+ * The _Data JSON should provide the route-specific data, for example, the data between {} after
+ * "AddBSNeuron" in the example above.
  */
-
 bool MakeNESRequest(SafeClient& _Client, const std::string& _Route, const nlohmann::json& _Data, nlohmann::json& _Result) {
 	if (_Route.empty()) {
 		_Client.Logger_->Log("Route must be non-empty string.", 7);
@@ -96,6 +98,13 @@ bool MakeNESRequest(SafeClient& _Client, const std::string& _Route, const nlohma
     }
 
     return true;
+}
+
+bool MakeNESRequest(SafeClient& _Client, const std::string& _Route, const nlohmann::json& _Data) {
+
+	nlohmann::json Result;
+	return MakeNESRequest(_Client, _Route, _Data, Result);
+
 }
 
 } // BG

@@ -17,22 +17,11 @@
 
 
 // Internal Libraries (BG convention: use <> instead of "")
+#include <BGStatusCode.h>
 #include <RPC/SafeClient.h>
 
 
 namespace BG {
-
-
-enum BGStatusCode {
-    BGStatusSuccess = 0,
-    BGStatusGeneralFailure = 1,
-    BGStatusInvalidParametersPassed = 2,
-    BGStatusUpstreamGatewayUnavailable = 3,
-    BGStatusUnauthorizedInvalidNoToken = 4,
-    BGStatusSimulationBusy = 5,
-    NUMBGStatusCode
-};
-
 
 
 bool GetNESStatus(SafeClient & _Client, long _TaskID, BGStatusCode & _StatusCode, nlohmann::json& ResultJSON);

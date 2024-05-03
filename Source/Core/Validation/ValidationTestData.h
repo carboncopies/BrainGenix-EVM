@@ -41,7 +41,9 @@ protected:
 
     bool IsValid_ = false;
 
+public:
     std::vector<SomaAPTime_ms> KGT_t_soma_fire_ms;
+    float MaxRecordTime_ms = 0.0;
 
 public:
 
@@ -49,7 +51,9 @@ public:
     ValidationTestData(BG::Common::Logger::LoggingSystem& _Logger, const nlohmann::json& _RequestJSON, const std::string& _DataLabel);
 
 
-    bool Valid() { return IsValid_; }
+    bool Valid() const { return IsValid_; }
+
+    nlohmann::json GetSomaAPTimes() const;
 
 };
 

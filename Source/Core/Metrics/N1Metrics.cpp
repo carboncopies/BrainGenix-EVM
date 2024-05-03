@@ -11,6 +11,7 @@
 // Internal Libraries (BG convention: use <> instead of "")
 #include <Metrics/N1Metrics.h>
 #include <Validation/Connectome.h>
+#include <NESInteraction/NESRunSimulation.h>
 
 
 namespace BG {
@@ -190,12 +191,32 @@ bool N1Metrics::ValidateAccurateSystemIdentification() {
 	return true;
 }
 
+bool RunValidationTestSimulation(SafeClient& _Client, int _SimID, const std::vector<SomaAPTime_ms>& TfireSomeIDPairsList, float _SimulationDuration_ms, nlohmann::json& _ResultJSON) {
+	if (!RecordAll(_Client, _SimID, _SimulationDuration_ms)) {
+		return false;
+	}
+	if (!SetSpecificAPTimes(_Client, _SimID, TfireSomeIDPairsList)) {
+		return false;
+	}
+	if (!AwaitSimulationRunFor(_Client, _SimID, _SimulationDuration_ms)) {
+		return false;
+	}
+	if (!GetRecording(_Client, _SimID, _ResultJSON)) {
+		return false;
+	}
+	return true;
+}
+
 // This test of functional operations correctly discovered in the emulation uses
 // the ValidationTestData provided in TestData_.
 // Before this is called, the KGT and EMU must already have been loaded and registered.
 // Acivity data associated with a specific neuron in KGT is associated with a neuron
 // in EMU in accordance with the registration map.
 bool N1Metrics::ValidateAccurateTuning() {
+
+	if ((!CollectedData.KGTData.Loaded) || (!CollectedData.EMUData.Loaded) || (!CollectedData.Connectomes)) {
+		return false;
+	}
 
 	// 1. Use the KGT test data to prepare a remapped set of test data for the EMU simulation.
 	std::vector<SomaAPTime_ms> EMU_t_soma_fire_ms;
@@ -214,10 +235,22 @@ bool N1Metrics::ValidateAccurateTuning() {
 	}
 
 	// 2. Ask NES to run a simulation in the KGT and retrieve the results.
+	nlohmann::json KGTResultJSON;
+	if (!RunValidationTestSimulation(Client_, CollectedData.KGTData.SimID, TestData_.KGT_t_soma_fire_ms, TestData_.MaxRecordTime_ms, KGTResultJSON)) {
+		return false;
+	}
+	nlohmann::json& KGTRecordingJSON = KGTResultJSON[0];
 
 	// 3. Ask NES to run a simulation in the EMU and retrieve the results.
+	nlohmann::json EMUResultJSON;
+	if (!RunValidationTestSimulation(Client_, CollectedData.EMUData.SimID, EMU_t_soma_fire_ms, TestData_.MaxRecordTime_ms, EMUResultJSON)) {
+		return false;
+	}
+	nlohmann::json& EMURecordingJSON = EMUResultJSON[0];
 
 	// 4. Compare the results.
+	// *** This could be a spike-within-deltat metric or a activity-envelope metric.
+	//     Start by figuring out what it would be to detect XOR function.
 
 	// 5. Add information used in the report.
 

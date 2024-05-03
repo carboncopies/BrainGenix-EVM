@@ -23,4 +23,6 @@ namespace BG {
 
 bool MakeNESRequest(SafeClient& _Client, const std::string& _Route, const nlohmann::json& _Data, nlohmann::json& _Result);
 
+bool MakeNESRequest(SafeClient& _Client, const std::string& _Route, const nlohmann::json& _Data);
+
 } // BG

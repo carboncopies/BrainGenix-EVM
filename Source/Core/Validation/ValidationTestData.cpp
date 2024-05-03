@@ -39,10 +39,18 @@ ValidationTestData::ValidationTestData(BG::Common::Logger::LoggingSystem& _Logge
     			return;
     		}
 
-    		int neuron_id = pair_json[0].template get<int>();
-    		float t_fire = pair_json[1].template get<float>();
+    		float t_fire = pair_json[0].template get<float>();
+    		int neuron_id = pair_json[1].template get<int>();
 
-    		KGT_t_soma_fire_ms.emplace_back(neuron_id, t_fire);
+			if (neuron_id < 0) {
+
+				MaxRecordTime_ms = t_fire;
+
+			} else {
+
+				KGT_t_soma_fire_ms.emplace_back(neuron_id, t_fire);
+
+			}
 
     	}
 
@@ -51,6 +59,14 @@ ValidationTestData::ValidationTestData(BG::Common::Logger::LoggingSystem& _Logge
     } else { // Not one of the recognized test data formats
         Logger_.Log("Error Test Data format unrecognized. Request Is: " + _RequestJSON.dump(), 7);
     }
+}
+
+nlohmann::json ValidationTestData::GetSomaAPTimes() const {
+	nlohmann::json SomaIDTFirePairsListJSON(nlohmann::json::value_t::array);
+    for (const auto& somafirepair : KGT_t_soma_fire_ms) {
+        SomaIDTFirePairsListJSON.push_back(nlohmann::json::parse("["+std::to_string(somafirepair.SomaID)+','+std::to_string(somafirepair.t_fire)+"]"));
+    }
+	return SomaIDTFirePairsListJSON;
 }
 
 } // BG
