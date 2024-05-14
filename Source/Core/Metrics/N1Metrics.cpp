@@ -239,8 +239,19 @@ bool N1Metrics::ValidateAccurateTuning() {
 	nlohmann::json& EMURecordingJSON = EMUResultJSON[0];
 
 	// 4. Compare the results.
-	// *** This could be a spike-within-deltat metric or a activity-envelope metric.
+	// *** This could be a spike-within-delta_t metric or a activity-envelope metric.
 	//     Start by figuring out what it would be to detect XOR function.
+	// For the XOR example, we want to specify that we are interested in neuron spiking falling within
+	// some max tdiff between original and emulation. That way, the "output" neuron behavior can also
+	// be followed. We might add some more specifications about which neuron's behavior is most
+	// important (depending on what makese sense for an example).
+	// Let's start by just building this for the XOR example, we can make it more flexible later.
+	
+	// 4.a Extract spike times from the KGTResultJSON and EMUResultJSON.
+
+	std::cout << KGTResultJSON.dump() << '\n';
+
+	// 4.b Compare spike times at corresponding neurons, count tims when spikes appear within threshold T and when not.
 
 	// 5. Add information used in the report.
 
