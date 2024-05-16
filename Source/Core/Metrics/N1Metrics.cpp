@@ -218,11 +218,15 @@ bool N1Metrics::ValidateAccurateTuning() {
 		return false;
 	}
 
+	Client_.Logger_->Log("Remapping KGT test data to EMU cell IDs.", 3);
+
 	// 1. Use the KGT test data to prepare a remapped set of test data for the EMU simulation.
 	ValidationTestData EMUTestData(TestData_, CollectedData.KGT2Emu);
 	if (!EMUTestData.Valid()) {
 		return false;
 	}
+
+	Client_.Logger_->Log("Requesting KGT simulation run.", 3);
 
 	// 2. Ask NES to run a simulation in the KGT and retrieve the results.
 	nlohmann::json KGTResultJSON;
@@ -230,6 +234,8 @@ bool N1Metrics::ValidateAccurateTuning() {
 		return false;
 	}
 	nlohmann::json& KGTRecordingJSON = KGTResultJSON[0];
+
+	Client_.Logger_->Log("Requesting EMU simulation run.", 3);
 
 	// 3. Ask NES to run a simulation in the EMU and retrieve the results.
 	nlohmann::json EMUResultJSON;
@@ -249,6 +255,8 @@ bool N1Metrics::ValidateAccurateTuning() {
 	
 	// 4.a Extract spike times from the KGTResultJSON and EMUResultJSON.
 
+	Client_.Logger_->Log("Extracting spike times.", 3);
+
 	std::cout << KGTResultJSON.dump() << '\n';
 
 	// 4.b Compare spike times at corresponding neurons, count tims when spikes appear within threshold T and when not.
@@ -264,9 +272,9 @@ bool N1Metrics::Validate() {
 
 	if (!CollectedData.EnsureConnectomes(Client_, Config)) return false;
 
-	ValidateAccurateSystemIdentification();
+	if (!ValidateAccurateSystemIdentification()) return false;
 
-	ValidateAccurateTuning();
+	if (!ValidateAccurateTuning()) return false;
 
 	// Generate report.
 
