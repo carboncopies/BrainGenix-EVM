@@ -83,7 +83,7 @@ ValidationTestData::ValidationTestData(const ValidationTestData& _Source, const 
 nlohmann::json ValidationTestData::GetSomaAPTimes() const {
 	nlohmann::json SomaIDTFirePairsListJSON(nlohmann::json::value_t::array);
     for (const auto& somafirepair : KGT_t_soma_fire_ms) {
-        SomaIDTFirePairsListJSON.push_back(nlohmann::json::parse("["+std::to_string(somafirepair.SomaID)+','+std::to_string(somafirepair.t_fire)+"]"));
+        SomaIDTFirePairsListJSON.push_back(nlohmann::json::parse("["+std::to_string(somafirepair.t_fire)+','+std::to_string(somafirepair.SomaID)+"]"));
     }
 	return SomaIDTFirePairsListJSON;
 }
