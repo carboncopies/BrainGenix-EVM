@@ -36,5 +36,7 @@ bool SimulationRunFor(SafeClient& _Client, int _SimID, float _SimulationDuration
 bool AwaitSimulationRunFor(SafeClient& _Client, int _SimID, float _SimulationDuration_ms);
 
 bool GetRecording(SafeClient& _Client, int _SimID, nlohmann::json& _ResponseJSON);
+bool GetSpikeTimes(SafeClient& _Client, int _SimID, nlohmann::json& _ResponseJSON);
+bool ExtractSpikeTimes(SafeClient& _Client, const nlohmann::json& _ResponseJSON, std::map<size_t, std::vector<float>>& SpikeTimes);
 
 } // BG

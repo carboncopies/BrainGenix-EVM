@@ -6,6 +6,7 @@
 // Standard Libraries (BG convention: use <> instead of "")
 #include <thread>
 #include <chrono>
+#include <map>
 
 // Third-Party Libraries (BG convention: use <> instead of "")
 #include <nlohmann/json.hpp>
@@ -118,6 +119,34 @@ bool GetRecording(SafeClient& _Client, int _SimID, nlohmann::json& _ResponseJSON
 
     return MakeNESRequest(_Client, "Simulation/GetRecording", Data, _ResponseJSON);
 
+}
+
+bool GetSpikeTimes(SafeClient& _Client, int _SimID, nlohmann::json& _ResponseJSON) {
+
+    nlohmann::json Data;
+    Data["SimulationID"] = _SimID;
+
+    return MakeNESRequest(_Client, "Simulation/GetSpikeTimes", Data, _ResponseJSON);
+
+}
+
+// Returns a map < neuron-ID, list of spike times >.
+bool ExtractSpikeTimes(SafeClient& _Client, const nlohmann::json& _ResponseJSON, std::map<size_t, std::vector<float>>& SpikeTimes) {
+    nlohmann::json::iterator _Iterator;
+    if (FindPar(*(_Client.Logger_), _ResponseJSON, "SpikeTimes", _Iterator) != BGStatusCode::BGStatusSuccess) {
+		return false;
+	}
+
+    for (auto& neuron_data : _Iterator->items()) {
+        size_t ID = std::atoi(neuron_data.key().c_str());
+        std::vector<float> tspikems;
+        if (GetParFloatVec(*(_Client.Logger_), neuron_data.value(), "tSpike_ms", tspikems) != BGStatusCode::BGStatusSuccess) {
+		    return false;
+	    }
+        SpikeTimes[ID] = tspikems;
+    }
+
+    return true;
 }
 
 } // BG

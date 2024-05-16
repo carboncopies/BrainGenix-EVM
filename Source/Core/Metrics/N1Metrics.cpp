@@ -201,7 +201,10 @@ bool RunValidationTestSimulation(SafeClient& _Client, int _SimID, const Validati
 	if (!AwaitSimulationRunFor(_Client, _SimID, _TestData.MaxRecordTime_ms)) {
 		return false;
 	}
-	if (!GetRecording(_Client, _SimID, _ResultJSON)) {
+	// if (!GetRecording(_Client, _SimID, _ResultJSON)) {
+	// 	return false;
+	// }
+	if (!GetSpikeTimes(_Client, _SimID, _ResultJSON)) {
 		return false;
 	}
 	return true;
@@ -256,10 +259,22 @@ bool N1Metrics::ValidateAccurateTuning() {
 	// 4.a Extract spike times from the KGTResultJSON and EMUResultJSON.
 
 	Client_.Logger_->Log("Extracting spike times.", 3);
+	std::map<size_t, std::vector<float>> KGTSpikeTimes;
+	if (!ExtractSpikeTimes(Client_, KGTRecordingJSON, KGTSpikeTimes)) {
+		return false;
+	}
+	std::map<size_t, std::vector<float>> EMUSpikeTimes;
+	if (!ExtractSpikeTimes(Client_, EMURecordingJSON, EMUSpikeTimes)) {
+		return false;
+	}
 
-	std::cout << KGTResultJSON.dump() << '\n';
-
-	// 4.b Compare spike times at corresponding neurons, count tims when spikes appear within threshold T and when not.
+	// 4.b Compare spike times at corresponding neurons, count times when spikes appear within threshold T and when not.
+	// *** Use a struct to collect correspondence info
+	//     Go through each KGT neuron
+	//     Compare the number of spikes with number of spikes at mapped EMU neuron
+	//     For each spike at KGT neuron, find nearest in mapped EMU neuron, check if within threshold interval (count missed spikes)
+	//     Then, go through each EMU neuron
+	//     For each spike at EMU neuron, find nearest in neuron mapped back to KGT, check if wihin threshold interval (count spurious spikes)
 
 	// 5. Add information used in the report.
 
