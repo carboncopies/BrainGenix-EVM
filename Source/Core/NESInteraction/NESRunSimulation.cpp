@@ -47,14 +47,15 @@ bool GetSimulationStatus(SafeClient& _Client, int _SimID, nlohmann::json& _Respo
 bool GetSimulationStatus(SafeClient& _Client, int _SimID, float& _InSimulationTime_ms, bool& IsSimulating) {
     nlohmann::json SimStatusJSON;
     if (!GetSimulationStatus(_Client, _SimID, SimStatusJSON)) {
+        _Client.Logger_->Log("Simulation status NES request failed.", 7);
         return false;
     }
 
     nlohmann::json& SimStatusFirstResponse = SimStatusJSON[0];
-    if (!GetParFloat(*(_Client.Logger_), SimStatusFirstResponse, "InSimulationTime_ms", _InSimulationTime_ms)) {
+    if (GetParFloat(*(_Client.Logger_), SimStatusFirstResponse, "InSimulationTime_ms", _InSimulationTime_ms) != BGStatusCode::BGStatusSuccess) {
         return false;
     }
-    if (!GetParBool(*(_Client.Logger_), SimStatusFirstResponse, "IsSimulating", IsSimulating)) {
+    if (GetParBool(*(_Client.Logger_), SimStatusFirstResponse, "IsSimulating", IsSimulating) != BGStatusCode::BGStatusSuccess) {
         return false;
     }
 
@@ -76,11 +77,17 @@ bool AwaitSimulationRunFor(SafeClient& _Client, int _SimID, float _SimulationDur
     float t_before_run = 0.0;
     bool issimulating_before_run = false;
     if (!GetSimulationStatus(_Client, _SimID, t_before_run, issimulating_before_run)) {
+        _Client.Logger_->Log("GetSimulationStatus failed.", 7);
+        return false;
+    }
+    if (issimulating_before_run) {
+        _Client.Logger_->Log("Unable to start simulation, because one is still running.", 7);
         return false;
     }
 
     // Start this run.
     if (!SimulationRunFor(_Client, _SimID, _SimulationDuration_ms)) {
+        _Client.Logger_->Log("Failed to start simulation run.", 7);
         return false;
     }
 
@@ -95,7 +102,10 @@ bool AwaitSimulationRunFor(SafeClient& _Client, int _SimID, float _SimulationDur
             _Client.Logger_->Log("Simulation failed.", 7);
             return false;
         }
-        if ((t_ms > t_before_run) && (!issimulating)) return true;
+        if ((t_ms > t_before_run) && (!issimulating)) {
+            _Client.Logger_->Log("Simulation done.", 3);
+            return true;
+        }
         // *** BEWARE: There is no timeout, so this can get stuck forever.
     }
     
